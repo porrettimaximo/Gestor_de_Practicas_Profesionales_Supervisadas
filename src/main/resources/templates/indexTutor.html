@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -216,7 +216,7 @@
         </div>
         <div class="user-info">
             <div class="user-dropdown">
-                <span class="user-name">Mauro Cambarieri 👨‍🏫</span>
+                <span class="user-name" th:text="${tutor.nombre + ' ' + tutor.apellido + ' 👨‍🏫'}">Mauro Cambarieri 👨‍🏫</span>
             </div>
         </div>
     </div>

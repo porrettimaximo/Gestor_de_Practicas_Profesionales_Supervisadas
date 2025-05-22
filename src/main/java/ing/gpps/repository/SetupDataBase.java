@@ -32,13 +32,17 @@ public class SetupDataBase {
         Estudiante estudiante2 = new Estudiante("Maximo", "Porretti", "porretimaxi@gmail.com", "2345", 46456214L, 1841L, 2920223500L);
         Estudiante estudiante3 = new Estudiante("Tomas", "Acosta", "acostatomas@gmail.com", "3456", 45234765L, 4526L, 2920652378L);
 
+        Admin admin1 = new Admin("Admin", "Admin", "admin@gmail.com", "admin", 2920123456L);
+
         usuarioService.registrarUsuario(estudiante1);
         usuarioService.registrarUsuario(estudiante2);
         usuarioService.registrarUsuario(estudiante3);
 
+        usuarioService.registrarUsuario(admin1);
+
         // Crear tutores
-        DocenteSupervisor tutorUNRN = new DocenteSupervisor("María", "González", "maria.gonzalez@unrn.edu.ar", "tutor123", 2920123456L);
-        TutorExterno tutorExterno = new TutorExterno("Juan", "Pérez", "juan.perez@empresa.com", "tutor456", 2920654321L);
+        DocenteSupervisor tutorUNRN = new DocenteSupervisor("María", "González", "maria_gonzalez@unrn.edu.ar", "tutor123", 2920123456L);
+        TutorExterno tutorExterno = new TutorExterno("Juan", "Pérez", "juan_perez@empresa.com", "tutor456", 2920654321L);
 
         usuarioService.registrarUsuario(tutorUNRN);
         usuarioService.registrarUsuario(tutorExterno);

@@ -47,12 +47,24 @@ public class LoginController {
 
     @GetMapping("/indexAdmin")
     public String showIndexAdminPage() {
-        return "indexAdmin";
+        // Verificar si el usuario está autenticado
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.isAuthenticated() && !auth.getName().equals("anonymousUser")) {
+            // Redirigir al dashboard del estudiante
+            return "redirect:/admin/dashboard";
+        }
+        return "redirect:/login";
     }
 
     @GetMapping("/indexTutor")
-    public String showIndexTutor() {
-        return "indexTutor";
+    public String showIndexTutorPage() {
+        // Verificar si el usuario está autenticado
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.isAuthenticated() && !auth.getName().equals("anonymousUser")) {
+            // Redirigir al dashboard del tutor
+            return "redirect:/docente_supervisor/dashboard";
+        }
+        return "redirect:/login";
     }
 
     @GetMapping("/indexEntidad")
@@ -70,11 +82,11 @@ public class LoginController {
             if ("ESTUDIANTE".equals(rol)) {
                 return "redirect:/estudiante/dashboard";
             } else if ("DOCENTE_SUPERVISOR".equals(rol)) {
-                return "redirect:/indexTutor";
+                return "redirect:/docente_supervisor";
             } else if ("TUTOR_EXTERNO".equals(rol)) {
                 return "redirect:/indexEntidad";
             } else if ("ADMIN".equals(rol)) {
-                return "redirect:/indexAdmin";
+                return "redirect:/admin/dashboard";
             }
         }
         return "redirect:/login";

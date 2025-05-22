@@ -1,7 +1,8 @@
 package ing.gpps.repository;
 
-import ing.gpps.entity.pps.Entrega;
-import ing.gpps.entity.pps.Proyecto;
+import ing.gpps.entity.institucional.Entidad;
+import ing.gpps.entity.institucional.Entrega;
+import ing.gpps.entity.institucional.Proyecto;
 import ing.gpps.entity.users.*;
 import ing.gpps.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,14 +15,16 @@ public class SetupDataBase {
     private final UsuarioService usuarioService;
     private final ProyectoRepository proyectoRepository;
     private final EntregaRepository entregaRepository;
+    private final EntidadRepository entidadRepository;
 
     @Autowired
     public SetupDataBase(UsuarioRepository usuarioRepository, UsuarioService usuarioService,
-                         ProyectoRepository proyectoRepository, EntregaRepository entregaRepository) {
+                         ProyectoRepository proyectoRepository, EntregaRepository entregaRepository, EntidadRepository entidadRepository) {
         this.usuarioRepository = usuarioRepository;
         this.usuarioService = usuarioService;
         this.proyectoRepository = proyectoRepository;
         this.entregaRepository = entregaRepository;
+        this.entidadRepository = entidadRepository;
         cargarDatos();
     }
 
@@ -47,6 +50,10 @@ public class SetupDataBase {
         usuarioService.registrarUsuario(tutorUNRN);
         usuarioService.registrarUsuario(tutorExterno);
 
+        Entidad entidad = new Entidad(12345678L, "Empresa Altec", "Viedma");
+
+        entidadRepository.save(entidad);
+
         // Crear proyectos con una descripción más corta
         Proyecto proyecto1 = new Proyecto(
                 "Desarrollo de aplicación de ventas",
@@ -56,7 +63,7 @@ public class SetupDataBase {
                 estudiante2, // Maximo Porreti
                 tutorUNRN,
                 tutorExterno,
-                "Empresa Altec"
+                entidad
         );
 
         // Agregar objetivos

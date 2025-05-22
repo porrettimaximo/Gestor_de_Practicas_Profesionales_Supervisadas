@@ -1,7 +1,7 @@
 package ing.gpps.service;
 
-import ing.gpps.entity.pps.Entrega;
-import ing.gpps.entity.pps.Proyecto;
+import ing.gpps.entity.institucional.Entrega;
+import ing.gpps.entity.institucional.Proyecto;
 import ing.gpps.repository.EntregaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

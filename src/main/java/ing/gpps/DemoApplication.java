@@ -1,10 +1,7 @@
 package ing.gpps;
 
 import ing.gpps.entity.users.Estudiante;
-import ing.gpps.repository.EntregaRepository;
-import ing.gpps.repository.ProyectoRepository;
-import ing.gpps.repository.SetupDataBase;
-import ing.gpps.repository.UsuarioRepository;
+import ing.gpps.repository.*;
 import ing.gpps.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -28,6 +25,9 @@ public class DemoApplication {
 	@Autowired
 	EntregaRepository entregaRepository;
 
+	@Autowired
+	EntidadRepository entidadRepository;
+
 	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
 
@@ -39,7 +39,7 @@ public class DemoApplication {
 		return args -> {
 			System.out.println("Los beans de la aplicación son:" + ctx.getBeanDefinitionCount());
 			System.out.println("La aplicación ha iniciado correctamente."+usuarioRepository.count());
-			SetupDataBase setupDataBase = new SetupDataBase(usuarioRepository, usuarioService, proyectoRepository, entregaRepository);
+			SetupDataBase setupDataBase = new SetupDataBase(usuarioRepository, usuarioService, proyectoRepository, entregaRepository, entidadRepository);
 			System.out.println("-------------------");
 
 		};

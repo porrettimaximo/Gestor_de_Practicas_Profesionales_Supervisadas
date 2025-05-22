@@ -1,5 +1,6 @@
-package ing.gpps.entity.pps;
+package ing.gpps.entity.institucional;
 
+import ing.gpps.entity.idClasses.ProyectoId;
 import ing.gpps.entity.users.Estudiante;
 import ing.gpps.entity.users.TutorExterno;
 import ing.gpps.entity.users.Usuario;
@@ -17,12 +18,14 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class Proyecto {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
 
-    @Column(nullable = false)
-    private String titulo;
+    @EmbeddedId
+    private ProyectoId proyectoId;
+
+    @ManyToOne
+    @MapsId("cuitEntidad")
+    @JoinColumn(name = "cuit")
+    private Entidad entidad;
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String descripcion;
@@ -32,6 +35,13 @@ public class Proyecto {
 
     @Column(name = "fecha_fin_estimada")
     private LocalDate fechaFinEstimada;
+
+    @ManyToOne
+    @JoinColumn(name = "fk_nombre_area")
+    private Area area;
+
+    @OneToOne(mappedBy = "proyecto")
+    private PlanDeTrabajo planDeTrabajo;
 
     @ManyToOne
     @JoinColumn(name = "estudiante_id")
@@ -45,9 +55,6 @@ public class Proyecto {
     @JoinColumn(name = "tutor_externo_id")
     private TutorExterno tutorExterno;
 
-    @Column(nullable = false)
-    private String entidad;
-
     @OneToMany(mappedBy = "proyecto", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Entrega> entregas = new ArrayList<>();
 
@@ -58,8 +65,7 @@ public class Proyecto {
     private int progreso;
 
     public Proyecto(String titulo, String descripcion, LocalDate fechaInicio, LocalDate fechaFinEstimada,
-                    Estudiante estudiante, Usuario tutorUNRN, TutorExterno tutorExterno, String entidad) {
-        this.titulo = titulo;
+                    Estudiante estudiante, Usuario tutorUNRN, TutorExterno tutorExterno, Entidad entidad) {
         this.descripcion = descripcion;
         this.fechaInicio = fechaInicio;
         this.fechaFinEstimada = fechaFinEstimada;
@@ -68,6 +74,7 @@ public class Proyecto {
         this.tutorExterno = tutorExterno;
         this.entidad = entidad;
         this.progreso = 0;
+        this.proyectoId = new ProyectoId(titulo, entidad.cuit());
     }
 
     public void addObjetivo(String objetivo) {
@@ -82,5 +89,18 @@ public class Proyecto {
     public void removeEntrega(Entrega entrega) {
         entregas.remove(entrega);
         entrega.setProyecto(null);
+    }
+
+    // Getters
+    public ProyectoId proyectoId() {
+        return proyectoId;
+    }
+
+    public Entidad entidad() {
+        return entidad;
+    }
+
+    public String getTitulo() {
+        return proyectoId != null ? proyectoId.titulo() : null;
     }
 }

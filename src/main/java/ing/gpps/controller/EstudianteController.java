@@ -1,9 +1,9 @@
 package ing.gpps.controller;
 
 
-import ing.gpps.entity.pps.Entrega;
+import ing.gpps.entity.institucional.Entrega;
 import ing.gpps.entity.users.Estudiante;
-import ing.gpps.entity.pps.Proyecto;
+import ing.gpps.entity.institucional.Proyecto;
 import ing.gpps.entity.users.Usuario;
 import ing.gpps.security.CustomUserDetails;
 import ing.gpps.service.EntregaService;
@@ -106,31 +106,31 @@ public class EstudianteController {
         return "redirect:/login";
     }
 
-    @GetMapping("/proyecto/{id}")
-    public String verProyecto(@PathVariable int id, Model model, Authentication authentication) {
-        if (authentication != null && authentication.isAuthenticated()) {
-            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-            Usuario usuario = userDetails.getUsuario();
-
-            if (usuario instanceof Estudiante) {
-                Estudiante estudiante = (Estudiante) usuario;
-                Optional<Proyecto> proyecto = proyectoService.buscarPorEstudianteYId(estudiante, id);
-
-                if (proyecto.isPresent()) {
-                    List<Entrega> entregas = entregaService.buscarPorProyecto(proyecto.get());
-                    List<Entrega> entregasAprobadas = entregaService.buscarAprobadasPorProyecto(proyecto.get());
-
-                    model.addAttribute("estudiante", estudiante);
-                    model.addAttribute("proyecto", proyecto.get());
-                    model.addAttribute("entregas", entregas);
-                    model.addAttribute("entregasAprobadas", entregasAprobadas);
-
-                    return "indexAlumno";
-                }
-            }
-        }
-        return "redirect:/login";
-    }
+//    @GetMapping("/proyecto/{id}")
+//    public String verProyecto(@PathVariable int id, Model model, Authentication authentication) {
+//        if (authentication != null && authentication.isAuthenticated()) {
+//            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+//            Usuario usuario = userDetails.getUsuario();
+//
+//            if (usuario instanceof Estudiante) {
+//                Estudiante estudiante = (Estudiante) usuario;
+//                Optional<Proyecto> proyecto = proyectoService.buscarPorEstudianteYId(estudiante, id);
+//
+//                if (proyecto.isPresent()) {
+//                    List<Entrega> entregas = entregaService.buscarPorProyecto(proyecto.get());
+//                    List<Entrega> entregasAprobadas = entregaService.buscarAprobadasPorProyecto(proyecto.get());
+//
+//                    model.addAttribute("estudiante", estudiante);
+//                    model.addAttribute("proyecto", proyecto.get());
+//                    model.addAttribute("entregas", entregas);
+//                    model.addAttribute("entregasAprobadas", entregasAprobadas);
+//
+//                    return "indexAlumno";
+//                }
+//            }
+//        }
+//        return "redirect:/login";
+//    }
     // Muestra solo las entregas hechas por el estudiante
     @GetMapping("/entregas/hechas")
     public String mostrarEntregasHechas(Model model, Authentication authentication) {

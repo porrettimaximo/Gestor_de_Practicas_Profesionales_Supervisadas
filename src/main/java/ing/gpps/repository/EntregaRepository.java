@@ -1,8 +1,8 @@
 package ing.gpps.repository;
 
 
-import ing.gpps.entity.pps.Entrega;
-import ing.gpps.entity.pps.Proyecto;
+import ing.gpps.entity.institucional.Entrega;
+import ing.gpps.entity.institucional.Proyecto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

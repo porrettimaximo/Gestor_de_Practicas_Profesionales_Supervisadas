@@ -1,4 +1,4 @@
-package ing.gpps.entity.pps;
+package ing.gpps.entity.institucional;
 
 
 import jakarta.persistence.*;
@@ -33,7 +33,10 @@ public class Entrega {
     private EstadoEntrega estado;
 
     @ManyToOne
-    @JoinColumn(name = "proyecto_id")
+    @JoinColumns({
+            @JoinColumn(name = "fk_titulo_proyecto", referencedColumnName = "titulo"),
+            @JoinColumn(name = "fk_cuit_entidad_proyecto", referencedColumnName = "cuit")
+    })
     private Proyecto proyecto;
 
     @Column(name = "archivo_url")

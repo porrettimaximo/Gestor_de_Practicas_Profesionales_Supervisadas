@@ -2,7 +2,7 @@ package ing.gpps.service;
 
 
 import ing.gpps.entity.users.Estudiante;
-import ing.gpps.entity.pps.Proyecto;
+import ing.gpps.entity.institucional.Proyecto;
 import ing.gpps.repository.ProyectoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,9 +28,9 @@ public class ProyectoService {
         return proyectoRepository.findByEstudiante(estudiante);
     }
 
-    public Optional<Proyecto> buscarPorEstudianteYId(Estudiante estudiante, int id) {
-        return proyectoRepository.findByEstudianteAndId(estudiante, id);
-    }
+//    public Optional<Proyecto> buscarPorEstudianteYId(Estudiante estudiante, int id) {
+//        return proyectoRepository.findByEstudianteAndId(estudiante, id);
+//    }
 
     public void actualizarProgreso(Proyecto proyecto, int progreso) {
         proyecto.setProgreso(progreso);

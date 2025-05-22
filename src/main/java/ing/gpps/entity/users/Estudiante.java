@@ -1,12 +1,14 @@
 package ing.gpps.entity.users;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
+import ing.gpps.entity.institucional.Informe;
+import ing.gpps.entity.institucional.Proyecto;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -20,6 +22,23 @@ public class Estudiante extends Usuario {
 
     @Column(name = "legajo", unique = true)
     private Long legajo;
+
+    @Column(name = "fk_id_supervisor")
+    Long fk_matricula_supervisor;
+
+    @Column(name = "fk_tutor_externo")
+    Long fk_tutor_externo;
+
+    //relationships
+    @ManyToOne
+    @JoinColumns({
+            @JoinColumn(name = "fk_titulo_proyecto", referencedColumnName = "titulo"),
+            @JoinColumn(name = "fk_cuit_entidad", referencedColumnName = "cuit")
+    })
+    private Proyecto proyecto;
+    @OneToMany(mappedBy = "estudiante", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Informe> informes;
+
 
     public Estudiante(String nombre, String apellido, String email, String password, Long dni, Long legajo, Long numTelefono) {
         super(nombre, apellido, email, password, numTelefono);

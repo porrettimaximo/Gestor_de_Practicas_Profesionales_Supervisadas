@@ -64,6 +64,10 @@ public class Proyecto {
     @Column(name = "progreso")
     private int progreso;
 
+    @Enumerated(EnumType.STRING)
+    private EstadoProyecto estado;
+
+
     public Proyecto(String titulo, String descripcion, LocalDate fechaInicio, LocalDate fechaFinEstimada,
                     Estudiante estudiante, Usuario tutorUNRN, TutorExterno tutorExterno, Entidad entidad) {
         this.descripcion = descripcion;
@@ -103,4 +107,12 @@ public class Proyecto {
     public String getTitulo() {
         return proyectoId != null ? proyectoId.titulo() : null;
     }
+
+    public enum EstadoProyecto {
+        EN_ESPERA,
+        EN_CURSO,
+        FINALIZADO
+    }
+
+
 }

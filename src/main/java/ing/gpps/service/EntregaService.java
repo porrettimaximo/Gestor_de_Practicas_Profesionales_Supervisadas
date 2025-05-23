@@ -25,17 +25,18 @@ public class EntregaService {
     }
 
     public List<Entrega> buscarPorProyecto(Proyecto proyecto) {
-        return entregaRepository.findByProyectoOrderByFechaLimiteAsc(proyecto);
+        return entregaRepository.findByPlanDeTrabajoOrderByFechaLimiteAsc(proyecto.getPlanDeTrabajo());
     }
 
     public List<Entrega> buscarEntregadasPorProyecto(Proyecto proyecto) {
-        return entregaRepository.findByProyectoAndEstadoOrderByFechaEntregaDesc(
-                proyecto, Entrega.EstadoEntrega.ENTREGADO);
+        return entregaRepository.findByPlanDeTrabajoAndEstadoOrderByFechaEntregaDesc(
+                proyecto.getPlanDeTrabajo(), Entrega.EstadoEntrega.ENTREGADO);
+
     }
 
     public List<Entrega> buscarAprobadasPorProyecto(Proyecto proyecto) {
-        return entregaRepository.findByProyectoAndEstadoOrderByFechaEntregaDesc(
-                proyecto, Entrega.EstadoEntrega.APROBADO);
+        return entregaRepository.findByPlanDeTrabajoAndEstadoOrderByFechaEntregaDesc(
+                proyecto.getPlanDeTrabajo(), Entrega.EstadoEntrega.APROBADO);
     }
 
     public void registrarEntrega(Entrega entrega, String archivoUrl, String tamanoArchivo, String comentarios) {

@@ -1,20 +1,23 @@
 package ing.gpps.entity.institucional;
 
 import ing.gpps.entity.idClasses.PlanDeTrabajoId;
-import ing.gpps.entity.users.DireccionDeCarrera;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Getter
+@Setter
 public class PlanDeTrabajo {
 
     @EmbeddedId
     private PlanDeTrabajoId planDeTrabajoId;
 
-    @ManyToOne
+    @OneToOne
     @MapsId("proyectoId")
     @JoinColumns({
             @JoinColumn(name = "titulo_proyecto", referencedColumnName = "titulo"),
@@ -28,19 +31,22 @@ public class PlanDeTrabajo {
     @Column(nullable = false)
     private LocalDate fechaFin;
 
-    @ManyToOne
-    @JoinColumn(name = "fk_id_direccion_de_carrera")
-    private DireccionDeCarrera direccionDeCarrera;
+    @OneToMany(mappedBy = "planDeTrabajo", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Actividad> actividades = new ArrayList<>();
 
     @OneToMany(mappedBy = "planDeTrabajo", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Actividad> actividades;
+    private List<Entrega> entregas = new ArrayList<>();
 
-    public PlanDeTrabajo(int numero, LocalDate inicio, LocalDate fin, DireccionDeCarrera dir, Proyecto proyecto) {
-        this.planDeTrabajoId = new PlanDeTrabajoId(numero, proyecto.proyectoId());
-        this.fechaInicio = inicio;
-        this.fechaFin = fin;
-        this.direccionDeCarrera = dir;
+    public PlanDeTrabajo(int numero, LocalDate fechaInicio, LocalDate fechaFin, Proyecto proyecto) {
+        this.planDeTrabajoId = new PlanDeTrabajoId(numero, proyecto.getProyectoId());
+        this.fechaInicio = fechaInicio;
+        this.fechaFin = fechaFin;
         this.proyecto = proyecto;
+
+        // Establecer la relación bidireccional
+        if (proyecto.getPlanDeTrabajo() != this) {
+            proyecto.setPlanDeTrabajo(this);
+        }
     }
 
     protected PlanDeTrabajo() {
@@ -49,5 +55,49 @@ public class PlanDeTrabajo {
     public PlanDeTrabajoId planDeTrabajoId() {
         return planDeTrabajoId;
     }
-}
 
+    // Métodos para manejar entregas
+    public void addEntrega(Entrega entrega) {
+        if (!entregas.contains(entrega)) {
+            entregas.add(entrega);
+            entrega.setPlanDeTrabajo(this);
+        }
+    }
+
+    public void removeEntrega(Entrega entrega) {
+        if (entregas.contains(entrega)) {
+            entregas.remove(entrega);
+            entrega.setPlanDeTrabajo(null);
+        }
+    }
+
+    public List<Entrega> getEntregas() {
+        return new ArrayList<>(entregas);
+    }
+
+    // Métodos para manejar actividades
+    public void addActividad(Actividad actividad) {
+        if (!actividades.contains(actividad)) {
+            actividades.add(actividad);
+            actividad.setPlanDeTrabajo(this);
+        }
+    }
+
+    public void removeActividad(Actividad actividad) {
+        if (actividades.contains(actividad)) {
+            actividades.remove(actividad);
+            actividad.setPlanDeTrabajo(null);
+        }
+    }
+
+    public List<Actividad> getActividades() {
+        return new ArrayList<>(actividades);
+    }
+
+    public void setProyecto(Proyecto proyecto) {
+        this.proyecto = proyecto;
+        if (proyecto != null && proyecto.getPlanDeTrabajo() != this) {
+            proyecto.setPlanDeTrabajo(this);
+        }
+    }
+}

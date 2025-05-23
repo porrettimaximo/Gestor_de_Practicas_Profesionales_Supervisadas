@@ -2,6 +2,7 @@ package ing.gpps.repository;
 
 import ing.gpps.entity.institucional.Entidad;
 import ing.gpps.entity.institucional.Entrega;
+import ing.gpps.entity.institucional.PlanDeTrabajo;
 import ing.gpps.entity.institucional.Proyecto;
 import ing.gpps.entity.users.*;
 import ing.gpps.service.UsuarioService;
@@ -16,15 +17,18 @@ public class SetupDataBase {
     private final ProyectoRepository proyectoRepository;
     private final EntregaRepository entregaRepository;
     private final EntidadRepository entidadRepository;
+    private PlanDeTrabajoRepository planDeTrabajoRepository;
 
     @Autowired
     public SetupDataBase(UsuarioRepository usuarioRepository, UsuarioService usuarioService,
-                         ProyectoRepository proyectoRepository, EntregaRepository entregaRepository, EntidadRepository entidadRepository) {
+                         ProyectoRepository proyectoRepository, EntregaRepository entregaRepository,
+                         EntidadRepository entidadRepository, PlanDeTrabajoRepository planDeTrabajoRepository) {
         this.usuarioRepository = usuarioRepository;
         this.usuarioService = usuarioService;
         this.proyectoRepository = proyectoRepository;
         this.entregaRepository = entregaRepository;
         this.entidadRepository = entidadRepository;
+        this.planDeTrabajoRepository = planDeTrabajoRepository;
         cargarDatos();
     }
 
@@ -58,8 +62,6 @@ public class SetupDataBase {
         Proyecto proyecto1 = new Proyecto(
                 "Desarrollo de aplicación de ventas",
                 "Desarrollo de una aplicación web para gestión de inventario y ventas. Incluye interfaz intuitiva para seguimiento de productos, gestión de ventas y generación de informes.",
-                LocalDate.of(2025, 3, 15),
-                LocalDate.of(2025, 6, 15),
                 estudiante2, // Maximo Porreti
                 tutorUNRN,
                 tutorExterno,
@@ -76,27 +78,37 @@ public class SetupDataBase {
         proyecto1.setProgreso(75); // Establecer progreso
         proyectoRepository.save(proyecto1);
 
+        PlanDeTrabajo planDeTrabajo = new PlanDeTrabajo(
+                1,
+                LocalDate.now(),
+                LocalDate.of(2025, 12, 1),
+                proyecto1
+        );
+
         // Crear entregas para el proyecto
         Entrega entrega1 = new Entrega(
                 "Entrega 1: Análisis de Requerimientos",
                 "Documento con el análisis detallado de los requerimientos del sistema",
                 LocalDate.of(2025, 4, 30),
-                proyecto1
+                planDeTrabajo
         );
 
         Entrega entrega2 = new Entrega(
                 "Entrega 2: Diseño de Arquitectura",
                 "Documento con el diseño de la arquitectura del sistema",
                 LocalDate.of(2025, 5, 15),
-                proyecto1
+                planDeTrabajo
         );
 
         Entrega entrega3 = new Entrega(
                 "Entrega 3: Implementación del Módulo de Ventas",
                 "Código fuente y documentación del módulo de ventas",
                 LocalDate.of(2025, 6, 1),
-                proyecto1
+                planDeTrabajo
+
         );
+
+        planDeTrabajoRepository.save(planDeTrabajo);
 
         // Guardar entregas
         entregaRepository.save(entrega1);
@@ -112,7 +124,7 @@ public class SetupDataBase {
         System.out.println("Datos cargados correctamente");
         System.out.println("Estudiante: " + estudiante2.getNombre() + " " + estudiante2.getApellido() + " con email: " + estudiante2.getEmail());
         System.out.println("Proyecto asignado: " + proyecto1.getTitulo());
-        System.out.println("entregas: " + proyecto1.getEntregas());
-        System.out.println("Número de entregas: " + proyecto1.getEntregas().size());
+        System.out.println("entregas: " + proyecto1.getPlanDeTrabajo().getEntregas());
+        System.out.println("Número de entregas: " + proyecto1.getPlanDeTrabajo().getEntregas().size());
     }
 }

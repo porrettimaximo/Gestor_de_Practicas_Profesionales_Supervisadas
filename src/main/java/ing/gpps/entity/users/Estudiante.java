@@ -29,13 +29,13 @@ public class Estudiante extends Usuario {
     @Column(name = "fk_tutor_externo")
     Long fk_tutor_externo;
 
-    //relationships
-    @ManyToOne
+    @OneToOne
     @JoinColumns({
             @JoinColumn(name = "fk_titulo_proyecto", referencedColumnName = "titulo"),
             @JoinColumn(name = "fk_cuit_entidad", referencedColumnName = "cuit")
     })
     private Proyecto proyecto;
+
     @OneToMany(mappedBy = "estudiante", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Informe> informes;
 
@@ -49,5 +49,9 @@ public class Estudiante extends Usuario {
     @Override
     public String getRol() {
         return "ESTUDIANTE";
+    }
+
+    public void asignarProyecto(Proyecto p) {
+        proyecto = p;
     }
 }

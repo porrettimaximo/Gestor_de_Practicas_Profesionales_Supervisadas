@@ -61,6 +61,7 @@ public class EstudianteController {
 
                             // Agregar todos los atributos necesarios al modelo
                             model.addAttribute("proyecto", proyectoActual);
+                            model.addAttribute("planDeTrabajo", proyectoActual.getPlanDeTrabajo());
                             model.addAttribute("entregas", entregas);
                             model.addAttribute("entregasAprobadas", entregasAprobadas);
 

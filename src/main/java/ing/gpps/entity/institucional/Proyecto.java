@@ -9,7 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,33 +29,24 @@ public class Proyecto {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String descripcion;
 
-    @Column(name = "fecha_inicio")
-    private LocalDate fechaInicio;
-
-    @Column(name = "fecha_fin_estimada")
-    private LocalDate fechaFinEstimada;
-
     @ManyToOne
     @JoinColumn(name = "fk_nombre_area")
     private Area area;
 
-    @OneToOne(mappedBy = "proyecto")
+    @OneToOne(mappedBy = "proyecto", cascade = CascadeType.ALL, orphanRemoval = true)
     private PlanDeTrabajo planDeTrabajo;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "estudiante_id")
     private Estudiante estudiante;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "tutor_unrn_id")
     private Usuario tutorUNRN;
 
     @ManyToOne
     @JoinColumn(name = "tutor_externo_id")
     private TutorExterno tutorExterno;
-
-    @OneToMany(mappedBy = "proyecto", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Entrega> entregas = new ArrayList<>();
 
     @ElementCollection
     private List<String> objetivos = new ArrayList<>();
@@ -67,35 +57,22 @@ public class Proyecto {
     @Enumerated(EnumType.STRING)
     private EstadoProyecto estado;
 
-
-    public Proyecto(String titulo, String descripcion, LocalDate fechaInicio, LocalDate fechaFinEstimada,
-                    Estudiante estudiante, Usuario tutorUNRN, TutorExterno tutorExterno, Entidad entidad) {
+    public Proyecto(String titulo, String descripcion, Estudiante estudiante,
+                    Usuario tutorUNRN, TutorExterno tutorExterno, Entidad entidad) {
         this.descripcion = descripcion;
-        this.fechaInicio = fechaInicio;
-        this.fechaFinEstimada = fechaFinEstimada;
         this.estudiante = estudiante;
         this.tutorUNRN = tutorUNRN;
         this.tutorExterno = tutorExterno;
         this.entidad = entidad;
         this.progreso = 0;
-        this.proyectoId = new ProyectoId(titulo, entidad.cuit());
+        this.proyectoId = new ProyectoId(titulo, entidad.getCuit());
+        this.estado = EstadoProyecto.EN_ESPERA;
     }
 
     public void addObjetivo(String objetivo) {
         this.objetivos.add(objetivo);
     }
 
-    public void addEntrega(Entrega entrega) {
-        entregas.add(entrega);
-        entrega.setProyecto(this);
-    }
-
-    public void removeEntrega(Entrega entrega) {
-        entregas.remove(entrega);
-        entrega.setProyecto(null);
-    }
-
-    // Getters
     public ProyectoId proyectoId() {
         return proyectoId;
     }
@@ -108,11 +85,21 @@ public class Proyecto {
         return proyectoId != null ? proyectoId.titulo() : null;
     }
 
+    public void asignarEstudiante(Estudiante e) {
+        this.estudiante = e;
+        e.setProyecto(this);
+    }
+
+    public void setPlanDeTrabajo(PlanDeTrabajo planDeTrabajo) {
+        this.planDeTrabajo = planDeTrabajo;
+        if (planDeTrabajo != null && planDeTrabajo.getProyecto() != this) {
+            planDeTrabajo.setProyecto(this);
+        }
+    }
+
     public enum EstadoProyecto {
         EN_ESPERA,
         EN_CURSO,
         FINALIZADO
     }
-
-
 }

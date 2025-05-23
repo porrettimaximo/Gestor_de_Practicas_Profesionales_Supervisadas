@@ -20,16 +20,17 @@ public class DireccionDeCarreraService {
 
     public void aprobarEstudiantePPS(Proyecto p, Estudiante e) {
 
-        p.setEstudiante(e);
-        p.setEstado(Proyecto.EstadoProyecto.EN_CURSO);
-        p.setProgreso(0);
-        p.setFechaInicio(java.time.LocalDate.now());
-        p.setFechaFinEstimada(java.time.LocalDate.now().plusMonths(6));
-
-        proyectoRepository.save(p);
-
-        // Enviar notificación al estudiante
-        generarConvenioService.generar(p, e);
+//        p.asignarEstudiante(e);
+//        e.asignarProyecto(p);
+//        p.setEstado(Proyecto.EstadoProyecto.EN_CURSO);
+//        p.setProgreso(0);
+//        p.setFechaInicio(java.time.LocalDate.now());
+//        p.setFechaFinEstimada(java.time.LocalDate.now().plusMonths(6));
+//
+//        proyectoRepository.save(p);
+//
+//        // Enviar notificación al estudiante
+//        generarConvenioService.generar(p, e);
 
 
 

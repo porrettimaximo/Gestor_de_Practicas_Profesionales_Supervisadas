@@ -9,6 +9,7 @@ import java.util.Objects;
 public class InformeId implements Serializable {
 
     @Column(nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int numero;
 
     @Column(name = "estudiante_dni", nullable = false)

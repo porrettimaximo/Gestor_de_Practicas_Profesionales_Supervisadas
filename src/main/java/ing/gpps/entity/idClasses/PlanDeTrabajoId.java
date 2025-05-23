@@ -8,7 +8,7 @@ import java.util.Objects;
 @Embeddable
 public class PlanDeTrabajoId implements Serializable {
 
-    @Column(nullable = false)
+    @Column(name = "numero")
     private int numero;
 
     @Embedded
@@ -34,8 +34,8 @@ public class PlanDeTrabajoId implements Serializable {
         return proyectoId.titulo();
     }
 
-    public String nombreEntidad() {
-        return proyectoId.titulo();
+    public Long cuitEntidad() {
+        return proyectoId.cuitEntidad();
     }
 
     @Override
@@ -49,7 +49,4 @@ public class PlanDeTrabajoId implements Serializable {
     public int hashCode() {
         return Objects.hash(numero, proyectoId);
     }
-
 }
-
-

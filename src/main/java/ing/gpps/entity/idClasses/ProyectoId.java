@@ -43,5 +43,3 @@ public class ProyectoId implements Serializable {
         return Objects.hash(titulo, cuitEntidad);
     }
 }
-
-

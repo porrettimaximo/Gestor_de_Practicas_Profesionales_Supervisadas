@@ -1,6 +1,5 @@
 package ing.gpps.entity.institucional;
 
-
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,10 +33,11 @@ public class Entrega {
 
     @ManyToOne
     @JoinColumns({
-            @JoinColumn(name = "fk_titulo_proyecto", referencedColumnName = "titulo"),
-            @JoinColumn(name = "fk_cuit_entidad_proyecto", referencedColumnName = "cuit")
+            @JoinColumn(name = "fk_numero_planDeTrabajo", referencedColumnName = "numero"),
+            @JoinColumn(name = "fk_titulo_proyecto", referencedColumnName = "titulo_proyecto"),
+            @JoinColumn(name = "fk_cuit_entidad", referencedColumnName = "cuit_entidad")
     })
-    private Proyecto proyecto;
+    private PlanDeTrabajo planDeTrabajo;
 
     @Column(name = "archivo_url")
     private String archivoUrl;
@@ -48,12 +48,16 @@ public class Entrega {
     @Column(name = "tamano_archivo")
     private String tamanoArchivo;
 
-    public Entrega(String titulo, String descripcion, LocalDate fechaLimite, Proyecto proyecto) {
+    public Entrega(String titulo, String descripcion, LocalDate fechaLimite, PlanDeTrabajo planDeTrabajo) {
         this.titulo = titulo;
         this.descripcion = descripcion;
         this.fechaLimite = fechaLimite;
-        this.proyecto = proyecto;
+        this.planDeTrabajo = planDeTrabajo;
         this.estado = EstadoEntrega.PENDIENTE;
+    }
+
+    public void setPlanDeTrabajo(PlanDeTrabajo planDeTrabajo) {
+        this.planDeTrabajo = planDeTrabajo;
     }
 
     public enum EstadoEntrega {

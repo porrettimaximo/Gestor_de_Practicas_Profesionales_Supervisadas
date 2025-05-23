@@ -8,7 +8,7 @@ import java.util.Objects;
 @Embeddable
 public class ActividadId implements Serializable {
 
-    @Column(nullable = false) //COMENTARIO PARA PROBAR
+    @Column(name = "numero")
     private int numero;
 
     @Embedded
@@ -42,4 +42,3 @@ public class ActividadId implements Serializable {
         return Objects.hash(numero, planDeTrabajoId);
     }
 }
-

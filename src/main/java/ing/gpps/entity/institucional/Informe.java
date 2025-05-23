@@ -46,5 +46,9 @@ public class Informe {
 
     protected Informe() {
     }
+
+    public void setActividad(Actividad actividad) {
+        this.actividad = actividad;
+    }
 }
 

@@ -1,14 +1,12 @@
 package ing.gpps.repository;
 
-import ing.gpps.entity.institucional.Entidad;
-import ing.gpps.entity.institucional.Entrega;
-import ing.gpps.entity.institucional.PlanDeTrabajo;
-import ing.gpps.entity.institucional.Proyecto;
+import ing.gpps.entity.institucional.*;
 import ing.gpps.entity.users.*;
 import ing.gpps.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class SetupDataBase {
 
@@ -85,26 +83,36 @@ public class SetupDataBase {
                 proyecto1
         );
 
+        Actividad actividad = new Actividad(
+                1,
+                "Análisis de Requerimientos",
+                "Realizar un análisis detallado de los requerimientos del sistema, incluyendo entrevistas con usuarios y revisión de documentación existente.",
+                true,
+                planDeTrabajo
+        );
+
+        planDeTrabajo.setActividades(List.of(actividad));
+
         // Crear entregas para el proyecto
         Entrega entrega1 = new Entrega(
                 "Entrega 1: Análisis de Requerimientos",
                 "Documento con el análisis detallado de los requerimientos del sistema",
                 LocalDate.of(2025, 4, 30),
-                planDeTrabajo
+                planDeTrabajo.getActividades().get(0)
         );
 
         Entrega entrega2 = new Entrega(
                 "Entrega 2: Diseño de Arquitectura",
                 "Documento con el diseño de la arquitectura del sistema",
                 LocalDate.of(2025, 5, 15),
-                planDeTrabajo
+                planDeTrabajo.getActividades().get(0)
         );
 
         Entrega entrega3 = new Entrega(
                 "Entrega 3: Implementación del Módulo de Ventas",
                 "Código fuente y documentación del módulo de ventas",
                 LocalDate.of(2025, 6, 1),
-                planDeTrabajo
+                planDeTrabajo.getActividades().get(0)
 
         );
 
@@ -124,7 +132,7 @@ public class SetupDataBase {
         System.out.println("Datos cargados correctamente");
         System.out.println("Estudiante: " + estudiante2.getNombre() + " " + estudiante2.getApellido() + " con email: " + estudiante2.getEmail());
         System.out.println("Proyecto asignado: " + proyecto1.getTitulo());
-        System.out.println("entregas: " + proyecto1.getPlanDeTrabajo().getEntregas());
-        System.out.println("Número de entregas: " + proyecto1.getPlanDeTrabajo().getEntregas().size());
+        System.out.println("entregas: " + proyecto1.getPlanDeTrabajo().getActividades().getFirst().getEntregas());
+        System.out.println("Número de entregas: " + proyecto1.getPlanDeTrabajo().getActividades().getFirst().getEntregas().size());
     }
 }

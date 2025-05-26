@@ -34,9 +34,6 @@ public class PlanDeTrabajo {
     @OneToMany(mappedBy = "planDeTrabajo", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Actividad> actividades = new ArrayList<>();
 
-    @OneToMany(mappedBy = "planDeTrabajo", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Entrega> entregas = new ArrayList<>();
-
     public PlanDeTrabajo(int numero, LocalDate fechaInicio, LocalDate fechaFin, Proyecto proyecto) {
         this.planDeTrabajoId = new PlanDeTrabajoId(numero, proyecto.getProyectoId());
         this.fechaInicio = fechaInicio;
@@ -56,28 +53,9 @@ public class PlanDeTrabajo {
         return planDeTrabajoId;
     }
 
-    // Métodos para manejar entregas
-    public void addEntrega(Entrega entrega) {
-        if (!entregas.contains(entrega)) {
-            entregas.add(entrega);
-            entrega.setPlanDeTrabajo(this);
-        }
-    }
-
-    public void removeEntrega(Entrega entrega) {
-        if (entregas.contains(entrega)) {
-            entregas.remove(entrega);
-            entrega.setPlanDeTrabajo(null);
-        }
-    }
-
-    public List<Entrega> getEntregas() {
-        return new ArrayList<>(entregas);
-    }
-
     // Métodos para manejar actividades
     public void addActividad(Actividad actividad) {
-        if (!actividades.contains(actividad)) {
+        if (!this.actividades.contains(actividad)) {
             actividades.add(actividad);
             actividad.setPlanDeTrabajo(this);
         }

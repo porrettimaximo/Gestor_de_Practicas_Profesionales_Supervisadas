@@ -1,6 +1,7 @@
 package ing.gpps.repository;
 
 
+import ing.gpps.entity.institucional.Actividad;
 import ing.gpps.entity.institucional.Entrega;
 import ing.gpps.entity.institucional.PlanDeTrabajo;
 import ing.gpps.entity.institucional.Proyecto;
@@ -11,7 +12,7 @@ import java.util.List;
 
 @Repository
 public interface EntregaRepository extends JpaRepository<Entrega, Integer> {
-    List<Entrega> findByPlanDeTrabajo(PlanDeTrabajo planDeTrabajo);
-    List<Entrega> findByPlanDeTrabajoOrderByFechaLimiteAsc(PlanDeTrabajo planDeTrabajo);
-    List<Entrega> findByPlanDeTrabajoAndEstadoOrderByFechaEntregaDesc(PlanDeTrabajo planDeTrabajo, Entrega.EstadoEntrega estado);
+    List<Entrega> findByActividad(Actividad actividad);
+    List<Entrega> findByActividadOrderByFechaLimiteAsc(Actividad actividad);
+    List<Entrega> findByActividadAndEstadoOrderByFechaEntregaDesc(Actividad actividad, Entrega.EstadoEntrega estado);
 }

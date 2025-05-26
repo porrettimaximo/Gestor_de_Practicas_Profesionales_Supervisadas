@@ -2,7 +2,6 @@ package ing.gpps.entity.institucional;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
@@ -10,8 +9,8 @@ import java.time.LocalDate;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 public class Entrega {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -31,13 +30,15 @@ public class Entrega {
     @Enumerated(EnumType.STRING)
     private EstadoEntrega estado;
 
+    // CAMBIO PRINCIPAL: Ahora se asocia a Actividad en lugar de PlanDeTrabajo
     @ManyToOne
     @JoinColumns({
-            @JoinColumn(name = "fk_numero_planDeTrabajo", referencedColumnName = "numero"),
-            @JoinColumn(name = "fk_titulo_proyecto", referencedColumnName = "titulo_proyecto"),
-            @JoinColumn(name = "fk_cuit_entidad", referencedColumnName = "cuit_entidad")
+            @JoinColumn(name = "fk_numero_actividad", referencedColumnName = "numero"),
+            @JoinColumn(name = "fk_numero_planDeTrabajo", referencedColumnName = "fk_numero_planDeTrabajo"),
+            @JoinColumn(name = "fk_titulo_proyecto", referencedColumnName = "fk_titulo_proyecto"),
+            @JoinColumn(name = "fk_cuit_entidad", referencedColumnName = "fk_cuit_entidad")
     })
-    private PlanDeTrabajo planDeTrabajo;
+    private Actividad actividad;
 
     @Column(name = "archivo_url")
     private String archivoUrl;
@@ -48,16 +49,24 @@ public class Entrega {
     @Column(name = "tamano_archivo")
     private String tamanoArchivo;
 
-    public Entrega(String titulo, String descripcion, LocalDate fechaLimite, PlanDeTrabajo planDeTrabajo) {
+    public Entrega(String titulo, String descripcion, LocalDate fechaLimite, Actividad actividad) {
         this.titulo = titulo;
         this.descripcion = descripcion;
         this.fechaLimite = fechaLimite;
-        this.planDeTrabajo = planDeTrabajo;
+        this.actividad = actividad;
         this.estado = EstadoEntrega.PENDIENTE;
     }
 
-    public void setPlanDeTrabajo(PlanDeTrabajo planDeTrabajo) {
-        this.planDeTrabajo = planDeTrabajo;
+    protected Entrega() {
+    }
+
+    public void setActividad(Actividad actividad) {
+        this.actividad = actividad;
+    }
+
+    // Método de conveniencia para acceder al PlanDeTrabajo a través de la actividad
+    public PlanDeTrabajo getPlanDeTrabajo() {
+        return actividad != null ? actividad.getPlanDeTrabajo() : null;
     }
 
     public enum EstadoEntrega {

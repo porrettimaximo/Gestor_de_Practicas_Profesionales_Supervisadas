@@ -1,6 +1,5 @@
 package ing.gpps.entity.institucional;
 
-import ing.gpps.entity.users.AdminEntidad;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,6 +22,12 @@ public class Entidad {
     @Column(name = "ubicacion", nullable = false)
     private String ubicacion; //TODO: MODELAR
 
+    @Column(name = "email", nullable = false)
+    private String email;
+
+    @Column(name = "tipo", nullable = false)
+    private TipoEntidad tipo;
+
     @OneToMany
     @JoinColumn(name = "fk_cuit_entidad")
     private List<Proyecto> proyectos;
@@ -32,12 +37,12 @@ public class Entidad {
 //    private List<AdminEntidad> administradores;
 
     // Constructor completo
-    public Entidad(Long cuit, String nombre, String ubicacion) {
+    public Entidad(Long cuit, String nombre, String ubicacion, String email, TipoEntidad empresa) {
         this.cuit = cuit;
         this.nombre = nombre;
         this.ubicacion = ubicacion;
-//        this.proyectos = proyectos;
-//        this.administradores = administradores;
+        this.email = email;
+        this.tipo = empresa;
     }
 
     // Getters y setters
@@ -49,3 +54,4 @@ public class Entidad {
         return cuit;
     }
 }
+

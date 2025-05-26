@@ -371,6 +371,90 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* Estilos para modales */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #002642;
+        }
+
+        .modal-header h2 {
+            color: #002642;
+            margin: 0;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .modal-body {
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #002642;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+        }
     </style>
 </head>
 <body>
@@ -636,95 +720,28 @@
                     <th>Tipo</th>
                     <th>Ubicación</th>
                     <th>Contacto</th>
-                    <th>Estado</th>
                     <th>Acciones</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>Empresa XYZ</td>
-                    <td>30-12345678-9</td>
-                    <td><span class="entity-type">Empresa</span></td>
-                    <td>Bariloche</td>
-                    <td>info@xyz.com</td>
-                    <td><span class="entity-status status-active">Activo</span></td>
+                <!-- Iterar sobre las entidades y mostrar cada una -->
+                <tr th:each="entidad : ${entidades}">
+                    <td th:text="${entidad.nombre}"></td>
+                    <td th:text="${entidad.cuit}"></td>
+                    <td>
+                        <span class="entity-type" th:text="${entidad.tipo}"></span>
+                    </td>
+                    <td th:text="${entidad.ubicacion}"></td>
+                    <td th:text="${entidad.email}"></td>
                     <td class="actions">
-                        <button class="btn small edit-entity-btn" data-id="1">
+                        <button class="btn edit-entity-btn" th:attr="data-cuit=${entidad.cuit}">
                             <i class="fas fa-edit"></i>
                         </button>
-
-                        <button class="btn small">
+                        <button class="btn delete-entity-btn" th:attr="data-cuit=${entidad.cuit}">
                             <i class="fas fa-trash-alt"></i>
                         </button>
                     </td>
-                </tr>
-                <tr>
-                    <td>Municipalidad de Río Negro</td>
-                    <td>30-98765432-1</td>
-                    <td><span class="entity-type">Institución Pública</span></td>
-                    <td>Viedma</td>
-                    <td>contacto@municipalidad.gov.ar</td>
-                    <td><span class="entity-status status-active">Activo</span></td>
-                    <td class="actions">
-                        <button class="btn small edit-entity-btn" data-id="2">
-                            <i class="fas fa-edit"></i>
-                        </button>
 
-                        <button class="btn small">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Startup ABC</td>
-                    <td>30-45678912-3</td>
-                    <td><span class="entity-type">Empresa</span></td>
-                    <td>Bariloche</td>
-                    <td>hello@abc.com</td>
-                    <td><span class="entity-status status-active">Activo</span></td>
-                    <td class="actions">
-                        <button class="btn small edit-entity-btn" data-id="3">
-                            <i class="fas fa-edit"></i>
-                        </button>
-
-                        <button class="btn small">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Fundación Educativa</td>
-                    <td>30-78912345-6</td>
-                    <td><span class="entity-type">ONG</span></td>
-                    <td>Cipolletti</td>
-                    <td>info@fundacion.org</td>
-                    <td><span class="entity-status status-inactive">Inactivo</span></td>
-                    <td class="actions">
-                        <button class="btn small edit-entity-btn" data-id="4">
-                            <i class="fas fa-edit"></i>
-                        </button>
-
-                        <button class="btn small">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Instituto Tecnológico</td>
-                    <td>30-23456789-0</td>
-                    <td><span class="entity-type">Institución Pública</span></td>
-                    <td>Bariloche</td>
-                    <td>contacto@instituto.edu.ar</td>
-                    <td><span class="entity-status status-active">Activo</span></td>
-                    <td class="actions">
-                        <button class="btn small edit-entity-btn" data-id="5">
-                            <i class="fas fa-edit"></i>
-                        </button>
-
-                        <button class="btn small">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
-                    </td>
                 </tr>
                 </tbody>
             </table>
@@ -1215,10 +1232,232 @@
         </div>
     </section>
 
-   
+    <!-- Modal Agregar Usuario -->
+    <div id="add-user-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Agregar Usuario</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="add-user-form">
+                    <div class="form-group">
+                        <label for="nombre">Nombre:</label>
+                        <input type="text" id="nombre" name="nombre" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="apellido">Apellido:</label>
+                        <input type="text" id="apellido" name="apellido" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="dni">DNI:</label>
+                        <input type="text" id="dni" name="dni" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="rol">Rol:</label>
+                        <select id="rol" name="rol" required>
+                            <option value="student">Estudiante</option>
+                            <option value="tutor">Tutor UNRN</option>
+                            <option value="external">Tutor Externo</option>
+                            <option value="admin">Administrador</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn secondary modal-close-btn">Cancelar</button>
+                <button class="btn primary" onclick="submitUserForm()">Guardar</button>
+            </div>
+        </div>
+    </div>
 
+    <!-- Modal Agregar Entidad -->
+    <div id="add-entity-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Agregar Entidad</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="add-entity-form" th:action="@{/admin/entidad/agregar}" method="post">
+                    <!-- Token CSRF obligatorio -->
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
 
+                    <div class="form-group">
+                        <label for="nombre-entidad">Nombre:</label>
+                        <input type="text" id="nombre-entidad" name="nombre" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cuit">CUIT:</label>
+                        <input type="text" id="cuit" name="cuit" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tipo-entidad">Tipo:</label>
+                        <select id="tipo-entidad" name="tipo" required>
+                            <option value="empresa">Empresa</option>
+                            <option value="institucion">Institución Pública</option>
+                            <option value="ong">ONG</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="ubicacion">Ubicación:</label>
+                        <select id="ubicacion" name="ubicacion" required>
+                            <option value="bariloche">Bariloche</option>
+                            <option value="viedma">Viedma</option>
+                            <option value="cipolletti">Cipolletti</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="contacto">Contacto:</label>
+                        <input type="email" id="contacto" name="contacto" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn secondary modal-close-btn">Cancelar</button>
+                <button type="submit" form="add-entity-form" class="btn primary">Guardar</button>
+            </div>
+        </div>
+    </div>
 
+    <!-- Modal Agregar Convenio -->
+    <div id="add-convenio-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Nuevo Convenio</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="add-convenio-form">
+                    <div class="form-group">
+                        <label for="entidad-convenio">Entidad:</label>
+                        <select id="entidad-convenio" name="entidad" required>
+                            <option value="">Seleccionar entidad...</option>
+                            <option value="xyz">Empresa XYZ</option>
+                            <option value="municipalidad">Municipalidad de Río Negro</option>
+                            <option value="abc">Startup ABC</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="fecha-inicio">Fecha Inicio:</label>
+                        <input type="date" id="fecha-inicio" name="fechaInicio" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fecha-fin">Fecha Fin:</label>
+                        <input type="date" id="fecha-fin" name="fechaFin" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="documento">Documento:</label>
+                        <input type="file" id="documento" name="documento" accept=".pdf" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn secondary modal-close-btn">Cancelar</button>
+                <button class="btn primary" onclick="submitConvenioForm()">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Agregar Proyecto -->
+    <div id="add-proyecto-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Nuevo Proyecto</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="add-proyecto-form">
+                    <div class="form-group">
+                        <label for="titulo">Título:</label>
+                        <input type="text" id="titulo" name="titulo" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="entidad-proyecto">Entidad:</label>
+                        <select id="entidad-proyecto" name="entidad" required>
+                            <option value="">Seleccionar entidad...</option>
+                            <option value="xyz">Empresa XYZ</option>
+                            <option value="municipalidad">Municipalidad de Río Negro</option>
+                            <option value="abc">Startup ABC</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="area">Área:</label>
+                        <select id="area" name="area" required>
+                            <option value="web">Desarrollo Web</option>
+                            <option value="mobile">Desarrollo Móvil</option>
+                            <option value="data">Ciencia de Datos</option>
+                            <option value="networks">Redes</option>
+                            <option value="security">Seguridad</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="descripcion">Descripción:</label>
+                        <textarea id="descripcion" name="descripcion" required></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn secondary modal-close-btn">Cancelar</button>
+                <button class="btn primary" onclick="submitProyectoForm()">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Agregar PPS -->
+    <div id="add-pps-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Nueva PPS</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="add-pps-form">
+                    <div class="form-group">
+                        <label for="entidad-pps">Entidad:</label>
+                        <select id="entidad-pps" name="entidad" required>
+                            <option value="">Seleccionar entidad...</option>
+                            <option value="xyz">Empresa XYZ</option>
+                            <option value="municipalidad">Municipalidad de Río Negro</option>
+                            <option value="abc">Startup ABC</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="estudiante">Estudiante:</label>
+                        <select id="estudiante" name="estudiante" required>
+                            <option value="">Seleccionar estudiante...</option>
+                            <option value="1">Juan Pérez</option>
+                            <option value="2">María González</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tutor-unrn">Tutor UNRN:</label>
+                        <select id="tutor-unrn" name="tutorUnrn" required>
+                            <option value="">Seleccionar tutor...</option>
+                            <option value="1">Carlos Rodríguez</option>
+                            <option value="2">Laura Martínez</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="fecha-inicio-pps">Fecha Inicio:</label>
+                        <input type="date" id="fecha-inicio-pps" name="fechaInicio" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fecha-fin-pps">Fecha Fin:</label>
+                        <input type="date" id="fecha-fin-pps" name="fechaFin" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn secondary modal-close-btn">Cancelar</button>
+                <button class="btn primary" onclick="submitPpsForm()">Guardar</button>
+            </div>
+        </div>
+    </div>
 
 </main>
 
@@ -1373,6 +1612,78 @@
             window.location.href = 'login.html';
         }
     });
+
+    // Funciones para manejar los formularios
+    function submitUserForm() {
+        const form = document.getElementById('add-user-form');
+        if (form.checkValidity()) {
+            // Aquí iría la lógica para enviar los datos al servidor
+            alert('Usuario agregado exitosamente');
+            document.getElementById('add-user-modal').style.display = 'none';
+            form.reset();
+        } else {
+            form.reportValidity();
+        }
+    }
+
+    function submitEntityForm() {
+    const form = document.getElementById('add-entity-form');
+    const formData = new FormData(form);
+
+    fetch('/admin/entidad/agregar', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        if (response.ok) {
+            // Cerrar modal y recargar página o actualizar la lista
+            document.getElementById('add-entity-modal').style.display = 'none';
+            location.reload(); // o actualizar la lista de entidades
+        } else {
+            alert('Error al guardar la entidad');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error al guardar la entidad');
+    });
+    }
+
+    function submitConvenioForm() {
+        const form = document.getElementById('add-convenio-form');
+        if (form.checkValidity()) {
+            // Aquí iría la lógica para enviar los datos al servidor
+            alert('Convenio agregado exitosamente');
+            document.getElementById('add-convenio-modal').style.display = 'none';
+            form.reset();
+        } else {
+            form.reportValidity();
+        }
+    }
+
+    function submitProyectoForm() {
+        const form = document.getElementById('add-proyecto-form');
+        if (form.checkValidity()) {
+            // Aquí iría la lógica para enviar los datos al servidor
+            alert('Proyecto agregado exitosamente');
+            document.getElementById('add-proyecto-modal').style.display = 'none';
+            form.reset();
+        } else {
+            form.reportValidity();
+        }
+    }
+
+    function submitPpsForm() {
+        const form = document.getElementById('add-pps-form');
+        if (form.checkValidity()) {
+            // Aquí iría la lógica para enviar los datos al servidor
+            alert('PPS agregada exitosamente');
+            document.getElementById('add-pps-modal').style.display = 'none';
+            form.reset();
+        } else {
+            form.reportValidity();
+        }
+    }
 </script>
 </body>
 </html>

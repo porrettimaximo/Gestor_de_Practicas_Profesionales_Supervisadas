@@ -2,6 +2,7 @@ package ing.gpps.repository;
 
 import ing.gpps.entity.institucional.*;
 import ing.gpps.entity.users.*;
+import ing.gpps.service.EntidadService;
 import ing.gpps.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -16,17 +17,19 @@ public class SetupDataBase {
     private final EntregaRepository entregaRepository;
     private final EntidadRepository entidadRepository;
     private PlanDeTrabajoRepository planDeTrabajoRepository;
+    private final EntidadService entidadService;
 
     @Autowired
     public SetupDataBase(UsuarioRepository usuarioRepository, UsuarioService usuarioService,
                          ProyectoRepository proyectoRepository, EntregaRepository entregaRepository,
-                         EntidadRepository entidadRepository, PlanDeTrabajoRepository planDeTrabajoRepository) {
+                         EntidadRepository entidadRepository, PlanDeTrabajoRepository planDeTrabajoRepository, EntidadService entidadService) {
         this.usuarioRepository = usuarioRepository;
         this.usuarioService = usuarioService;
         this.proyectoRepository = proyectoRepository;
         this.entregaRepository = entregaRepository;
         this.entidadRepository = entidadRepository;
         this.planDeTrabajoRepository = planDeTrabajoRepository;
+        this.entidadService = entidadService;
         cargarDatos();
     }
 
@@ -52,9 +55,9 @@ public class SetupDataBase {
         usuarioService.registrarUsuario(tutorUNRN);
         usuarioService.registrarUsuario(tutorExterno);
 
-        Entidad entidad = new Entidad(12345678L, "Empresa Altec", "Viedma");
+        Entidad entidad = new Entidad(12345678L, "Empresa Altec", "Viedma", "altec@unrn.com", TipoEntidad.EMPRESA);
 
-        entidadRepository.save(entidad);
+        entidadService.registrarEntidad(entidad);
 
         // Crear proyectos con una descripción más corta
         Proyecto proyecto1 = new Proyecto(
@@ -134,5 +137,8 @@ public class SetupDataBase {
         System.out.println("Proyecto asignado: " + proyecto1.getTitulo());
         System.out.println("entregas: " + proyecto1.getPlanDeTrabajo().getActividades().getFirst().getEntregas());
         System.out.println("Número de entregas: " + proyecto1.getPlanDeTrabajo().getActividades().getFirst().getEntregas().size());
+
+
+
     }
 }

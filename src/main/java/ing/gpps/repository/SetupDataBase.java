@@ -18,17 +18,20 @@ public class SetupDataBase {
     private final EntregaRepository entregaRepository;
     private final EntidadRepository entidadRepository;
     private PlanDeTrabajoRepository planDeTrabajoRepository;
+    private final NotificacionRepository notificacionRepository; //nuevo campo, a chequear
 
     @Autowired
     public SetupDataBase(UsuarioRepository usuarioRepository, UsuarioService usuarioService,
                          ProyectoRepository proyectoRepository, EntregaRepository entregaRepository,
-                         EntidadRepository entidadRepository, PlanDeTrabajoRepository planDeTrabajoRepository) {
+                         EntidadRepository entidadRepository, PlanDeTrabajoRepository planDeTrabajoRepository,
+                         NotificacionRepository notificacionRepository) {
         this.usuarioRepository = usuarioRepository;
         this.usuarioService = usuarioService;
         this.proyectoRepository = proyectoRepository;
         this.entregaRepository = entregaRepository;
         this.entidadRepository = entidadRepository;
         this.planDeTrabajoRepository = planDeTrabajoRepository;
+        this.notificacionRepository = notificacionRepository; //nuevo campo, a chequear
         cargarDatos();
     }
 
@@ -38,12 +41,15 @@ public class SetupDataBase {
         Estudiante estudiante1 = new Estudiante("Lautaro", "Salvo", "salvoschaferlautaro@gmail.com", "1234", 42658278L, 1521L, 2920219900L);
         Estudiante estudiante2 = new Estudiante("Maximo", "Porretti", "porretimaxi@gmail.com", "2345", 46456214L, 1841L, 2920223500L);
         Estudiante estudiante3 = new Estudiante("Tomas", "Acosta", "acostatomas@gmail.com", "3456", 45234765L, 4526L, 2920652378L);
+        Estudiante estudiante4 = new Estudiante("Cristian", "Millaqueo", "cristianmillaqueo.12ok@gmail.com", "9293", 436808L, 4521L, 2944929339L);
+
 
         Admin admin1 = new Admin("Admin", "Admin", "admin@gmail.com", "admin", 2920123456L);
 
         usuarioService.registrarUsuario(estudiante1);
         usuarioService.registrarUsuario(estudiante2);
         usuarioService.registrarUsuario(estudiante3);
+        usuarioService.registrarUsuario(estudiante4);
 
         usuarioService.registrarUsuario(admin1);
 

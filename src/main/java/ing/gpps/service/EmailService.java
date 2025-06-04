@@ -2,15 +2,19 @@ package ing.gpps.service;
 
 import jakarta.mail.*;
 import jakarta.mail.internet.*;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import java.util.Properties;
-
+@Service //lo registro como un bean de Spring
 public class EmailService {
 
     private final String remitente;
     private final String claveApp;
 
-    public EmailService(String remitente, String claveApp) {
+    public EmailService(
+            @Value ("${email.remitente}") String remitente,
+            @Value("${email.claveApp}") String claveApp) {
         this.remitente = remitente;
         this.claveApp = claveApp;
     }

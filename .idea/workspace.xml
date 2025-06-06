@@ -5,32 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8a4dffd5-889c-4703-adf3-92d1edf6cbdc" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/notificaciones/BaseDeNotificacionSubject.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/notificaciones/EventoNotificacion.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/notificaciones/Notificacion.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/notificaciones/NotificacionSubject.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/notificaciones/NotificacionesService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/notificaciones/TipoEvento.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/repository/NotificacionRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/ing/gpps/main/FakeObserver.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/ing/gpps/main/FakeSubject.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/ing/gpps/main/NotificarServiceTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ing/gpps/DemoApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/DemoApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ing/gpps/entity/users/DireccionDeCarrera.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/entity/users/DireccionDeCarrera.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ing/gpps/entity/users/DocenteSupervisor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/entity/users/DocenteSupervisor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ing/gpps/entity/users/Estudiante.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/entity/users/Estudiante.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ing/gpps/entity/users/Notificar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/notificaciones/Notificar.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ing/gpps/entity/users/TutorExterno.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/entity/users/TutorExterno.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ing/gpps/repository/SetupDataBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/repository/SetupDataBase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ing/gpps/service/EmailService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/service/EmailService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/DemoApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ing/gpps/DemoApplication.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/entity/users/DireccionDeCarrera.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ing/gpps/entity/users/DireccionDeCarrera.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/entity/users/DocenteSupervisor.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ing/gpps/entity/users/DocenteSupervisor.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/entity/users/Estudiante.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ing/gpps/entity/users/Estudiante.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/entity/users/Notificar.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/entity/users/TutorExterno.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ing/gpps/entity/users/TutorExterno.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/repository/SetupDataBase.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ing/gpps/repository/SetupDataBase.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/templates/indexAlumnoSinPPS.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/templates/indexAlumnoSinPPS.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

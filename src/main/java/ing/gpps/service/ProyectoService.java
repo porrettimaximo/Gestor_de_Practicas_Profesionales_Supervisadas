@@ -36,4 +36,8 @@ public class ProyectoService {
         proyecto.setProgreso(progreso);
         proyectoRepository.save(proyecto);
     }
+
+    public List<Proyecto> obtenerTodos() {
+        return proyectoRepository.findAll();
+    }
 }

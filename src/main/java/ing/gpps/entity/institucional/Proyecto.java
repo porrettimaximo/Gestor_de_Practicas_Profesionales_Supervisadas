@@ -1,6 +1,7 @@
 package ing.gpps.entity.institucional;
 
 import ing.gpps.entity.idClasses.ProyectoId;
+import ing.gpps.entity.users.DocenteSupervisor;
 import ing.gpps.entity.users.Estudiante;
 import ing.gpps.entity.users.TutorExterno;
 import ing.gpps.entity.users.Usuario;
@@ -42,7 +43,7 @@ public class Proyecto {
 
     @OneToOne
     @JoinColumn(name = "tutor_unrn_id")
-    private Usuario tutorUNRN;
+    private DocenteSupervisor tutorUNRN;
 
     @ManyToOne
     @JoinColumn(name = "tutor_externo_id")
@@ -58,7 +59,7 @@ public class Proyecto {
     private EstadoProyecto estado;
 
     public Proyecto(String titulo, String descripcion, Estudiante estudiante,
-                    Usuario tutorUNRN, TutorExterno tutorExterno, Entidad entidad) {
+                    DocenteSupervisor tutorUNRN, TutorExterno tutorExterno, Entidad entidad) {
         this.descripcion = descripcion;
         this.estudiante = estudiante;
         this.tutorUNRN = tutorUNRN;
@@ -66,7 +67,7 @@ public class Proyecto {
         this.entidad = entidad;
         this.progreso = 0;
         this.proyectoId = new ProyectoId(titulo, entidad.getCuit());
-        this.estado = EstadoProyecto.EN_ESPERA;
+        this.estado = EstadoProyecto.EN_CURSO;
     }
 
     public void addObjetivo(String objetivo) {
@@ -81,6 +82,10 @@ public class Proyecto {
         return entidad;
     }
 
+    public Area area() {
+        return area;
+    }
+
     public String getTitulo() {
         return proyectoId != null ? proyectoId.titulo() : null;
     }
@@ -88,6 +93,7 @@ public class Proyecto {
     public void asignarEstudiante(Estudiante e) {
         this.estudiante = e;
         e.setProyecto(this);
+        estado = EstadoProyecto.EN_CURSO;
     }
 
     public void setPlanDeTrabajo(PlanDeTrabajo planDeTrabajo) {

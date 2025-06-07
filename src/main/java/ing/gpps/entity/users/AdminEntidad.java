@@ -2,8 +2,11 @@ package ing.gpps.entity.users;
 
 import ing.gpps.entity.institucional.Entidad;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 @Entity
+@NoArgsConstructor
 @DiscriminatorValue("ADMIN_ENTIDAD")
 public class AdminEntidad extends Usuario {
     public AdminEntidad(String nombre, String apellido, String email, String password, Long numTelefono) {

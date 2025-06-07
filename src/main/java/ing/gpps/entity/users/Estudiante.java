@@ -46,6 +46,10 @@ public class Estudiante extends Usuario {
         this.legajo = legajo;
     }
 
+    public Estudiante(String nombre, String apellido, String email, String password, Long telefono) {
+        super(nombre, apellido, email, password, telefono);
+    }
+
     @Override
     public String getRol() {
         return "ESTUDIANTE";

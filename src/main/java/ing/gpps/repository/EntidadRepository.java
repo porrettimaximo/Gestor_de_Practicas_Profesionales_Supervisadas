@@ -8,4 +8,7 @@ import java.util.Optional;
 
 public interface EntidadRepository extends JpaRepository<Entidad, String> {
 
+    void deleteByCuit(Long cuit);
+
+    Optional<Entidad> findByCuit(Long cuit);
 }

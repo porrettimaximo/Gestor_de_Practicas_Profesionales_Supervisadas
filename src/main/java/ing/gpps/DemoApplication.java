@@ -36,6 +36,9 @@ public class DemoApplication {
 	@Autowired
 	PlanDeTrabajoRepository plandeTrabajoRepository;
 
+	@Autowired
+	private AreaRepository areaRepository;
+
 	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
 
@@ -47,7 +50,7 @@ public class DemoApplication {
 		return args -> {
 			System.out.println("Los beans de la aplicación son:" + ctx.getBeanDefinitionCount());
 			System.out.println("La aplicación ha iniciado correctamente."+usuarioRepository.count());
-			SetupDataBase setupDataBase = new SetupDataBase(usuarioRepository, usuarioService, proyectoRepository, entregaRepository, entidadRepository, plandeTrabajoRepository, entidadService);
+			SetupDataBase setupDataBase = new SetupDataBase(usuarioRepository, usuarioService, proyectoRepository, entregaRepository, entidadRepository, plandeTrabajoRepository, entidadService, areaRepository);
 			System.out.println("-------------------");
 
 		};

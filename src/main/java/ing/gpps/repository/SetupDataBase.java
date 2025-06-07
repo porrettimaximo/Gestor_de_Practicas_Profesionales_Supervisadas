@@ -18,11 +18,13 @@ public class SetupDataBase {
     private final EntidadRepository entidadRepository;
     private PlanDeTrabajoRepository planDeTrabajoRepository;
     private final EntidadService entidadService;
+    private AreaRepository areaRepository;
 
     @Autowired
     public SetupDataBase(UsuarioRepository usuarioRepository, UsuarioService usuarioService,
                          ProyectoRepository proyectoRepository, EntregaRepository entregaRepository,
-                         EntidadRepository entidadRepository, PlanDeTrabajoRepository planDeTrabajoRepository, EntidadService entidadService) {
+                         EntidadRepository entidadRepository, PlanDeTrabajoRepository planDeTrabajoRepository,
+                         EntidadService entidadService, AreaRepository areaRepository) {
         this.usuarioRepository = usuarioRepository;
         this.usuarioService = usuarioService;
         this.proyectoRepository = proyectoRepository;
@@ -30,6 +32,7 @@ public class SetupDataBase {
         this.entidadRepository = entidadRepository;
         this.planDeTrabajoRepository = planDeTrabajoRepository;
         this.entidadService = entidadService;
+        this.areaRepository = areaRepository;
         cargarDatos();
     }
 
@@ -68,6 +71,11 @@ public class SetupDataBase {
                 tutorExterno,
                 entidad
         );
+
+        Area area1 = new Area("Desarrollo de Software");
+        areaRepository.save(area1); // Guardar el área en la base de datos
+
+        proyecto1.setArea(area1);
 
         // Agregar objetivos
         proyecto1.addObjetivo("Desarrollar una interfaz de usuario intuitiva y responsive.");

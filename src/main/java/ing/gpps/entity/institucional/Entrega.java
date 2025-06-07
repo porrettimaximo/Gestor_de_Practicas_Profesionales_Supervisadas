@@ -30,7 +30,6 @@ public class Entrega {
     @Enumerated(EnumType.STRING)
     private EstadoEntrega estado;
 
-    // CAMBIO PRINCIPAL: Ahora se asocia a Actividad en lugar de PlanDeTrabajo
     @ManyToOne
     @JoinColumns({
             @JoinColumn(name = "fk_numero_actividad", referencedColumnName = "numero"),
@@ -40,14 +39,21 @@ public class Entrega {
     })
     private Actividad actividad;
 
-    @Column(name = "archivo_url")
-    private String archivoUrl;
-
     @Column(name = "comentarios")
     private String comentarios;
 
-    @Column(name = "tamano_archivo")
-    private String tamanoArchivo;
+    @Column(name = "fecha")
+    private LocalDate fecha;
+
+    @Column(name = "ruta_archivo")
+    private String rutaArchivo;
+
+    @ManyToOne
+    @JoinColumns({
+            @JoinColumn(name = "fk_titulo_proyecto", referencedColumnName = "titulo", insertable = false, updatable = false),
+            @JoinColumn(name = "fk_cuit_entidad", referencedColumnName = "cuit", insertable = false, updatable = false)
+    })
+    private Proyecto proyecto;
 
     public Entrega(String titulo, String descripcion, LocalDate fechaLimite, Actividad actividad) {
         this.titulo = titulo;
@@ -57,16 +63,28 @@ public class Entrega {
         this.estado = EstadoEntrega.PENDIENTE;
     }
 
-    protected Entrega() {
+    public Entrega() {
+        this.estado = EstadoEntrega.PENDIENTE;
     }
 
     public void setActividad(Actividad actividad) {
         this.actividad = actividad;
     }
 
-    // Método de conveniencia para acceder al PlanDeTrabajo a través de la actividad
     public PlanDeTrabajo getPlanDeTrabajo() {
         return actividad != null ? actividad.getPlanDeTrabajo() : null;
+    }
+
+    public void setFecha(LocalDate fecha) {
+        this.fecha = fecha;
+    }
+
+    public void setProyecto(Proyecto proyecto) {
+        this.proyecto = proyecto;
+    }
+
+    public void setRutaArchivo(String rutaArchivo) {
+        this.rutaArchivo = rutaArchivo;
     }
 
     public enum EstadoEntrega {

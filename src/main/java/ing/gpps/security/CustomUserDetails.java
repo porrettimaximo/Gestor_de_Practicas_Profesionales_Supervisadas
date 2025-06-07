@@ -17,7 +17,17 @@ public class CustomUserDetails implements UserDetails {
     public CustomUserDetails(Usuario usuario) {
         this.usuario = usuario;
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_" + usuario.getRol()));
+        String rol = usuario.getRol();
+        if (rol != null) {
+            // Asegurarse de que el rol tenga el prefijo ROLE_
+            if (!rol.startsWith("ROLE_")) {
+                rol = "ROLE_" + rol;
+            }
+            authorities.add(new SimpleGrantedAuthority(rol));
+        } else {
+            // Si no hay rol, asignar un rol por defecto
+            authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+        }
         this.authorities = authorities;
     }
 
@@ -32,12 +42,12 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return usuario.getPassword();
+        return usuario != null ? usuario.getPassword() : null;
     }
 
     @Override
     public String getUsername() {
-        return usuario.getEmail();
+        return usuario != null ? usuario.getEmail() : null;
     }
 
     @Override
@@ -57,6 +67,6 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return usuario != null;
     }
 }

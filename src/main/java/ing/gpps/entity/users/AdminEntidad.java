@@ -1,7 +1,10 @@
 package ing.gpps.entity.users;
 
 import ing.gpps.entity.institucional.Entidad;
-import jakarta.persistence.*;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 @DiscriminatorValue("ADMIN_ENTIDAD")

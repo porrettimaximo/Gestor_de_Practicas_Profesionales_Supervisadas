@@ -1098,3 +1098,17 @@ footer {
 .entrega-checkbox input {
   transform: scale(1.2);
 }
+
+.no-file {
+  color: #666;
+  font-style: italic;
+  font-size: 0.9em;
+}
+
+.btn i {
+  margin-right: 5px;
+}
+
+.btn.small i {
+  font-size: 0.9em;
+}

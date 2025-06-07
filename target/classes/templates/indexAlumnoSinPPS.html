@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -345,7 +345,8 @@
         <div class="sub-header">
             <div class="propuesta">
                 <span>Propuesta:</span>
-                <select id="admin-select" onchange="if(this.value==='logout'){window.location.href='login.html';}">
+                <form id="logoutForm" th:action="@{/logout}" method="post" style="display:none;"></form>
+                <select id="admin-select" onchange="if(this.value==='logout'){document.getElementById('logoutForm').submit();}">
                     <option value="admin">Estudiante</option>
                     <option value="logout">Cerrar sesión</option>
                 </select>

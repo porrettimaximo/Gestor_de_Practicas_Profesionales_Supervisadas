@@ -1,25 +1,45 @@
 package ing.gpps.controller;
 
-
-import ing.gpps.entity.institucional.Entrega;
+import ing.gpps.entity.institucional.*;
 import ing.gpps.entity.users.Estudiante;
-import ing.gpps.entity.institucional.Proyecto;
 import ing.gpps.entity.users.Usuario;
+import ing.gpps.entity.idClasses.ActividadId;
+import ing.gpps.entity.idClasses.PlanDeTrabajoId;
+import ing.gpps.entity.idClasses.ProyectoId;
 import ing.gpps.security.CustomUserDetails;
-import ing.gpps.service.EntregaService;
-import ing.gpps.service.ProyectoService;
-import ing.gpps.service.UsuarioService;
+import ing.gpps.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.Collections;
+
+import static java.lang.Integer.valueOf;
+
+import org.springframework.beans.factory.annotation.Value;
 
 @Controller
 @RequestMapping("/estudiante")
@@ -27,19 +47,38 @@ public class EstudianteController {
     private final UsuarioService usuarioService;
     private final ProyectoService proyectoService;
     private final EntregaService entregaService;
+    private final ActividadService actividadService;
+    private final InformeService informeService;
+    private final FileStorageService fileStorageService;
+    private final EstudianteService estudianteService;
+
+    private static final Logger logger = LoggerFactory.getLogger(EstudianteController.class);
+
+    @Value("${upload.path}")
+    private String uploadPath;
 
     @Autowired
-    public EstudianteController(UsuarioService usuarioService, ProyectoService proyectoService, EntregaService entregaService) {
+    public EstudianteController(UsuarioService usuarioService, 
+                              ProyectoService proyectoService, 
+                              EntregaService entregaService,
+                              ActividadService actividadService,
+                              InformeService informeService,
+                              FileStorageService fileStorageService,
+                              EstudianteService estudianteService) {
         this.usuarioService = usuarioService;
         this.proyectoService = proyectoService;
         this.entregaService = entregaService;
+        this.actividadService = actividadService;
+        this.informeService = informeService;
+        this.fileStorageService = fileStorageService;
+        this.estudianteService = estudianteService;
     }
 
-    // Modificar el método dashboard para asegurar que se están cargando correctamente los datos
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
+        Authentication authentication = null;
         try {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            authentication = SecurityContextHolder.getContext().getAuthentication();
             if (authentication != null && authentication.isAuthenticated()) {
                 Object principal = authentication.getPrincipal();
 
@@ -49,46 +88,147 @@ public class EstudianteController {
 
                     if (usuario instanceof Estudiante) {
                         Estudiante estudiante = (Estudiante) usuario;
-                        List<Proyecto> proyectos = proyectoService.buscarPorEstudiante(estudiante);
-
-                        // Agregar el estudiante al modelo siempre
                         model.addAttribute("estudiante", estudiante);
 
-                        if (!proyectos.isEmpty()) {
-                            Proyecto proyectoActual = proyectos.get(0); // Tomamos el primer proyecto
-                            List<Entrega> entregas = entregaService.buscarPorProyecto(proyectoActual);
-                            List<Entrega> entregasAprobadas = entregaService.buscarAprobadasPorProyecto(proyectoActual);
+                        List<Proyecto> proyectos = estudianteService.obtenerProyectosPorEstudiante(estudiante);
 
-                            // Agregar todos los atributos necesarios al modelo
+                        if (proyectos != null && !proyectos.isEmpty()) {
+                            Proyecto proyectoActual = proyectos.get(0);
                             model.addAttribute("proyecto", proyectoActual);
-                            model.addAttribute("planDeTrabajo", proyectoActual.getPlanDeTrabajo());
-                            model.addAttribute("entregas", entregas);
-                            model.addAttribute("entregasAprobadas", entregasAprobadas);
 
-                            System.out.println("Cargando indexAlumno para estudiante: " + estudiante.getNombre() + " " + estudiante.getApellido());
-                            System.out.println("Proyecto: " + proyectoActual.getTitulo());
-                            System.out.println("Número de entregas: " + entregas.size());
+                            // Verificar si el docente supervisor es nulo
+                            if (proyectoActual.getTutorUNRN() == null) {
+                                logger.warn("El proyecto del estudiante {} {} (ID: {}) no tiene un Docente Supervisor asignado.", 
+                                            estudiante.getNombre(), estudiante.getApellido(), estudiante.getId());
+                            }
 
-                            return "indexAlumno"; // Usa tu template existente
+                            PlanDeTrabajo planDeTrabajo = proyectoActual.getPlanDeTrabajo();
+                            if (planDeTrabajo != null) {
+                                model.addAttribute("planDeTrabajo", planDeTrabajo);
+
+                                logger.info("PlanDeTrabajo no es nulo. Intentando obtener actividades para el plan de trabajo ID: {}", planDeTrabajo.getPlanDeTrabajoId());
+                                List<Actividad> actividades = actividadService.obtenerActividadesPorPlanDeTrabajo(planDeTrabajo);
+                                logger.info("Resultado de obtenerActividadesPorPlanDeTrabajo: {}", actividades != null ? "Lista (tamaño: " + actividades.size() + ")" : "null");
+
+                                model.addAttribute("actividades", actividades != null ? actividades : Collections.emptyList());
+
+                                logger.info("Intentando obtener entregas para el proyecto ID: {}", proyectoActual.getProyectoId());
+                                List<Entrega> entregas = entregaService.buscarPorProyecto(proyectoActual);
+                                logger.info("Resultado de buscarPorProyecto (Entregas): {}", entregas != null ? "Lista (tamaño: " + entregas.size() + ")" : "null");
+
+                                model.addAttribute("entregas", entregas != null ? entregas : Collections.emptyList());
+
+                                logger.info("Intentando obtener informes para el estudiante ID: {}", estudiante.getId());
+                                List<Informe> informes = estudianteService.obtenerInformesPorEstudiante(valueOf(estudiante.getId()));
+                                logger.info("Resultado de obtenerInformesPorEstudiante: {}", informes != null ? "Lista (tamaño: " + informes.size() + ")" : "null");
+
+                                model.addAttribute("informes", informes != null ? informes : Collections.emptyList());
+
+                                logger.info("Cargando dashboard para estudiante: {} {}", estudiante.getNombre(), estudiante.getApellido());
+                                logger.info("Proyecto: {}", proyectoActual.getTitulo());
+                                logger.info("Número de actividades (final): {}", actividades != null ? actividades.size() : 0);
+                                logger.info("Número de entregas (final): {}", entregas != null ? entregas.size() : 0);
+                                logger.info("Número de informes (final): {}", informes != null ? informes.size() : 0);
+
+                                return "indexAlumno";
+                            } else {
+                                logger.warn("El proyecto del estudiante {} {} (ID: {}) no tiene un plan de trabajo asignado.", 
+                                            estudiante.getNombre(), estudiante.getApellido(), estudiante.getId());
+                                model.addAttribute("planDeTrabajo", null);
+                                model.addAttribute("actividades", Collections.emptyList());
+                                model.addAttribute("entregas", Collections.emptyList());
+                                model.addAttribute("informes", Collections.emptyList());
+                                return "indexAlumno";
+                            }
                         } else {
-                            System.out.println("El estudiante no tiene proyectos asignados: " + estudiante.getNombre() + " " + estudiante.getApellido());
-                            return "indexAlumnoSinPPS"; // Si no tiene proyectos, muestra la vista sin PPS
+                            logger.warn("El estudiante no tiene proyectos asignados: {} {}", estudiante.getNombre(), estudiante.getApellido());
+                            model.addAttribute("proyecto", null);
+                            model.addAttribute("planDeTrabajo", null);
+                            model.addAttribute("actividades", Collections.emptyList());
+                            model.addAttribute("entregas", Collections.emptyList());
+                            model.addAttribute("informes", Collections.emptyList());
+                            return "indexAlumnoSinPPS";
                         }
-                    } else {
-                        System.out.println("El usuario no es un estudiante: " + usuario.getClass().getName());
                     }
-                } else {
-                    System.out.println("El principal no es un CustomUserDetails: " + principal.getClass().getName());
                 }
-            } else {
-                System.out.println("No hay autenticación o el usuario no está autenticado");
             }
         } catch (Exception e) {
-            System.err.println("Error en dashboard: " + e.getMessage());
-            e.printStackTrace();
+            String username = (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails)
+                              ? ((CustomUserDetails) authentication.getPrincipal()).getUsername() : "Desconocido";
+            logger.error("Error en dashboard para estudiante {}: {}", username, e.getMessage(), e);
         }
-
         return "redirect:/login";
+    }
+
+    @PostMapping("/entregas/crear")
+    @ResponseBody
+    public String crearEntrega(@RequestBody Entrega entrega) {
+        Authentication authentication = null;
+        try {
+            authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication != null && authentication.isAuthenticated()) {
+                CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+                Usuario usuario = userDetails.getUsuario();
+
+                if (usuario instanceof Estudiante) {
+                    Estudiante estudiante = (Estudiante) usuario;
+                    entrega.setFecha(LocalDate.now());
+                    entrega.setEstado(Entrega.EstadoEntrega.PENDIENTE);
+                    entregaService.crearEntrega(entrega);
+                    return "success";
+                }
+            }
+            return "error";
+        } catch (Exception e) {
+            String username = (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails)
+                             ? ((CustomUserDetails) authentication.getPrincipal()).getUsername() : "Desconocido";
+            logger.error("Error al crear entrega para usuario {}: {}", username, e.getMessage());
+            return "error";
+        }
+    }
+
+    @PostMapping("/crearInforme")
+    @Transactional
+    public String crearInforme(@RequestParam("numero") int numero,
+                              @RequestParam("titulo") String titulo,
+                              @RequestParam("ruta") String ruta,
+                              @RequestParam("actividadNumero") int actividadNumero,
+                              @RequestParam("planNumero") int planNumero,
+                              @RequestParam("proyectoTitulo") String proyectoTitulo,
+                              @RequestParam("proyectoCuit") Long proyectoCuit,
+                              Authentication authentication) {
+        try {
+            if (authentication == null || !(authentication.getPrincipal() instanceof Usuario)) {
+                return "redirect:/login";
+            }
+
+            Usuario usuario = (Usuario) authentication.getPrincipal();
+            if (!(usuario instanceof Estudiante)) {
+                return "redirect:/login";
+            }
+
+            Estudiante estudiante = (Estudiante) usuario;
+
+            ProyectoId proyectoId = new ProyectoId(proyectoTitulo, proyectoCuit);
+            PlanDeTrabajoId planDeTrabajoId = new PlanDeTrabajoId(planNumero, proyectoId);
+            ActividadId actividadId = new ActividadId(actividadNumero, planDeTrabajoId);
+
+            Optional<Actividad> actividadOpt = actividadService.obtenerActividadPorId(actividadId);
+            if (!actividadOpt.isPresent()) {
+                return "redirect:/estudiante/dashboard?error=actividad_no_encontrada";
+            }
+
+            Actividad actividad = actividadOpt.get();
+            if (!actividad.getPlanDeTrabajo().getProyecto().equals(estudiante.getProyecto())) {
+                return "redirect:/estudiante/dashboard?error=proyecto_no_coincide";
+            }
+
+            Informe informe = informeService.crearInforme(numero, titulo, ruta, estudiante, actividad);
+            return "redirect:/estudiante/dashboard?success=informe_creado";
+        } catch (Exception e) {
+            logger.error("Error al crear informe: {}", e.getMessage());
+            return "redirect:/estudiante/dashboard?error=error_crear_informe";
+        }
     }
 
     @GetMapping("/sin-pps")
@@ -96,7 +236,7 @@ public class EstudianteController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated()) {
             CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-            ing.gpps.entity.users.Usuario usuario = userDetails.getUsuario();
+            Usuario usuario = userDetails.getUsuario();
 
             if (usuario instanceof Estudiante) {
                 Estudiante estudiante = (Estudiante) usuario;
@@ -107,46 +247,191 @@ public class EstudianteController {
         return "redirect:/login";
     }
 
-//    @GetMapping("/proyecto/{id}")
-//    public String verProyecto(@PathVariable int id, Model model, Authentication authentication) {
-//        if (authentication != null && authentication.isAuthenticated()) {
-//            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-//            Usuario usuario = userDetails.getUsuario();
-//
-//            if (usuario instanceof Estudiante) {
-//                Estudiante estudiante = (Estudiante) usuario;
-//                Optional<Proyecto> proyecto = proyectoService.buscarPorEstudianteYId(estudiante, id);
-//
-//                if (proyecto.isPresent()) {
-//                    List<Entrega> entregas = entregaService.buscarPorProyecto(proyecto.get());
-//                    List<Entrega> entregasAprobadas = entregaService.buscarAprobadasPorProyecto(proyecto.get());
-//
-//                    model.addAttribute("estudiante", estudiante);
-//                    model.addAttribute("proyecto", proyecto.get());
-//                    model.addAttribute("entregas", entregas);
-//                    model.addAttribute("entregasAprobadas", entregasAprobadas);
-//
-//                    return "indexAlumno";
-//                }
-//            }
-//        }
-//        return "redirect:/login";
-//    }
-    // Muestra solo las entregas hechas por el estudiante
     @GetMapping("/entregas/hechas")
     public String mostrarEntregasHechas(Model model, Authentication authentication) {
-        Optional<Usuario> estudiante = usuarioService.buscarPorEmail(authentication.getName());
-        Optional<Entrega> entregasHechas = entregaService.buscarPorId(estudiante.get().getId());
-        model.addAttribute("entregas", entregasHechas);
-        return "entregasHechas"; // nombre de la vista (ej: entregasHechas.html)
-    }
-    // Muestra todas las entregas del estudiante
-    @GetMapping("/entregas")
-    public String mostrarEntregas(Model model, Authentication authentication) {
-        Optional<Usuario> estudiante = usuarioService.buscarPorEmail(authentication.getName());
-        Optional<Entrega> todasEntregas = entregaService.buscarPorId(estudiante.get().getId());
-        model.addAttribute("entregas", todasEntregas);
-        return "entregas"; // nombre de la vista (ej: entregas.html)
+        try {
+            Optional<Usuario> usuarioOpt = usuarioService.buscarPorEmail(authentication.getName());
+            if (usuarioOpt.isPresent() && usuarioOpt.get() instanceof Estudiante) {
+                Estudiante estudiante = (Estudiante) usuarioOpt.get();
+                
+                Proyecto proyecto = estudiante.getProyecto();
+                if (proyecto != null) {
+                    List<Entrega> entregas = entregaService.buscarPorProyecto(proyecto);
+                     model.addAttribute("entregas", entregas != null ? entregas : Collections.emptyList());
+                } else {
+                    logger.warn("Estudiante {} {} no tiene proyecto asignado para mostrar entregas hechas.", 
+                                estudiante.getNombre(), estudiante.getApellido());
+                    model.addAttribute("entregas", Collections.emptyList());
+                }
+               
+                return "entregasHechas";
+            }
+            logger.warn("Usuario no autenticado o no es Estudiante en mostrarEntregasHechas");
+            return "redirect:/login";
+        } catch (Exception e) {
+             String username = (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails)
+                              ? ((CustomUserDetails) authentication.getPrincipal()).getUsername() : "Desconocido";
+            logger.error("Error al mostrar entregas hechas para usuario {}: {}",
+                        username, e.getMessage(), e);
+            return "redirect:/error";
+        }
     }
 
+    @GetMapping("/entregas")
+    public String mostrarEntregas(Model model, Authentication authentication) {
+        try {
+            Optional<Usuario> usuarioOpt = usuarioService.buscarPorEmail(authentication.getName());
+            if (usuarioOpt.isPresent() && usuarioOpt.get() instanceof Estudiante) {
+                Estudiante estudiante = (Estudiante) usuarioOpt.get();
+                
+                Proyecto proyecto = estudiante.getProyecto();
+                 if (proyecto != null) {
+                    List<Entrega> entregas = entregaService.buscarPorProyecto(proyecto);
+                     model.addAttribute("entregas", entregas != null ? entregas : Collections.emptyList());
+                } else {
+                     logger.warn("Estudiante {} {} no tiene proyecto asignado para mostrar entregas.", 
+                                estudiante.getNombre(), estudiante.getApellido());
+                     model.addAttribute("entregas", Collections.emptyList());
+                }
+
+                return "entregas";
+            }
+            logger.warn("Usuario no autenticado o no es Estudiante en mostrarEntregas");
+            return "redirect:/login";
+        } catch (Exception e) {
+             String username = (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails)
+                              ? ((CustomUserDetails) authentication.getPrincipal()).getUsername() : "Desconocido";
+            logger.error("Error al mostrar entregas para usuario {}: {}",
+                        username, e.getMessage(), e);
+            return "redirect:/error";
+        }
+    }
+
+    @PostMapping("/subirEntrega")
+    @ResponseBody
+    @Transactional
+    public String subirEntrega(@RequestParam("titulo") String titulo,
+                              @RequestParam("descripcion") String descripcion,
+                              @RequestParam("archivo") MultipartFile archivo,
+                              @RequestParam("actividadId") int actividadId,
+                              Authentication authentication) {
+        try {
+            logger.info("Iniciando proceso de subida de entrega para actividad ID: {}", actividadId);
+            
+            // Obtener el estudiante actual
+            Optional<Estudiante> estudianteOpt = estudianteService.buscarPorEmail(authentication.getName());
+            if (estudianteOpt.isEmpty()) {
+                logger.error("No se encontró el estudiante con email: {}", authentication.getName());
+                return "error: No se encontró el estudiante";
+            }
+
+            Estudiante estudiante = estudianteOpt.get();
+            logger.info("Estudiante encontrado por email en subirEntrega: {} {}, ID: {}", estudiante.getNombre(), estudiante.getApellido(), estudiante.getId());
+
+            // Verificar si el estudiante tiene un proyecto asignado
+            Proyecto proyecto = estudiante.getProyecto();
+            if (proyecto == null) {
+                logger.error("El estudiante {} (ID: {}) no tiene un proyecto asignado DESPUÉS DE RECUPERARLO DEL SERVICIO.", estudiante.getNombre(), estudiante.getId());
+                List<Proyecto> proyectosAlternativos = estudianteService.obtenerProyectosPorEstudiante(estudiante);
+                if (proyectosAlternativos != null && !proyectosAlternativos.isEmpty()) {
+                    logger.warn("Sin embargo, se encontraron {} proyectos asociados a este estudiante a través de obtenerProyectosPorEstudiante. El primero es: {}", proyectosAlternativos.size(), proyectosAlternativos.get(0).getProyectoId().titulo());
+                } else {
+                    logger.warn("Y tampoco se encontraron proyectos asociados a este estudiante a través de obtenerProyectosPorEstudiante.");
+                }
+                return "error: No tienes un proyecto asignado";
+            }
+
+            logger.info("Proyecto asignado al estudiante en subirEntrega: {}", proyecto.getProyectoId().titulo());
+
+            // Obtener el plan de trabajo del proyecto
+            PlanDeTrabajo planDeTrabajo = proyecto.getPlanDeTrabajo();
+            if (planDeTrabajo == null) {
+                logger.error("No se encontró el plan de trabajo para el proyecto: {}", proyecto.getProyectoId().titulo());
+                return "error: No se encontró el plan de trabajo del proyecto";
+            }
+
+            logger.info("Plan de trabajo encontrado con ID: {}", planDeTrabajo.getPlanDeTrabajoId());
+
+            // Obtener la actividad
+            ActividadId actividadIdObj = new ActividadId(
+                actividadId,
+                planDeTrabajo.getPlanDeTrabajoId()
+            );
+            Optional<Actividad> actividadOpt = actividadService.obtenerActividadPorId(actividadIdObj);
+            
+            if (actividadOpt.isEmpty()) {
+                logger.error("No se encontró la actividad con ID: {}", actividadId);
+                return "error: No se encontró la actividad";
+            }
+
+            Actividad actividad = actividadOpt.get();
+            logger.info("Actividad encontrada: {}", actividad.getNombre());
+
+            // Verificar que la actividad pertenece al proyecto del estudiante
+            if (!actividad.getPlanDeTrabajo().getProyecto().getProyectoId().equals(proyecto.getProyectoId())) {
+                logger.error("La actividad {} no pertenece al proyecto del estudiante", actividad.getNombre());
+                return "error: La actividad no pertenece a tu proyecto";
+            }
+
+            // Guardar el archivo
+            String subDirectory = proyecto.getProyectoId().titulo() + "/entregas";
+            String rutaArchivo = fileStorageService.storeFile(archivo, subDirectory);
+            if (rutaArchivo == null) {
+                logger.error("Error al guardar el archivo para la actividad: {}", actividad.getNombre());
+                return "error: Error al guardar el archivo";
+            }
+
+            logger.info("Archivo guardado en: {}", rutaArchivo);
+
+            // Crear la entrega
+            Entrega entrega = new Entrega();
+            entrega.setTitulo(titulo);
+            entrega.setDescripcion(descripcion);
+            entrega.setRutaArchivo(rutaArchivo);
+            entrega.setFechaEntrega(LocalDate.now());
+            entrega.setEstado(Entrega.EstadoEntrega.ENTREGADO);
+            entrega.setActividad(actividad);
+            entrega.setFechaLimite(actividad.getFechaLimite());
+
+            // Guardar la entrega
+            entregaService.crearEntrega(entrega);
+            logger.info("Entrega creada exitosamente para la actividad: {}", actividad.getNombre());
+
+            return "success";
+
+        } catch (Exception e) {
+            logger.error("Error al subir la entrega: " + e.getMessage(), e);
+            return "error: " + e.getMessage();
+        }
+    }
+
+    @GetMapping("/descargarEntrega/{id}")
+    public ResponseEntity<Resource> descargarEntrega(@PathVariable int id) {
+        try {
+            Entrega entrega = entregaService.findById((long) id);
+            if (entrega == null || entrega.getRutaArchivo() == null) {
+                return ResponseEntity.notFound().build();
+            }
+
+            Path filePath = Paths.get(uploadPath, entrega.getRutaArchivo());
+            Resource resource = new FileSystemResource(filePath.toFile());
+
+            if (!resource.exists()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            String contentType = Files.probeContentType(filePath);
+            if (contentType == null) {
+                contentType = "application/octet-stream";
+            }
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(contentType))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                    .body(resource);
+        } catch (Exception e) {
+            logger.error("Error al descargar el archivo de la entrega {}: {}", id, e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }

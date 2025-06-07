@@ -3,10 +3,14 @@ package ing.gpps.entity.institucional;
 import ing.gpps.entity.idClasses.InformeId;
 import ing.gpps.entity.users.Estudiante;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
 @Entity
+@Getter
+@Setter
 public class Informe {
 
     @EmbeddedId
@@ -36,7 +40,12 @@ public class Informe {
     private String ruta; // enlace de Drive
 
     public Informe(int numero, LocalDate fecha, String titulo, String ruta, Estudiante estudiante, Actividad actividad) {
-        this.id = new InformeId(numero, estudiante.getDni());
+        if (estudiante == null || estudiante.getDni() == null) {
+            throw new IllegalArgumentException("El estudiante y su DNI no pueden ser nulos");
+        }
+        this.id = new InformeId();
+        this.id.setNumero(numero);
+        this.id.setEstudianteDni(estudiante.getDni().intValue());
         this.fecha = fecha;
         this.titulo = titulo;
         this.ruta = ruta;

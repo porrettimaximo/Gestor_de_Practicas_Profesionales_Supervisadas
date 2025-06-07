@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Docente Supervisor - GPPS UNRN</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+
+        header, footer {
+            background-color: #002642;
+            color: white;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo-container {
+            padding: 5px 0;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-name {
+            color: white;
+            font-weight: bold;
+            font-family: Arial, sans-serif;
+        }
+
+        .sub-header {
+            background-color: #001a33;
+            padding: 10px 20px;
+            border-bottom: 1px solid #004672;
+            color: white;
+        }
+
+        .propuesta {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .propuesta select {
+            padding: 5px 10px;
+            border: 1px solid #004672;
+            border-radius: 4px;
+            background-color: #002642;
+            color: white;
+        }
+
+        nav {
+            background-color: #003a63;
+            border-bottom: 1px solid #004672;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .main-menu {
+            list-style: none;
+            display: flex;
+            gap: 30px;
+            padding: 0;
+            margin: 0;
+        }
+
+        .main-menu li a {
+            display: block;
+            padding: 15px 25px;
+            color: white;
+            text-decoration: none;
+            transition: background-color 0.3s;
+            font-size: 16px;
+            font-weight: 500;
+            text-align: center;
+            border-radius: 4px;
+        }
+
+        .main-menu li a:hover {
+            background-color: #003152;
+        }
+
+        .profile-menu {
+            padding: 15px 20px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-left: auto;
+        }
+
+        .profile-menu span {
+            font-weight: 500;
+        }
+
+        .icon-separator {
+            width: 1px;
+            height: 20px;
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        section {
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #002642;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #002642;
+            font-size: 1.5em;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            color: #002642;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .btn {
+            background-color: #002642;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #004d8c;
+        }
+
+        .btn.small {
+            padding: 6px 12px;
+            font-size: 0.9em;
+        }
+
+        .entrega-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .status-submitted { background-color: #e3f2fd; color: #1976d2; }
+        .status-approved { background-color: #e8f5e9; color: #2e7d32; }
+        .status-rejected { background-color: #ffebee; color: #c62828; }
+        .status-pending  { background-color: #fff3e0; color: #ef6c00; }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="logo-container">
+                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-So2CHeud6JF1xVNp1LlSIuwt3sgVUg.png" width=70 alt="Logo UNRN">
+                <img src="https://lh3.googleusercontent.com/a-/ALV-UjVX7tQfNfC44NY6OR_Fwc7MJze4ucpzRbw1lXa0yPCWLi6cuJkC=s129-p-k-rw-no" width=100 alt="Logo LIA">
+            </div>
+            <div class="user-info">
+                <div class="user-dropdown">
+                    <span class="user-name" th:text="${tutor.nombre + ' ' + tutor.apellido + ' 👨‍🏫'}">Nombre Docente 👨‍🏫</span>
+                </div>
+            </div>
+        </div>
+        <div class="sub-header">
+            <div class="propuesta">
+                <span>Propuesta:</span>
+                <form id="logoutForm" th:action="@{/logout}" method="post" style="display:none;"></form>
+                <select id="admin-select" onchange="if(this.value==='logout'){document.getElementById('logoutForm').submit();}" aria-label="Opciones de usuario">
+                    <option value="admin">Docente Supervisor</option>
+                    <option value="logout">Cerrar sesión</option>
+                </select>
+            </div>
+        </div>
+    </header>
+
+    <nav>
+        <div class="nav-container">
+            <ul class="main-menu">
+                <li><a href="#proyectos">Proyectos Activos</a></li>
+                <li><a href="#estudiantes">Estudiantes Asignados</a></li>
+            </ul>
+            <div class="profile-menu">
+                <span>Perfil: Docente Supervisor</span>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <section id="proyectos">
+            <h2>Proyectos Activos</h2>
+         
+            <table>
+                <thead>
+                    <tr>
+                        <th>Título</th>
+                        <th>Estudiante</th>
+                        <th>Entidad</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="proyecto : ${proyectos}">
+                        <td th:text="${proyecto.titulo}">Título del Proyecto</td>
+                        <td th:text="${proyecto.estudiante.nombre + ' ' + proyecto.estudiante.apellido}">Nombre Estudiante</td>
+                        <td th:text="${proyecto.entidad.nombre}">Nombre Entidad</td>
+                        <td>
+                            <span class="entrega-status" th:classappend="${proyecto.estado == 'ACTIVO' ? 'status-approved' : 'status-pending'}"
+                                  th:text="${proyecto.estado}">Estado</span>
+                        </td>
+                        <td>
+                            <a th:href="@{/docente-supervisor/proyecto/{cuit}/{titulo}(cuit=${proyecto.proyectoId.cuitEntidad},titulo=${proyecto.proyectoId.titulo})}" 
+                               class="btn small">
+                                <i class="fas fa-eye"></i> Ver
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="estudiantes">
+            <h2>Estudiantes Asignados</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>DNI</th>
+                        <th>Legajo</th>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Email</th>
+                        <th>Teléfono</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="proyecto : ${proyectos}" th:if="${proyecto.estudiante != null}">
+                        <td th:text="${proyecto.estudiante.dni}">DNI</td>
+                        <td th:text="${proyecto.estudiante.legajo}">Legajo</td>
+                        <td th:text="${proyecto.estudiante.nombre}">Nombre</td>
+                        <td th:text="${proyecto.estudiante.apellido}">Apellido</td>
+                        <td th:text="${proyecto.estudiante.email}">Email</td>
+                        <td th:text="${proyecto.estudiante.numTelefono}">Teléfono</td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(proyectos)}">
+                        <td colspan="6" style="text-align:center;">No hay estudiantes asignados.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2025 Universidad Nacional de Río Negro - GPPS</p>
+        </div>
+    </footer>
+</body>
+</html>

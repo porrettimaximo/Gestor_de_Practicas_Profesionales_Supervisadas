@@ -1,6 +1,7 @@
 package ing.gpps.entity.institucional;
 
 import ing.gpps.entity.idClasses.PlanDeTrabajoId;
+import ing.gpps.entity.users.Usuario;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -33,6 +34,10 @@ public class PlanDeTrabajo {
 
     @OneToMany(mappedBy = "planDeTrabajo", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Actividad> actividades = new ArrayList<>();
+
+    @OneToOne
+    @JoinColumn(name = "tutor_unrn_id")
+    private Usuario tutorUNRN;
 
     public PlanDeTrabajo(int numero, LocalDate fechaInicio, LocalDate fechaFin, Proyecto proyecto) {
         this.planDeTrabajoId = new PlanDeTrabajoId(numero, proyecto.getProyectoId());

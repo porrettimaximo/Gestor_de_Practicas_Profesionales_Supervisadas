@@ -33,22 +33,33 @@ public class Actividad {
     @Column(columnDefinition = "TEXT")
     private String descripcion;
 
-    @Column(nullable = false)
-    private boolean adjuntaArchivo;
+    @Column
+    private int horas;
+
+    @Column(name = "fecha_limite")
+    private LocalDate fechaLimite;
+
+    @Enumerated(EnumType.STRING)
+    private EstadoActividad estado;
+
+    @Column(columnDefinition = "TEXT")
+    private String comentarios;
+
+    @Column(name = "ruta_archivo")
+    private String rutaArchivo;
 
     @OneToMany(mappedBy = "actividad", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Informe> informes = new ArrayList<>();
 
-    // NUEVA RELACIÓN: Actividad puede tener múltiples entregas
     @OneToMany(mappedBy = "actividad", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Entrega> entregas = new ArrayList<>();
 
-    public Actividad(int numero, String nombre, String descripcion, boolean adjuntaArchivo, PlanDeTrabajo planDeTrabajo) {
+    public Actividad(int numero, String nombre, String descripcion, PlanDeTrabajo planDeTrabajo) {
         this.actividadId = new ActividadId(numero, planDeTrabajo.planDeTrabajoId());
         this.nombre = nombre;
         this.descripcion = descripcion;
-        this.adjuntaArchivo = adjuntaArchivo;
         this.planDeTrabajo = planDeTrabajo;
+        this.estado = EstadoActividad.EN_REVISION;
     }
 
     protected Actividad() {
@@ -62,16 +73,15 @@ public class Actividad {
         this.planDeTrabajo = planDeTrabajo;
     }
 
-    // Métodos para manejar informes (mantienen la lógica existente)
     public void addInforme(Informe informe) {
-        if (!informes.contains(informe)) {
+        if (informe != null) {
             informes.add(informe);
             informe.setActividad(this);
         }
     }
 
     public void removeInforme(Informe informe) {
-        if (informes.contains(informe)) {
+        if (informe != null) {
             informes.remove(informe);
             informe.setActividad(null);
         }
@@ -81,7 +91,6 @@ public class Actividad {
         return new ArrayList<>(informes);
     }
 
-    // NUEVOS MÉTODOS para manejar entregas
     public void addEntrega(Entrega entrega) {
         if (!entregas.contains(entrega)) {
             entregas.add(entrega);
@@ -100,19 +109,24 @@ public class Actividad {
         return new ArrayList<>(entregas);
     }
 
-    // Método de conveniencia para obtener todas las entregas pendientes
     public List<Entrega> getEntregasPendientes() {
         return entregas.stream()
                 .filter(entrega -> entrega.getEstado() == Entrega.EstadoEntrega.PENDIENTE)
                 .collect(Collectors.toList());
     }
 
-    // Método de conveniencia para verificar si la actividad tiene entregas vencidas
     public boolean tieneEntregasVencidas() {
         LocalDate hoy = LocalDate.now();
         return entregas.stream()
                 .anyMatch(entrega -> entrega.getFechaLimite() != null &&
                         entrega.getFechaLimite().isBefore(hoy) &&
                         entrega.getEstado() == Entrega.EstadoEntrega.PENDIENTE);
+    }
+
+    public enum EstadoActividad {
+        EN_REVISION,
+        EN_CURSO,
+        COMPLETADA,
+        RECHAZADA
     }
 }

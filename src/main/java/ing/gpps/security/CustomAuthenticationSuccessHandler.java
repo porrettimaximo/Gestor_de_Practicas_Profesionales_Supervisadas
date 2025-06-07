@@ -1,64 +1,53 @@
 package ing.gpps.security;
 
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-
-import java.io.IOException;
-import java.util.Collection;
-
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.stereotype.Component;
-
+import ing.gpps.entity.users.Admin;
+import ing.gpps.entity.users.DocenteSupervisor;
+import ing.gpps.entity.users.Estudiante;
+import ing.gpps.entity.users.TutorExterno;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.stereotype.Component;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import ing.gpps.entity.users.Usuario;
+import java.io.IOException;
 
 @Component
-public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
+public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
+    private static final Logger logger = LoggerFactory.getLogger(CustomAuthenticationSuccessHandler.class);
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-                                        Authentication authentication) throws IOException, ServletException {
-
-        // Verificar si el principal es un CustomUserDetails
-        if (authentication.getPrincipal() instanceof CustomUserDetails) {
-            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-            Usuario usuario = userDetails.getUsuario();
-
-            // Redirigir según el rol del usuario
-            if ("ESTUDIANTE".equals(usuario.getRol())) {
-                response.sendRedirect("/estudiante/dashboard");
-            } else if ("DOCENTE_SUPERVISOR".equals(usuario.getRol())) {
-                response.sendRedirect("/indexTutor");
-            } else if ("TUTOR_EXTERNO".equals(usuario.getRol())) {
-                response.sendRedirect("/indexEntidad");
-            } else if ("ADMIN".equals(usuario.getRol())) {
-                response.sendRedirect("/indexAdmin");
+                                      Authentication authentication) throws IOException, ServletException {
+        try {
+            if (authentication != null && authentication.getPrincipal() instanceof CustomUserDetails) {
+                CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+                String targetUrl = determineTargetUrl(userDetails);
+                logger.info("Redirigiendo usuario {} a {}", userDetails.getUsername(), targetUrl);
+                getRedirectStrategy().sendRedirect(request, response, targetUrl);
             } else {
-                response.sendRedirect("/login");
+                logger.warn("Autenticación exitosa pero sin detalles de usuario válidos");
+                super.onAuthenticationSuccess(request, response, authentication);
             }
-        } else {
-            // Fallback al comportamiento anterior basado en autoridades
-            Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-
-            if (hasRole(authorities, "ESTUDIANTE")) {
-                response.sendRedirect("/estudiante/dashboard");
-            } else if (hasRole(authorities, "DOCENTE_SUPERVISOR")) {
-                response.sendRedirect("/indexTutor");
-            } else if (hasRole(authorities, "TUTOR_EXTERNO")) {
-                response.sendRedirect("/indexEntidad");
-            } else if (hasRole(authorities, "ADMIN")) {
-                response.sendRedirect("/indexAdmin");
-            } else {
-                response.sendRedirect("/login");
-            }
+        } catch (Exception e) {
+            logger.error("Error al manejar autenticación exitosa: {}", e.getMessage());
+            super.onAuthenticationSuccess(request, response, authentication);
         }
     }
 
-    private boolean hasRole(Collection<? extends GrantedAuthority> authorities, String role) {
-        return authorities.stream()
-                .anyMatch(authority -> authority.getAuthority().equals("ROLE_" + role));
+    private String determineTargetUrl(CustomUserDetails userDetails) {
+        if (userDetails.getUsuario() instanceof Estudiante) {
+            return "/estudiante/dashboard";
+        } else if (userDetails.getUsuario() instanceof DocenteSupervisor) {
+            return "/docente-supervisor/dashboard";
+        } else if (userDetails.getUsuario() instanceof TutorExterno) {
+            return "/tutor-externo/dashboard";
+        } else if (userDetails.getUsuario() instanceof Admin) {
+            return "/admin/dashboard";
+        }
+        return "/login";
     }
 }

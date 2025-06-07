@@ -3,7 +3,6 @@ package ing.gpps.entity.users;
 import ing.gpps.entity.institucional.Informe;
 import ing.gpps.entity.institucional.Proyecto;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -52,6 +51,15 @@ public class Estudiante extends Usuario {
     }
 
     public void asignarProyecto(Proyecto p) {
-        proyecto = p;
+        if (this.proyecto != p) {
+            this.proyecto = p;
+            if (p != null) {
+                p.setEstudiante(this);
+            }
+        }
+    }
+
+    public Long getDni() {
+        return this.dni;
     }
 }

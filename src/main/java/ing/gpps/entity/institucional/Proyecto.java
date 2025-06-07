@@ -36,11 +36,10 @@ public class Proyecto {
     @OneToOne(mappedBy = "proyecto", cascade = CascadeType.ALL, orphanRemoval = true)
     private PlanDeTrabajo planDeTrabajo;
 
-    @OneToOne
-    @JoinColumn(name = "estudiante_id")
+    @OneToOne(mappedBy = "proyecto")
     private Estudiante estudiante;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "tutor_unrn_id")
     private Usuario tutorUNRN;
 
@@ -61,6 +60,9 @@ public class Proyecto {
                     Usuario tutorUNRN, TutorExterno tutorExterno, Entidad entidad) {
         this.descripcion = descripcion;
         this.estudiante = estudiante;
+        if (estudiante != null) {
+            estudiante.setProyecto(this);
+        }
         this.tutorUNRN = tutorUNRN;
         this.tutorExterno = tutorExterno;
         this.entidad = entidad;

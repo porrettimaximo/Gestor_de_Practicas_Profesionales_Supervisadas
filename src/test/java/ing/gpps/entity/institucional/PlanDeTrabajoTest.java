@@ -29,7 +29,6 @@ class PlanDeTrabajoTest {
 
         // Crear docente supervisor
         docenteSupervisor = new DocenteSupervisor();
-        docenteSupervisor.setId(1L);
         docenteSupervisor.setNombre("Juan");
         docenteSupervisor.setApellido("Pérez");
 
@@ -39,7 +38,7 @@ class PlanDeTrabajoTest {
         proyecto.setEntidad(entidad);
 
         // Crear plan de trabajo
-        planDeTrabajo = new PlanDeTrabajo(1L, LocalDate.now(), LocalDate.now().plusMonths(6), proyecto);
+        planDeTrabajo = new PlanDeTrabajo(1, LocalDate.now(), LocalDate.now().plusMonths(6), proyecto);
     }
 
     @Test
@@ -55,15 +54,14 @@ class PlanDeTrabajoTest {
     void testAgregarActividad() {
         // Crear una nueva actividad
         Actividad actividad = new Actividad();
-        actividad.setId(1L);
         actividad.setPlanDeTrabajo(planDeTrabajo);
-        actividad.setTitulo("Actividad de prueba");
+        actividad.setNombre("Actividad de prueba");
         actividad.setDescripcion("Descripción de prueba");
         actividad.setHoras(10);
-        actividad.setDocenteSupervisor(docenteSupervisor);
+//        actividad.setDocenteSupervisor(docenteSupervisor);
 
         // Agregar la actividad al plan de trabajo
-        planDeTrabajo.agregarActividad(actividad);
+        planDeTrabajo.addActividad(actividad);
 
         // Verificar que la actividad fue agregada correctamente
         assertFalse(planDeTrabajo.getActividades().isEmpty());
@@ -75,11 +73,11 @@ class PlanDeTrabajoTest {
     @Test
     void testRemoverActividad() {
         Actividad actividad = new Actividad();
-        actividad.setTitulo("Actividad Test");
+        actividad.setNombre("Actividad Test");
         actividad.setDescripcion("Descripción de prueba");
         actividad.setHoras(10);
         actividad.setEstado(Actividad.EstadoActividad.EN_REVISION);
-        actividad.setDocenteSupervisor(docenteSupervisor);
+//        actividad.setDocenteSupervisor(docenteSupervisor);
 
         planDeTrabajo.addActividad(actividad);
         assertEquals(1, planDeTrabajo.getActividades().size());

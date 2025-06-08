@@ -46,6 +46,10 @@ public class ProyectoService {
         proyectoRepository.save(proyecto);
     }
 
+    public List<Proyecto> obtenerTodos() {
+        return proyectoRepository.findAll();
+    }
+
     public Proyecto getProyectoByTituloAndCuit(String titulo, Long cuit) {
         // Log de entrada
         System.out.println("Buscando proyecto con titulo: " + titulo + ", cuit: " + cuit);

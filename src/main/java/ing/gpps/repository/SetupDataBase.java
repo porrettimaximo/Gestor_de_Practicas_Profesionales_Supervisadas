@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import ing.gpps.entity.institucional.TipoEntidad;
 
@@ -25,12 +26,14 @@ public class SetupDataBase implements CommandLineRunner {
     private final PlanDeTrabajoRepository planDeTrabajoRepository;
     private final EntidadService entidadService;
     private final EstudianteService estudianteService;
+    private AreaRepository areaRepository;
 
     @Autowired
     public SetupDataBase(UsuarioRepository usuarioRepository, UsuarioService usuarioService,
                          ProyectoRepository proyectoRepository, EntregaRepository entregaRepository,
-                         EntidadRepository entidadRepository, PlanDeTrabajoRepository planDeTrabajoRepository, 
-                         EntidadService entidadService, EstudianteService estudianteService) {
+                         EntidadRepository entidadRepository, PlanDeTrabajoRepository planDeTrabajoRepository,
+                         EntidadService entidadService, EstudianteService estudianteService,
+                         AreaRepository areaRepository) {
         this.usuarioRepository = usuarioRepository;
         this.usuarioService = usuarioService;
         this.proyectoRepository = proyectoRepository;
@@ -39,11 +42,13 @@ public class SetupDataBase implements CommandLineRunner {
         this.planDeTrabajoRepository = planDeTrabajoRepository;
         this.entidadService = entidadService;
         this.estudianteService = estudianteService;
+        this.areaRepository = areaRepository;
     }
 
     @Override
     @Transactional
     public void run(String... args) throws Exception {
+        this.areaRepository = areaRepository;
         cargarDatos();
     }
 
@@ -113,6 +118,12 @@ public class SetupDataBase implements CommandLineRunner {
                 entidad3
         );
 
+        Area area1 = new Area("Desarrollo de Software");
+        areaRepository.save(area1); // Guardar el área en la base de datos
+
+        proyecto1.setArea(area1);
+
+        // Agregar objetivos
         // Guardar los proyectos primero
         proyectoRepository.save(proyecto1);
         proyectoRepository.save(proyecto2);

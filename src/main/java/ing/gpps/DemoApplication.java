@@ -34,21 +34,23 @@ public class DemoApplication {
 	private final InformeService informeService;
 	private final EstudianteRepository estudianteRepository;
 	private final EstudianteService estudianteService;
+    private final AreaRepository areaRepository;
 
 	@Autowired
-	public DemoApplication(UsuarioRepository usuarioRepository, 
+	public DemoApplication(UsuarioRepository usuarioRepository,
 						 UsuarioService usuarioService,
-						 ProyectoRepository proyectoRepository, 
+						 ProyectoRepository proyectoRepository,
 						 EntregaRepository entregaRepository,
-						 EntidadRepository entidadRepository, 
+						 EntidadRepository entidadRepository,
 						 EntidadService entidadService,
-						 PlanDeTrabajoRepository planDeTrabajoRepository, 
+						 PlanDeTrabajoRepository planDeTrabajoRepository,
 						 ActividadRepository actividadRepository,
-						 ActividadService actividadService, 
+						 ActividadService actividadService,
 						 InformeRepository informeRepository,
 						 InformeService informeService,
 						 EstudianteRepository estudianteRepository,
-						 EstudianteService estudianteService) {
+						 EstudianteService estudianteService,
+                           AreaRepository areaRepository) {
 		this.usuarioRepository = usuarioRepository;
 		this.usuarioService = usuarioService;
 		this.proyectoRepository = proyectoRepository;
@@ -62,6 +64,7 @@ public class DemoApplication {
 		this.informeService = informeService;
 		this.estudianteRepository = estudianteRepository;
 		this.estudianteService = estudianteService;
+        this.areaRepository = areaRepository;
 	}
 
 	public static void main(String[] args) {
@@ -73,7 +76,7 @@ public class DemoApplication {
 		return args -> {
 			logger.info("Iniciando aplicación GPPS...");
 			logger.info("Número de beans cargados: {}", ctx.getBeanDefinitionCount());
-			
+
 			// Crear instancia de SetupDataBase
 			SetupDataBase setupDataBase = new SetupDataBase(
 				usuarioRepository,
@@ -83,7 +86,8 @@ public class DemoApplication {
 				entidadRepository,
 				planDeTrabajoRepository,
 				entidadService,
-				estudianteService
+				estudianteService,
+					areaRepository
 			);
 
 			// Verificar datos cargados

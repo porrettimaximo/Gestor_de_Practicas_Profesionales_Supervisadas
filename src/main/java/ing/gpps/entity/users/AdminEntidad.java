@@ -5,8 +5,12 @@ import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 @Entity
+@NoArgsConstructor
 @DiscriminatorValue("ADMIN_ENTIDAD")
 public class AdminEntidad extends Usuario {
     public AdminEntidad(String nombre, String apellido, String email, String password, Long numTelefono) {

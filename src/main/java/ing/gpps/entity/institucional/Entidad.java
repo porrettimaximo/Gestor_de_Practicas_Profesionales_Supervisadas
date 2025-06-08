@@ -28,8 +28,7 @@ public class Entidad {
     @Column(name = "tipo", nullable = false)
     private TipoEntidad tipo;
 
-    @OneToMany
-    @JoinColumn(name = "fk_cuit_entidad")
+    @OneToMany(mappedBy = "entidad", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Proyecto> proyectos;
 
 //    @OneToMany

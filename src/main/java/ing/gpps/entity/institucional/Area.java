@@ -21,6 +21,10 @@ public class Area {
         this.proyectos = proyectos;
     }
 
+    public Area(String nombre) {
+        this.nombre = nombre;
+    }
+
     // Constructor vacío
     public Area() {
     }

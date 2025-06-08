@@ -18,4 +18,5 @@ public interface EntidadRepository extends JpaRepository<Entidad, Long> {
 
     boolean existsByCuit(Long cuit);
     Optional<Entidad> findByCuit(Long cuit);
+    void deleteByCuit(Long cuit);
 }

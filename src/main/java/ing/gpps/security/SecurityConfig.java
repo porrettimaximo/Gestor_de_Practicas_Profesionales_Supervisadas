@@ -1,4 +1,5 @@
 package ing.gpps.security;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,6 +27,7 @@ public class SecurityConfig {
                         .requestMatchers("/indexTutor").permitAll()//.hasRole("DOCENTE_SUPERVISOR")
                         .requestMatchers("/indexEntidad").permitAll()//.hasRole("TUTOR_EXTERNO")
                         .requestMatchers("/indexAdmin").permitAll()//.hasRole("ADMIN")
+                        .requestMatchers("/indexAdminEntidad").permitAll()//.hasRole("ADMIN_ENTIDAD")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form

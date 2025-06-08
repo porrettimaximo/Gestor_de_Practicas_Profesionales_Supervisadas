@@ -85,6 +85,14 @@ public class Proyecto {
         return proyectoId != null ? proyectoId.titulo() : null;
     }
 
+    public TutorExterno getTutorExterno() {
+        return tutorExterno;
+    }
+
+    public void setTutorExterno(TutorExterno tutorExterno) {
+        this.tutorExterno = tutorExterno;
+    }
+
     public void asignarEstudiante(Estudiante e) {
         this.estudiante = e;
         e.setProyecto(this);
@@ -97,9 +105,23 @@ public class Proyecto {
         }
     }
 
+    public void setEntidad(Entidad entidad) {
+        this.entidad = entidad;
+    }
+
     public enum EstadoProyecto {
-        EN_ESPERA,
-        EN_CURSO,
-        FINALIZADO
+        EN_ESPERA("En espera"),
+        EN_CURSO("En curso"),
+        FINALIZADO("Finalizado");
+
+        private final String label;
+
+        EstadoProyecto(String label) {
+            this.label = label;
+        }
+
+        public String getLabel() {
+            return label;
+        }
     }
 }

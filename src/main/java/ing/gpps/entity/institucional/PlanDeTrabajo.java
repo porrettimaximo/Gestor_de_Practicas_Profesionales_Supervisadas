@@ -35,7 +35,7 @@ public class PlanDeTrabajo {
     private List<Actividad> actividades = new ArrayList<>();
 
     public PlanDeTrabajo(int numero, LocalDate fechaInicio, LocalDate fechaFin, Proyecto proyecto) {
-        this.planDeTrabajoId = new PlanDeTrabajoId(numero, proyecto.getProyectoId());
+        this.planDeTrabajoId = new PlanDeTrabajoId(numero, proyecto.proyectoId());
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
         this.proyecto = proyecto;
@@ -46,7 +46,7 @@ public class PlanDeTrabajo {
         }
     }
 
-    protected PlanDeTrabajo() {
+    public PlanDeTrabajo() {
     }
 
     public PlanDeTrabajoId planDeTrabajoId() {
@@ -77,5 +77,21 @@ public class PlanDeTrabajo {
         if (proyecto != null && proyecto.getPlanDeTrabajo() != this) {
             proyecto.setPlanDeTrabajo(this);
         }
+    }
+
+    public void setId(PlanDeTrabajoId id) {
+        this.planDeTrabajoId = id;
+    }
+
+    public void setFechaInicio(LocalDate inicio) {
+        this.fechaInicio = inicio;
+    }
+
+    public void setFechaFin(LocalDate fin) {
+        this.fechaFin = fin;
+    }
+
+    public void setActividades(List<Actividad> actividades) {
+        this.actividades = actividades;
     }
 }

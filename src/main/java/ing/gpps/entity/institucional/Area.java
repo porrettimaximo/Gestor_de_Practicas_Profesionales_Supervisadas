@@ -1,9 +1,15 @@
 package ing.gpps.entity.institucional;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
+@Setter
+@Getter
+@NoArgsConstructor
 @Entity
 public class Area {
     @Id
@@ -16,14 +22,5 @@ public class Area {
     public Area(String nombre, List<Proyecto> proyectos) {
         this.nombre = nombre;
         this.proyectos = proyectos;
-    }
-
-    // Constructor vacío
-    public Area() {
-    }
-
-    // Getters y setters
-    public String nombre() {
-        return nombre;
     }
 }

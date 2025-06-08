@@ -14,48 +14,56 @@ import org.springframework.context.annotation.Bean;
 @SpringBootApplication
 public class DemoApplication {
 
-	@Autowired
-	UsuarioRepository usuarioRepository;
+    @Autowired
+    UsuarioRepository usuarioRepository;
 
-	@Autowired
-	UsuarioService usuarioService;
+    @Autowired
+    UsuarioService usuarioService;
 
-	@Autowired
-	ProyectoRepository proyectoRepository;
+    @Autowired
+    ProyectoRepository proyectoRepository;
 
-	@Autowired
-	EntregaRepository entregaRepository;
+    @Autowired
+    EntregaRepository entregaRepository;
 
-	@Autowired
-	EntidadRepository entidadRepository;
+    @Autowired
+    EntidadRepository entidadRepository;
 
-	@Autowired
-	EntidadService entidadService;
+    @Autowired
+    EntidadService entidadService;
+
+    @Autowired
+    AreaRepository areaRepository;
+
+    @Autowired
+    TutorRepository tutorRepository;
+
+    @Autowired
+    PlanDeTrabajoRepository plandeTrabajoRepository;
+
+    @Autowired
+    ActividadRepository actividadRepository;
+
+    public static void main(String[] args) {
+        SpringApplication.run(DemoApplication.class, args);
+
+    }
 
 
-	@Autowired
-	PlanDeTrabajoRepository plandeTrabajoRepository;
+    @Bean
+    public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
+        return args -> {
+            System.out.println("Los beans de la aplicación son:" + ctx.getBeanDefinitionCount());
+            System.out.println("La aplicación ha iniciado correctamente." + usuarioRepository.count());
+            SetupDataBase setupDataBase = new SetupDataBase(usuarioRepository, usuarioService, proyectoRepository, entregaRepository, entidadRepository, plandeTrabajoRepository, entidadService, areaRepository, tutorRepository, actividadRepository);
+            System.out.println("-------------------");
 
-	public static void main(String[] args) {
-		SpringApplication.run(DemoApplication.class, args);
+        };
+    }
 
-	}
-
-
-	@Bean
-	public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
-		return args -> {
-			System.out.println("Los beans de la aplicación son:" + ctx.getBeanDefinitionCount());
-			System.out.println("La aplicación ha iniciado correctamente."+usuarioRepository.count());
-			SetupDataBase setupDataBase = new SetupDataBase(usuarioRepository, usuarioService, proyectoRepository, entregaRepository, entidadRepository, plandeTrabajoRepository, entidadService);
-			System.out.println("-------------------");
-
-		};
-	}
-
-	public static int devolverNumero(int numero){
-		return numero;
-	}
+    public static int devolverNumero(int numero) {
+        return numero;
+    }
 
 
 }

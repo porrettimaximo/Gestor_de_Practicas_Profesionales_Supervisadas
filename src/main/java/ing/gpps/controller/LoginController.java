@@ -23,6 +23,8 @@ public class LoginController {
                 return "redirect:/indexEntidad";
             } else if (auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
                 return "redirect:/indexAdmin";
+            } else if (auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN_ENTIDAD"))) {
+                return "redirect:/indexAdminEntidad";
             }
         }
         return "login";

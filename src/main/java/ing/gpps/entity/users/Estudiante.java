@@ -54,4 +54,9 @@ public class Estudiante extends Usuario {
     public void asignarProyecto(Proyecto p) {
         proyecto = p;
     }
+
+    public void setProyecto(Proyecto proyecto) {
+        this.proyecto = proyecto;
+    }
+
 }

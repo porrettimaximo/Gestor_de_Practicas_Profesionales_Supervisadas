@@ -28,6 +28,9 @@ public class Entidad {
     @Column(name = "tipo", nullable = false)
     private TipoEntidad tipo;
 
+    @Column(name = "telefono")
+    private String telefono;
+
     @OneToMany
     @JoinColumn(name = "fk_cuit_entidad")
     private List<Proyecto> proyectos;
@@ -37,12 +40,13 @@ public class Entidad {
 //    private List<AdminEntidad> administradores;
 
     // Constructor completo
-    public Entidad(Long cuit, String nombre, String ubicacion, String email, TipoEntidad empresa) {
+    public Entidad(Long cuit, String nombre, String ubicacion, String email, TipoEntidad empresa, String telefono) {
         this.cuit = cuit;
         this.nombre = nombre;
         this.ubicacion = ubicacion;
         this.email = email;
         this.tipo = empresa;
+        this.telefono = telefono;
     }
 
     // Getters y setters
@@ -52,6 +56,43 @@ public class Entidad {
 
     public Long cuit() {
         return cuit;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public void setCuit(Long cuit) {
+        this.cuit = cuit;
+    }
+
+    public String ubicacion() {
+        return ubicacion;
+    }
+
+
+    public void setTipo(TipoEntidad tipoEntidad) {
+        this.tipo = tipoEntidad;
+    }
+
+    public void setUbicacion(String ubicacion) {
+        this.ubicacion = ubicacion;
+    }
+
+    public String email() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public TipoEntidad tipo() {
+        return tipo;
+    }
+
+    public Long getCuit() {
+        return this.cuit;
     }
 }
 

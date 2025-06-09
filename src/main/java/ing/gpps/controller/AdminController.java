@@ -4,11 +4,10 @@ import ing.gpps.entity.institucional.Entidad;
 import ing.gpps.entity.institucional.Proyecto;
 import ing.gpps.entity.institucional.TipoEntidad;
 import ing.gpps.entity.users.Admin;
+import ing.gpps.entity.users.AdminEntidad;
 import ing.gpps.entity.users.Usuario;
 import ing.gpps.security.CustomUserDetails;
-import ing.gpps.service.EntidadService;
-import ing.gpps.service.ProyectoService;
-import ing.gpps.service.UsuarioService;
+import ing.gpps.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,6 +31,10 @@ public class AdminController {
     private UsuarioService usuarioService;
     @Autowired
     private ProyectoService proyectoService;
+    @Autowired
+    private AdminEntidadService adminEntidadService;
+    @Autowired
+    private EstudianteService estudianteService;
 
     public AdminController() {
 
@@ -262,23 +265,92 @@ public class AdminController {
         return "redirect:/admin/dashboard";
     }
 
-    @PostMapping("usuario/agregar")
-    public String agregarUsuario(@RequestParam("nombre") String nombre,
-                                 @RequestParam("apellido") String apellido,
-                                 @RequestParam("email") String email,
-                                 @RequestParam("telefono") String telefono,
-                                 @RequestParam("password") String password,
-                                 @RequestParam("rol") String rol,
-                                 RedirectAttributes redirectAttributes){
-
+    @PostMapping("/usuario/agregar/admin_entidad")
+    public String agregarUsuarioAdminEntidad(@RequestParam("nombre") String nombre,
+                                             @RequestParam("apellido") String apellido,
+                                             @RequestParam("email") String email,
+                                             @RequestParam("telefono") String telefono,
+                                             @RequestParam("password") String password,
+                                             @RequestParam("entidad") String cuitEntidad,
+                                             RedirectAttributes redirectAttributes) {
         Long numTelefono = Long.parseLong(telefono);
+        Long cuit = Long.parseLong(cuitEntidad);
+        adminEntidadService.registrarAdminEntidad(nombre, apellido, email, numTelefono, password, cuit);
+        return "redirect:/admin/dashboard";
+    }
+    @PostMapping("/usuario/agregar/docente_supervisor")
+    public String agregarUsuarioDocenteSupervisor(@RequestParam("nombre") String nombre,
+                                                     @RequestParam("apellido") String apellido,
+                                                     @RequestParam("email") String email,
+                                                     @RequestParam("telefono") String telefono,
+                                                     @RequestParam("password") String password,
+                                                     RedirectAttributes redirectAttributes) {
+        Long numTelefono = Long.parseLong(telefono);
+        usuarioService.registrarUsuario(nombre, apellido, email, numTelefono, password, "DOCENTE_SUPERVISOR");
 
-        usuarioService.registrarUsuario(nombre, apellido, email, numTelefono, password, rol);
+        return "redirect:/admin/dashboard";
+    }
+    @PostMapping("/usuario/agregar/tutor_externo")
+    public String agregarUsuarioTutorExterno(@RequestParam("nombre") String nombre,
+                                                  @RequestParam("apellido") String apellido,
+                                                  @RequestParam("email") String email,
+                                                  @RequestParam("telefono") String telefono,
+                                                  @RequestParam("password") String password,
+                                                  RedirectAttributes redirectAttributes) {
+        Long numTelefono = Long.parseLong(telefono);
+        usuarioService.registrarUsuario(nombre, apellido, email, numTelefono, password, "TUTOR_EXTERNO");
 
-        System.out.println(" ");
+        //TODO: Realizar ajustes luego del merge
+
+        return "redirect:/admin/dashboard";
+    }
+    @PostMapping("/usuario/agregar/estudiante")
+    public String agregarUsuarioEstudiante(@RequestParam("nombre") String nombre,
+                                                @RequestParam("apellido") String apellido,
+                                                @RequestParam("email") String email,
+                                                @RequestParam("telefono") String telefono,
+                                                @RequestParam("password") String password,
+                                                @RequestParam("legajo") String legajo,
+                                                @RequestParam("dni") String dni,
+                                                RedirectAttributes redirectAttributes) {
+        Long numTelefono = Long.parseLong(telefono);
+        Long legajoNum = Long.parseLong(legajo);
+        Long dniNum = Long.parseLong(dni);
+
+        estudianteService.registrarUsuario(nombre, apellido, email, numTelefono, password, legajoNum, dniNum);
+
+        return "redirect:/admin/dashboard";
+    }
+    @PostMapping("/usuario/agregar/direccion_carrera")
+    public String agregarUsuarioDireccionCarrera(@RequestParam("nombre") String nombre,
+                                                  @RequestParam("apellido") String apellido,
+                                                  @RequestParam("email") String email,
+                                                  @RequestParam("telefono") String telefono,
+                                                  @RequestParam("password") String password,
+                                                  RedirectAttributes redirectAttributes) {
+        Long numTelefono = Long.parseLong(telefono);
+        usuarioService.registrarUsuario(nombre, apellido, email, numTelefono, password, "DIRECCION_CARRERA");
+
+        return "redirect:/admin/dashboard";
+    }
+    @PostMapping("/usuario/agregar/admin")
+    public String agregarUsuarioAdministrador(@RequestParam("nombre") String nombre,
+                                                  @RequestParam("apellido") String apellido,
+                                                  @RequestParam("email") String email,
+                                                  @RequestParam("telefono") String telefono,
+                                                  @RequestParam("password") String password,
+                                                  RedirectAttributes redirectAttributes) {
+        Long numTelefono = Long.parseLong(telefono);
+        usuarioService.registrarUsuario(nombre, apellido, email, numTelefono, password, "ADMIN");
 
         return "redirect:/admin/dashboard";
     }
 
+    @PostMapping("/usuario/eliminar/{id}")
+    public String eliminarUsuario(@PathVariable("id") Long id) {
 
+        usuarioService.eliminarUsuario(id);
+
+        return "redirect:/admin/dashboard";
+    }
 }

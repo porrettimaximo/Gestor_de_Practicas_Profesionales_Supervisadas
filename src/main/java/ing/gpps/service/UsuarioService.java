@@ -76,4 +76,19 @@ public class UsuarioService {
 
         return user;
     }
+
+    public Usuario obtenerPorId(Long id) {
+
+        Optional<Usuario> user = usuarioRepository.findById(id);
+
+        if (user.isEmpty()) {
+            throw new RuntimeException("Usuario no encontrado con ID: " + id);
+        }
+
+        return user.get();
+    }
+
+    public void eliminarUsuario(Long id) {
+        usuarioRepository.deleteById(id);
+    }
 }

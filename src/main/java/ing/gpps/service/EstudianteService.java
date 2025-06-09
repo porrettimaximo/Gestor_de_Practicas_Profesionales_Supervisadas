@@ -8,6 +8,7 @@ import ing.gpps.repository.ActividadRepository;
 import ing.gpps.repository.EstudianteRepository;
 import ing.gpps.repository.ProyectoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.slf4j.Logger;
@@ -32,6 +33,9 @@ public class EstudianteService {
 
     @Autowired
     private ProyectoRepository proyectoRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
     public Actividad getActividadById(int actividadId) {
@@ -91,4 +95,10 @@ public class EstudianteService {
     public List<Estudiante> obtenerTodosLosEstudiantes() {
         return estudianteRepository.findAll();
     }
-} 
+
+    public void registrarUsuario(String nombre, String apellido, String email, Long numTelefono, String password, Long legajo, Long dni) {
+        password = passwordEncoder.encode(password);
+        Estudiante estudiante = new Estudiante(nombre, apellido, email, password, dni, legajo, numTelefono);
+        estudianteRepository.save(estudiante);
+    }
+}

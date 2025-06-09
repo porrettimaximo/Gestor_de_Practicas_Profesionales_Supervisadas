@@ -50,4 +50,6 @@ public class EntidadService {
     public void actualizarEntidad(Entidad entidad) {
         entidadRepository.save(entidad);
     }
+
+
 }

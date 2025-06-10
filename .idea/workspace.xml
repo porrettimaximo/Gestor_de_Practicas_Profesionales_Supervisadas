@@ -4,12 +4,74 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8a4dffd5-889c-4703-adf3-92d1edf6cbdc" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ing/gpps/DemoApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/DemoApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ing/gpps/entity/institucional/Entrega.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/entity/institucional/Entrega.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ing/gpps/repository/SetupDataBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/repository/SetupDataBase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/templates/indexAlumnoSinPPS.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/templates/indexAlumnoSinPPS.html" afterDir="false" />
+    <list default="true" id="8a4dffd5-889c-4703-adf3-92d1edf6cbdc" name="Changes" comment="merge funcional notificaciones">
+      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/DemoApplication.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/config/WebConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/controller/AdminController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/controller/DocenteSupervisorController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/controller/EstudianteController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/controller/LoginController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/controller/UsuarioController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/entity/idClasses/ActividadId.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/entity/idClasses/InformeId.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/entity/idClasses/PlanDeTrabajoId.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/entity/idClasses/ProyectoId.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/entity/institucional/Actividad.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/entity/institucional/Area.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/entity/institucional/Entidad.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/entity/institucional/Entrega$EstadoEntrega.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/entity/institucional/Entrega.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/entity/institucional/Informe.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/entity/institucional/PlanDeTrabajo.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/entity/institucional/Proyecto$EstadoProyecto.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/entity/institucional/Proyecto.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/entity/users/Admin.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/entity/users/AdminEntidad.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/entity/users/DireccionDeCarrera.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/entity/users/DocenteSupervisor.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/entity/users/Estudiante.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/entity/users/TutorExterno.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/entity/users/Usuario.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/notificaciones/BaseDeNotificacionSubject.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/notificaciones/EventoNotificacion.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/notificaciones/Notificacion.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/notificaciones/NotificacionSubject.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/notificaciones/NotificacionesService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/notificaciones/Notificar.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/notificaciones/TipoEvento.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/repository/EntidadRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/repository/EntregaRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/repository/NotificacionRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/repository/PlanDeTrabajoRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/repository/ProyectoRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/repository/SetupDataBase.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/repository/UsuarioRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/security/CustomAuthenticationSuccessHandler.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/security/CustomUserDetails.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/security/CustomUserDetailsService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/security/SecurityConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/service/DireccionDeCarreraService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/service/EmailService$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/service/EmailService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/service/EntregaService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/service/GenerarConvenioService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/service/Main.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/service/ProyectoService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/service/UsuarioService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/static/css/styles.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/templates/indexAdmin.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/templates/indexAlumno.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/templates/indexAlumnoSinPPS.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/templates/indexEntidad.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/templates/indexTutor.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/templates/login.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/demo-0.0.1-SNAPSHOT.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-archiver/pom.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/ing/gpps/main/DemoApplicationTests.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/ing/gpps/main/FakeObserver.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/ing/gpps/main/FakeSubject.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/ing/gpps/main/NotificarServiceTest.class" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,6 +129,7 @@
   "keyToString": {
     "Application.DemoApplication.executor": "Run",
     "JUnit.NotificarServiceTest.executor": "Run",
+    "Maven.demo [org.apache.maven.plugins:maven-clean-plugin:3.3.2:clean].executor": "Run",
     "Maven.demo [org.apache.maven.plugins:maven-clean-plugin:3.4.1:clean].executor": "Run",
     "Maven.demo [org.apache.maven.plugins:maven-jar-plugin:3.4.2:jar].executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
@@ -132,6 +195,15 @@
       <option name="presentableId" value="Default" />
       <updated>1747742841486</updated>
     </task>
+    <task id="LOCAL-00001" summary="merge funcional notificaciones">
+      <option name="closed" value="true" />
+      <created>1749517478901</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1749517478901</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -144,6 +216,10 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="merge funcional notificaciones" />
+    <option name="LAST_COMMIT_MESSAGE" value="merge funcional notificaciones" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

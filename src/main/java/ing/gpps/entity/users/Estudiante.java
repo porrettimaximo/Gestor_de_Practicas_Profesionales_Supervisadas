@@ -99,4 +99,9 @@ public class Estudiante extends Usuario implements Notificar {
             System.err.println("Error al enviar la notificación por correoal estudiante " + this.getNombre () + e.getMessage());
         }
     }
+
+    public void setProyecto(Proyecto proyecto) {
+        this.proyecto = proyecto;
+    }
+
 }

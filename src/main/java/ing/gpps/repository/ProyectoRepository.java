@@ -22,4 +22,20 @@ public interface ProyectoRepository extends JpaRepository<Proyecto, ProyectoId> 
 
     boolean existsByProyectoId_Titulo(String titulo);
     Optional<Proyecto> findByProyectoId_Titulo(String titulo);
+
+    List<Proyecto> findByEstudiante(Estudiante estudiante);
+
+    Proyecto findByProyectoIdCuitEntidad(Long cuit);
+    //Optional<Proyecto> findByEstudianteAndId(Estudiante estudiante, ProyectoId proyectoId);
+
+    @Query("""
+            SELECT p FROM Proyecto p
+            WHERE p.entidad.cuit = :cuitEntidad
+            AND p.planDeTrabajo IS NULL
+            """)
+    List<Proyecto> findWithoutPlanDeTrabajoByEntidad(@Param("cuitEntidad") Long cuitEntidad);
+
+    Optional<Proyecto> findByProyectoId(ProyectoId id);
+
+    List<Proyecto> findAllByProyectoIdCuitEntidad(Long cuitEntidad);
 }

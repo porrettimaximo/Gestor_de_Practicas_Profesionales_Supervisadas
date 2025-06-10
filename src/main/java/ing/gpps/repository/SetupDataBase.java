@@ -3,14 +3,11 @@ package ing.gpps.repository;
 import ing.gpps.entity.institucional.*;
 import ing.gpps.entity.users.*;
 import ing.gpps.service.EntidadService;
-import ing.gpps.service.*;
-import ing.gpps.service.EstudianteService;
+import ing.gpps.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import ing.gpps.entity.institucional.TipoEntidad;
 
@@ -27,13 +24,16 @@ public class SetupDataBase implements CommandLineRunner {
     private final EstudianteService estudianteService;
     private AreaRepository areaRepository;
     private final NotificacionRepository notificacionRepository;
+    private final TutorRepository tutorRepository;
+    private final ActividadRepository actividadRepository;
 
     @Autowired
     public SetupDataBase(UsuarioRepository usuarioRepository, UsuarioService usuarioService,
                          ProyectoRepository proyectoRepository, EntregaRepository entregaRepository,
                          EntidadRepository entidadRepository, PlanDeTrabajoRepository planDeTrabajoRepository,
                          EntidadService entidadService,
-                         AreaRepository areaRepository, EstudianteService estudianteService, NotificacionRepository notificacionRepository) {
+                         AreaRepository areaRepository, EstudianteService estudianteService, NotificacionRepository notificacionRepository,
+                         TutorRepository tutorRepository, ActividadRepository actividadRepository) {
         this.usuarioRepository = usuarioRepository;
         this.usuarioService = usuarioService;
         this.proyectoRepository = proyectoRepository;
@@ -41,18 +41,12 @@ public class SetupDataBase implements CommandLineRunner {
         this.entidadRepository = entidadRepository;
         this.planDeTrabajoRepository = planDeTrabajoRepository;
         this.entidadService = entidadService;
-        this.estudianteService = estudianteService;
-        this.areaRepository = areaRepository;
-        this.notificacionRepository = notificacionRepository;
-    }
-
-    @Override
-    @Transactional
-    public void run(String... args) throws Exception {
-        this.areaRepository = areaRepository;
+        this.tutorRepository = tutorRepository;
+        this.actividadRepository = actividadRepository;
         cargarDatos();
     }
 
+    // Asegurar que el usuario porrettimaxi tiene un proyecto asignado
     private void cargarDatos() {
         // Crear usuarios
         Estudiante estudiante1 = new Estudiante("Lautaro", "Salvo", "salvoschaferlautaro@gmail.com", "1234", 42658278L, 1521L, 2920219900L);
@@ -275,6 +269,69 @@ public class SetupDataBase implements CommandLineRunner {
         entrega2.setEstado(Entrega.EstadoEntrega.ENTREGADO);
         entrega2.setFechaEntrega(LocalDate.of(2025, 4, 22));
         entregaRepository.save(entrega2);
+
+        // Crear una nueva entidad distinta
+        Entidad nuevaEntidad = new Entidad(
+                98765432L, // CUIT distinto
+                "Fundación Patagonia Tec",
+                "Cipolletti",
+                "fundacionpatagonia@gmail.com",
+                TipoEntidad.ONG,
+                "2984123456"
+        );
+        entidadService.registrarEntidad(nuevaEntidad);
+
+        Proyecto p = new Proyecto("Desarrollo IA",
+                "Desarrollo de un sistema de IA para optimización de procesos industriales.",
+                null,
+                null,
+                tutorExterno,
+                nuevaEntidad
+        );
+
+        proyectoRepository.save(p);
+
+        //Crea cinco áreas distintas
+        List<Proyecto> proyectosArea1 = new ArrayList<>();
+        List<Proyecto> proyectosArea2 = new ArrayList<>();
+        List<Proyecto> proyectosArea3 = new ArrayList<>();
+        List<Proyecto> proyectosArea4 = new ArrayList<>();
+        List<Proyecto> proyectosArea5 = new ArrayList<>();
+
+        Area area1 = new Area("Desarrollo web", proyectosArea1);
+        Area area2 = new Area("Desarrollo móvil", proyectosArea2);
+        Area area3 = new Area("Inteligencia Artificial", proyectosArea3);
+        Area area4 = new Area("Ciberseguridad", proyectosArea4);
+        Area area5 = new Area("Big Data", proyectosArea5);
+
+        areaRepository.save(area1);
+        areaRepository.save(area2);
+        areaRepository.save(area3);
+        areaRepository.save(area4);
+        areaRepository.save(area5);
+
+        AdminEntidad adminEntidad = new AdminEntidad(
+                "Cristian",
+                "Millaqueo",
+                "cristianmillaqueo@gmail.com",
+                "1234",
+                2984123456L
+        );
+        adminEntidad.setEntidad(nuevaEntidad);
+
+        //define dos tutores externos para la entidad
+        TutorExterno tutorExterno1 = new TutorExterno("Ana", "López", "ana@gmail.com", "tutorAna", 2987654321L);
+        TutorExterno tutorExterno2 = new TutorExterno("Carlos", "Martínez", "martinezcarlos@gmail.com", "carlitos123", 2988765432L);
+        // Asignar los tutores externos a la entidad
+        tutorExterno1.setEntidad(nuevaEntidad);
+        tutorExterno2.setEntidad(nuevaEntidad);
+        tutorRepository.save(tutorExterno1);
+        tutorRepository.save(tutorExterno2);
+
+        usuarioService.registrarUsuario(adminEntidad);
+
+        System.out.println("Administrador de entidad cargado: " + adminEntidad.getNombre() + " (" + adminEntidad.getEmail() + ")");
+
 
         System.out.println("Datos cargados correctamente");
         System.out.println("Estudiantes registrados: " + usuarioRepository.count());

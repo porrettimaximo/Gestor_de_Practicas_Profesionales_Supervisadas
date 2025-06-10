@@ -1,22 +1,17 @@
 package ing.gpps;
 
-import ing.gpps.entity.institucional.*;
-import ing.gpps.entity.users.*;
+import ing.gpps.entity.users.Estudiante;
 import ing.gpps.repository.*;
-import ing.gpps.service.*;
+import ing.gpps.service.EntidadService;
+import ing.gpps.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @SpringBootApplication
-@ComponentScan(basePackages = "ing.gpps")
 public class DemoApplication {
 
 	private static final Logger logger = LoggerFactory.getLogger(DemoApplication.class);
@@ -36,6 +31,7 @@ public class DemoApplication {
 	private final EstudianteService estudianteService;
     private final AreaRepository areaRepository;
     private final NotificacionRepository notificacionRepository;
+    private final TutorRepository tutorRepository;
 
 	@Autowired
 	public DemoApplication(UsuarioRepository usuarioRepository,
@@ -52,7 +48,8 @@ public class DemoApplication {
 						 EstudianteRepository estudianteRepository,
 						 EstudianteService estudianteService,
                            AreaRepository areaRepository,
-                           NotificacionRepository notificacionRepository) {
+                           NotificacionRepository notificacionRepository,
+                           TutorRepository tutorRepository) {
 		this.usuarioRepository = usuarioRepository;
 		this.usuarioService = usuarioService;
 		this.proyectoRepository = proyectoRepository;
@@ -68,6 +65,7 @@ public class DemoApplication {
 		this.estudianteService = estudianteService;
         this.areaRepository = areaRepository;
         this.notificacionRepository = notificacionRepository;
+        this.tutorRepository = tutorRepository;
 	}
 
 	public static void main(String[] args) {

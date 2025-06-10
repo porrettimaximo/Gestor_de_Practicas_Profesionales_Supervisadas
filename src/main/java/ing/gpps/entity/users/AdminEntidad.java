@@ -10,6 +10,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -27,7 +30,10 @@ public class AdminEntidad extends Usuario {
     }
 
     @ManyToOne
-    @JoinColumn(name = "cuit_entidad")
+    @JoinColumn(name = "cuit_entidad", referencedColumnName = "cuit", nullable = false)
     private Entidad entidad;
 
+    public Entidad getEntidad() {
+        return this.entidad;
+    }
 }

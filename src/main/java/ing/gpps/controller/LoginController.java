@@ -34,6 +34,9 @@ public class LoginController {
                 } else if (userDetails.getUsuario() instanceof Admin) {
                     logger.info("Redirigiendo admin a su dashboard");
                     return "redirect:/admin/dashboard";
+                }else if (userDetails.getUsuario() instanceof AdminEntidad) {
+                    logger.info("Redirigiendo admin-entidad a su dashboard");
+                    return "redirect:/indexAdminEntidad";
                 }
             }
             return "login";

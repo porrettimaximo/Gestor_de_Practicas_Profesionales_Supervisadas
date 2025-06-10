@@ -12,10 +12,21 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface EntidadRepository extends JpaRepository<Entidad, Long> {
+public interface EntidadRepository extends JpaRepository<Entidad, String> {
     @Query("SELECT DISTINCT e FROM Entidad e JOIN e.proyectos p WHERE p.tutorExterno = :tutor")
     List<Entidad> findByTutorExterno(@Param("tutor") TutorExterno tutor);
 
+    Optional<Entidad> findByCuit(Long cuit);
+
+    List<Entidad> findByNombreContainingIgnoreCase(String nombre);
+
+    List<Entidad> findByEmailContainingIgnoreCase(String email);
+
+    List<Entidad> findByTelefonoContainingIgnoreCase(String telefono);
+
+    List<Entidad> findByUbicacionContainingIgnoreCase(String direccion);
+
+    Entidad save(Entidad entidad);
     boolean existsByCuit(Long cuit);
     Optional<Entidad> findByCuit(Long cuit);
     void deleteByCuit(Long cuit);

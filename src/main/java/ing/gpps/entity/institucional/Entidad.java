@@ -28,6 +28,9 @@ public class Entidad {
     @Column(name = "tipo", nullable = false)
     private TipoEntidad tipo;
 
+    @Column(name = "telefono")
+    private String telefono;
+
     @OneToMany(mappedBy = "entidad", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Proyecto> proyectos;
 
@@ -36,12 +39,13 @@ public class Entidad {
 //    private List<AdminEntidad> administradores;
 
     // Constructor completo
-    public Entidad(Long cuit, String nombre, String ubicacion, String email, TipoEntidad empresa) {
+    public Entidad(Long cuit, String nombre, String ubicacion, String email, TipoEntidad empresa, String telefono) {
         this.cuit = cuit;
         this.nombre = nombre;
         this.ubicacion = ubicacion;
         this.email = email;
         this.tipo = empresa;
+        this.telefono = telefono;
     }
 
     // Getters y setters

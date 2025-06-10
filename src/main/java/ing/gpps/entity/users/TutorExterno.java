@@ -7,10 +7,15 @@ import ing.gpps.service.EmailService;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Transient;
+import ing.gpps.entity.institucional.Entidad;
+import ing.gpps.entity.institucional.Proyecto;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -27,6 +32,16 @@ public class TutorExterno extends Usuario implements Notificar {
     @Autowired
     private EmailService emailService;
 
+    @ManyToOne
+    @JoinColumn(name = "cuit_entidad", referencedColumnName = "cuit")
+    private Entidad entidad;
+
+    @OneToMany(mappedBy = "tutorExterno")
+    private List<Proyecto> proyectos;
+
+    public Long getTelefono() {
+        return super.getNumTelefono();
+    }
 
     public TutorExterno(String nombre, String apellido, String email, String password, Long numTelefono) {
         super(nombre, apellido, email, password, numTelefono);
@@ -53,5 +68,7 @@ public class TutorExterno extends Usuario implements Notificar {
             System.err.println ("Error al enviar la notificación por correoal estudiante " + this.getNombre () + e.getMessage ());
         }
     }
+
+
 
 }

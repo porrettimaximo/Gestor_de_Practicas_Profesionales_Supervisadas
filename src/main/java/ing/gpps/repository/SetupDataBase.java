@@ -63,6 +63,8 @@ public class SetupDataBase implements CommandLineRunner {
 
         Admin admin1 = new Admin("Admin", "Admin", "admin@gmail.com", "admin", 2920123456L);
 
+        usuarioService.registrarUsuario("Mauro", "Cambarieri","mcambarieri@gmail.com", 2920123456L,"1234",  "DIRECCION_CARRERA");
+
         // Registrar usuarios solo si no existen
         if (!usuarioRepository.existsByEmail(estudiante1.getEmail())) {
             usuarioService.registrarUsuario(estudiante1);
@@ -90,6 +92,7 @@ public class SetupDataBase implements CommandLineRunner {
         TutorExterno tutorExterno = new TutorExterno("Juan", "Pérez", "juan_perez@empresa.com", "tutor456", 2920654321L);
         DocenteSupervisor tutorUNRN2 = new DocenteSupervisor("Carlos", "Rodríguez", "carlos_rodriguez@unrn.edu.ar", "tutor789", 2920789456L);
         TutorExterno tutorExterno0 = new TutorExterno("Ana", "Martínez", "ana_martinez@empresa2.com", "tutor101", 2920456789L);
+
 
         // Registrar tutores solo si no existen
         if (!usuarioRepository.existsByEmail(tutorUNRN.getEmail())) {

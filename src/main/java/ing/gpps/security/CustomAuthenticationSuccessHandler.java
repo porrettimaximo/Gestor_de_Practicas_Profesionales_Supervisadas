@@ -1,6 +1,7 @@
 package ing.gpps.security;
 
 import ing.gpps.entity.users.Admin;
+import ing.gpps.entity.users.DireccionDeCarrera;
 import ing.gpps.entity.users.DocenteSupervisor;
 import ing.gpps.entity.users.Estudiante;
 import ing.gpps.entity.users.TutorExterno;
@@ -47,6 +48,8 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             return "/tutor-externo/dashboard";
         } else if (userDetails.getUsuario() instanceof Admin) {
             return "/admin/dashboard";
+        } else if (userDetails.getUsuario() instanceof DireccionDeCarrera) {
+            return "/direccion/dashboard";
         }
         return "/login";
     }

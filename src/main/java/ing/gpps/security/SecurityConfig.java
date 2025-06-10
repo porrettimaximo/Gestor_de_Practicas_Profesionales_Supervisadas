@@ -42,6 +42,7 @@ public class SecurityConfig {
                 .requestMatchers("/docente-supervisor/**").hasRole("DOCENTE_SUPERVISOR")
                 .requestMatchers("/tutor-externo/**").hasRole("TUTOR_EXTERNO")
                 .requestMatchers("/admin/**").hasRole("ADMIN")
+                .requestMatchers("/direccion/**").hasRole("DIRECCION_CARRERA")
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
@@ -66,7 +67,7 @@ public class SecurityConfig {
                     response.sendRedirect("/login?error=unauthorized");
                 })
                 .accessDeniedHandler((request, response, accessDeniedException) -> {
-                    response.sendRedirect("/error?error=access-denied");
+                    response.sendRedirect("/login?error=access-denied");
                 })
             )
             .userDetailsService(userDetailsService);

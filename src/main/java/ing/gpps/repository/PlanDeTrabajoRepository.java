@@ -5,8 +5,11 @@ import ing.gpps.entity.institucional.PlanDeTrabajo;
 import ing.gpps.entity.institucional.Proyecto;
 import ing.gpps.entity.idClasses.PlanDeTrabajoId;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository

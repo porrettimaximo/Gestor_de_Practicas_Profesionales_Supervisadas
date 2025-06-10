@@ -35,11 +35,7 @@ public class Estudiante extends Usuario implements Notificar {
     @Column(name = "fk_tutor_externo")
     Long fk_tutor_externo;
 
-    @OneToOne
-    @JoinColumns({
-            @JoinColumn(name = "fk_titulo_proyecto", referencedColumnName = "titulo"),
-            @JoinColumn(name = "fk_cuit_entidad", referencedColumnName = "cuit")
-    })
+    @OneToOne(mappedBy = "estudiante", cascade = CascadeType.ALL, orphanRemoval = true)
     private Proyecto proyecto;
 
     @OneToMany(mappedBy = "estudiante", cascade = CascadeType.ALL, orphanRemoval = true)

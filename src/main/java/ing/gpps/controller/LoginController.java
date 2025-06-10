@@ -1,9 +1,6 @@
 package ing.gpps.controller;
 
-import ing.gpps.entity.users.Admin;
-import ing.gpps.entity.users.DocenteSupervisor;
-import ing.gpps.entity.users.Estudiante;
-import ing.gpps.entity.users.TutorExterno;
+import ing.gpps.entity.users.*;
 import ing.gpps.security.CustomUserDetails;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -36,7 +33,7 @@ public class LoginController {
                     return "redirect:/admin/dashboard";
                 }else if (userDetails.getUsuario() instanceof AdminEntidad) {
                     logger.info("Redirigiendo admin-entidad a su dashboard");
-                    return "redirect:/indexAdminEntidad";
+                    return "redirect:/admin-entidad/dashboard";
                 }
             }
             return "login";

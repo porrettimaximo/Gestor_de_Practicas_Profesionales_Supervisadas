@@ -37,7 +37,8 @@ public class Proyecto {
     @OneToOne(mappedBy = "proyecto", cascade = CascadeType.ALL, orphanRemoval = true)
     private PlanDeTrabajo planDeTrabajo;
 
-    @OneToOne(mappedBy = "proyecto")
+    @OneToOne
+    @JoinColumn(name = "estudiante_id")
     private Estudiante estudiante;
 
     @ManyToOne
@@ -101,9 +102,22 @@ public class Proyecto {
     }
 
     public void asignarEstudiante(Estudiante e) {
+        if (this.estudiante != null) {
+            this.estudiante.setProyecto(null);
+        }
         this.estudiante = e;
-        e.setProyecto(this);
+        if (e != null) {
+            e.setProyecto(this);
+        }
         estado = EstadoProyecto.EN_CURSO;
+    }
+
+    public void removerEstudiante() {
+        if (this.estudiante != null) {
+            Estudiante e = this.estudiante;
+            this.estudiante = null;
+            e.setProyecto(null);
+        }
     }
 
     public void setPlanDeTrabajo(PlanDeTrabajo planDeTrabajo) {
@@ -114,7 +128,13 @@ public class Proyecto {
     }
 
     public void setEntidad(Entidad entidad) {
+        if (this.entidad != null) {
+            this.entidad.removeProyecto(this);
+        }
         this.entidad = entidad;
+        if (entidad != null) {
+            entidad.addProyecto(this);
+        }
     }
 
     public enum EstadoProyecto {

@@ -38,8 +38,6 @@ public class AdminEntidadService {
     // ✅ AGREGAR ENTITYMANAGER
     @Autowired
     private EntidadService entidadService;
-    @Autowired
-    private AdminEntidadRepository adminEntidadRepository;
     private EntityManager entityManager;
 
     public AdminEntidadService(AdminEntidadRepository adminEntidadRepository, TutorRepository tutorRepository, EntidadRepository entidadRepository, ProyectoRepository proyectoRepository, PlanDeTrabajoRepository planDeTrabajoRepository, ActividadRepository actividadRepository, EstudianteRepository estuditanteRepository, UsuarioService usuarioService, AreaRepository areaRepository) {
@@ -68,7 +66,8 @@ public class AdminEntidadService {
         validarCamposTexto(apellido);
         validarCamposTexto(email);
         TutorExterno tutor = new TutorExterno(nombre, apellido, email, password, numTelefono);
-        tutor.setCuit(cuit);
+        entidadRepository.findByCuit(cuit)
+                .ifPresent(tutor::setEntidad);
         if (tutorRepository.findByEmail(email).isEmpty()) {
             usuarioService.registrarUsuario(tutor);
         } else {
@@ -102,7 +101,6 @@ public class AdminEntidadService {
         actividad.setNombre(nombre);
         actividad.setDescripcion(descripcion);
         actividad.setCantidadHoras(cantidadHoras);
-        actividad.setAdjuntaArchivo(adjuntaArchivo);
         actividad.setProyecto(proyecto);
         this.actividades.add(actividad);
     }
@@ -174,7 +172,6 @@ public class AdminEntidadService {
             nuevaActividad.setNombre(actividadFormulario.getNombre());
             nuevaActividad.setDescripcion(actividadFormulario.getDescripcion());
             nuevaActividad.setCantidadHoras(actividadFormulario.getCantidadHoras());
-            nuevaActividad.setAdjuntaArchivo(actividadFormulario.isAdjuntaArchivo());
 
             // Asignar IDs manualmente
             ActividadId actividadId = new ActividadId(i + 1, planId);
@@ -226,7 +223,6 @@ public class AdminEntidadService {
         actividad.setCantidadHoras(cantidadHoras);
         actividad.setNombre(nombre);
         actividad.setDescripcion(descripcion);
-        actividad.setAdjuntaArchivo(adjuntaArchivo);
 
     }
 

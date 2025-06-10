@@ -57,12 +57,11 @@ public class Actividad {
     @OneToMany(mappedBy = "actividad", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Entrega> entregas = new ArrayList<>();
 
-    public Actividad(int numero, String nombre, String descripcion, boolean adjuntaArchivo, PlanDeTrabajo planDeTrabajo, int cantidadHoras) {
+    public Actividad(int numero, String nombre, String descripcion, PlanDeTrabajo planDeTrabajo, int cantidadHoras) {
         this.cantidadHoras = cantidadHoras;
         this.actividadId = new ActividadId(numero, planDeTrabajo.planDeTrabajoId());
         this.nombre = nombre;
         this.descripcion = descripcion;
-        this.adjuntaArchivo = adjuntaArchivo;
         this.planDeTrabajo = planDeTrabajo;
         this.estado = EstadoActividad.EN_REVISION;
     }
@@ -139,10 +138,6 @@ public class Actividad {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
-    }
-
-    public void setAdjuntaArchivo(boolean adjuntaArchivo) {
-        this.adjuntaArchivo = adjuntaArchivo;
     }
 
     public void setProyecto(Proyecto proyecto) {

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -32,7 +33,7 @@ public class Entidad {
     private String telefono;
 
     @OneToMany(mappedBy = "entidad", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Proyecto> proyectos;
+    private List<Proyecto> proyectos = new ArrayList<>();
 
 //    @OneToMany
 //    @JoinColumn(name = "cuit_entidad")
@@ -55,5 +56,23 @@ public class Entidad {
 
     public Long cuit() {
         return cuit;
+    }
+
+    public void addProyecto(Proyecto proyecto) {
+        if (proyecto != null) {
+            proyectos.add(proyecto);
+            proyecto.setEntidad(this);
+        }
+    }
+
+    public void removeProyecto(Proyecto proyecto) {
+        if (proyecto != null) {
+            proyectos.remove(proyecto);
+            proyecto.setEntidad(null);
+        }
+    }
+
+    public List<Proyecto> getProyectos() {
+        return new ArrayList<>(proyectos);
     }
 }

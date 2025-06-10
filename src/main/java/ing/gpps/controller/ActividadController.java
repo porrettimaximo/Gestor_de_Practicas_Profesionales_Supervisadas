@@ -68,7 +68,7 @@ public class ActividadController {
                 planDeTrabajo.getActividades().size() + 1,
                 request.getNombre(),
                 request.getDescripcion(),
-                planDeTrabajo
+                planDeTrabajo, 1
             );
 
             if (request.getHoras() > 0) {

@@ -32,10 +32,6 @@ public class Area {
         this.nombre = nombre;
     }
 
-    // Constructor vacío
-    public Area() {
-    }
-
     // Getters y setters
     public String nombre() {
         return nombre;

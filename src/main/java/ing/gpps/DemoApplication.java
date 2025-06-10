@@ -2,8 +2,9 @@ package ing.gpps;
 
 import ing.gpps.entity.users.Estudiante;
 import ing.gpps.repository.*;
-import ing.gpps.service.EntidadService;
-import ing.gpps.service.UsuarioService;
+import ing.gpps.service.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -89,7 +90,9 @@ public class DemoApplication {
 				entidadService,
 					areaRepository,
 				estudianteService,
-                    notificacionRepository
+                    notificacionRepository,
+					tutorRepository,
+					actividadRepository
 			);
 
 			// Verificar datos cargados

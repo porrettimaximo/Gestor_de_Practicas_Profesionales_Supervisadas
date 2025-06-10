@@ -204,7 +204,7 @@ public class DocenteSupervisorController {
             }
 
             int numeroActividad = planDeTrabajo.getActividades().size() + 1;
-            Actividad actividad = new Actividad(numeroActividad, actividadRequest.getNombre(), actividadRequest.getDescripcion(), planDeTrabajo);
+            Actividad actividad = new Actividad(numeroActividad, actividadRequest.getNombre(), actividadRequest.getDescripcion(), planDeTrabajo, 200);
             actividad.setHoras(actividadRequest.getHoras());
 
             // Parsear manualmente la fecha

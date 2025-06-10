@@ -3,13 +3,18 @@ package ing.gpps.repository;
 import ing.gpps.entity.institucional.*;
 import ing.gpps.entity.users.*;
 import ing.gpps.service.EntidadService;
+import ing.gpps.service.EstudianteService;
 import ing.gpps.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import ing.gpps.entity.institucional.TipoEntidad;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class SetupDataBase implements CommandLineRunner {
@@ -40,10 +45,12 @@ public class SetupDataBase implements CommandLineRunner {
         this.entregaRepository = entregaRepository;
         this.entidadRepository = entidadRepository;
         this.planDeTrabajoRepository = planDeTrabajoRepository;
+        this.estudianteService = estudianteService;
         this.entidadService = entidadService;
+        this.notificacionRepository = notificacionRepository;
         this.tutorRepository = tutorRepository;
         this.actividadRepository = actividadRepository;
-        cargarDatos();
+        this.areaRepository = areaRepository;
     }
 
     // Asegurar que el usuario porrettimaxi tiene un proyecto asignado
@@ -54,15 +61,24 @@ public class SetupDataBase implements CommandLineRunner {
         Estudiante estudiante3 = new Estudiante("Tomas", "Acosta", "acostatomas@gmail.com", "3456", 45234765L, 4526L, 2920652378L);
         Estudiante estudiante4 = new Estudiante("Cristian", "Millaqueo", "cristianmillaqueo.12ok@gmail.com", "9293", 436808L, 4521L, 2944929339L);
 
-
         Admin admin1 = new Admin("Admin", "Admin", "admin@gmail.com", "admin", 2920123456L);
 
-        usuarioService.registrarUsuario(estudiante1);
-        usuarioService.registrarUsuario(estudiante2);
-        usuarioService.registrarUsuario(estudiante3);
-        usuarioService.registrarUsuario(estudiante4);
-
-        usuarioService.registrarUsuario(admin1);
+        // Registrar usuarios solo si no existen
+        if (!usuarioRepository.existsByEmail(estudiante1.getEmail())) {
+            usuarioService.registrarUsuario(estudiante1);
+        }
+        if (!usuarioRepository.existsByEmail(estudiante2.getEmail())) {
+            usuarioService.registrarUsuario(estudiante2);
+        }
+        if (!usuarioRepository.existsByEmail(estudiante3.getEmail())) {
+            usuarioService.registrarUsuario(estudiante3);
+        }
+        if (!usuarioRepository.existsByEmail(estudiante4.getEmail())) {
+            usuarioService.registrarUsuario(estudiante4);
+        }
+        if (!usuarioRepository.existsByEmail(admin1.getEmail())) {
+            usuarioService.registrarUsuario(admin1);
+        }
 
         // Obtener instancias gestionadas de estudiantes
         Estudiante managedEstudiante1 = estudianteService.buscarPorEmail(estudiante1.getEmail()).orElseThrow(() -> new RuntimeException("Estudiante 1 no encontrado"));
@@ -73,17 +89,26 @@ public class SetupDataBase implements CommandLineRunner {
         DocenteSupervisor tutorUNRN = new DocenteSupervisor("María", "González", "maria_gonzalez@unrn.edu.ar", "tutor123", 2920123456L);
         TutorExterno tutorExterno = new TutorExterno("Juan", "Pérez", "juan_perez@empresa.com", "tutor456", 2920654321L);
         DocenteSupervisor tutorUNRN2 = new DocenteSupervisor("Carlos", "Rodríguez", "carlos_rodriguez@unrn.edu.ar", "tutor789", 2920789456L);
-        TutorExterno tutorExterno2 = new TutorExterno("Ana", "Martínez", "ana_martinez@empresa2.com", "tutor101", 2920456789L);
+        TutorExterno tutorExterno0 = new TutorExterno("Ana", "Martínez", "ana_martinez@empresa2.com", "tutor101", 2920456789L);
 
-        usuarioService.registrarUsuario(tutorUNRN);
-        usuarioService.registrarUsuario(tutorExterno);
-        usuarioService.registrarUsuario(tutorUNRN2);
-        usuarioService.registrarUsuario(tutorExterno2);
+        // Registrar tutores solo si no existen
+        if (!usuarioRepository.existsByEmail(tutorUNRN.getEmail())) {
+            usuarioService.registrarUsuario(tutorUNRN);
+        }
+        if (!usuarioRepository.existsByEmail(tutorExterno.getEmail())) {
+            usuarioService.registrarUsuario(tutorExterno);
+        }
+        if (!usuarioRepository.existsByEmail(tutorUNRN2.getEmail())) {
+            usuarioService.registrarUsuario(tutorUNRN2);
+        }
+        if (!usuarioRepository.existsByEmail(tutorExterno0.getEmail())) {
+            usuarioService.registrarUsuario(tutorExterno0);
+        }
 
         // Crear entidades
-        Entidad entidad1 = new Entidad(12345678L, "Empresa Altec", "Viedma", "altec@unrn.com", TipoEntidad.EMPRESA);
-        Entidad entidad2 = new Entidad(87654321L, "Municipalidad de Viedma", "Viedma", "municipalidad@viedma.gov.ar", TipoEntidad.ORGANISMO_PUBLICO);
-        Entidad entidad3 = new Entidad(98765432L, "Hospital Zatti", "Viedma", "contacto@hospitalzatti.com", TipoEntidad.INSTITUCION_SALUD);
+        Entidad entidad1 = new Entidad(12345678L, "Empresa Altec", "Viedma", "altec@unrn.com", TipoEntidad.EMPRESA, "2920123456");
+        Entidad entidad2 = new Entidad(87654321L, "Municipalidad de Viedma", "Viedma", "municipalidad@viedma.gov.ar", TipoEntidad.ORGANISMO_PUBLICO, "2920987654");
+        Entidad entidad3 = new Entidad(98765432L, "Hospital Zatti", "Viedma", "contacto@hospitalzatti.com", TipoEntidad.INSTITUCION_SALUD, "2920765432");
 
         entidadService.registrarEntidad(entidad1);
         entidadService.registrarEntidad(entidad2);
@@ -104,7 +129,7 @@ public class SetupDataBase implements CommandLineRunner {
                 "Desarrollo de un sistema integral para la gestión de trámites y servicios municipales, incluyendo módulos de atención al ciudadano y gestión interna.",
                 null,  // Primero creamos el proyecto sin estudiante
                 tutorUNRN2,
-                tutorExterno2,
+                tutorExterno0,
                 entidad2
         );
 
@@ -113,14 +138,14 @@ public class SetupDataBase implements CommandLineRunner {
                 "Implementación de una plataforma de telemedicina para consultas remotas y seguimiento de pacientes.",
                 null,  // Primero creamos el proyecto sin estudiante
                 tutorUNRN,
-                tutorExterno2,
+                tutorExterno0,
                 entidad3
         );
 
-        Area area1 = new Area("Desarrollo de Software");
-        areaRepository.save(area1); // Guardar el área en la base de datos
+        Area area0 = new Area("Desarrollo de Software");
+        areaRepository.save(area0); // Guardar el área en la base de datos
 
-        proyecto1.setArea(area1);
+        proyecto1.setArea(area0);
 
         // Agregar objetivos
         // Guardar los proyectos primero
@@ -186,7 +211,7 @@ public class SetupDataBase implements CommandLineRunner {
                 1,
                 "Análisis de Requerimientos",
                 "Realizar un análisis detallado de los requerimientos del sistema, incluyendo entrevistas con usuarios y revisión de documentación existente.",
-                planDeTrabajo1
+                planDeTrabajo1, 100
         );
         actividad1.setFechaLimite(LocalDate.of(2025, 4, 30));
 
@@ -194,7 +219,7 @@ public class SetupDataBase implements CommandLineRunner {
                 2,
                 "Diseño de Arquitectura",
                 "Diseñar la arquitectura del sistema, incluyendo diagramas de clases, secuencia y componentes.",
-                planDeTrabajo1
+                planDeTrabajo1, 50
         );
         actividad2.setFechaLimite(LocalDate.of(2025, 5, 15));
 
@@ -202,7 +227,7 @@ public class SetupDataBase implements CommandLineRunner {
                 1,
                 "Investigación de Necesidades",
                 "Realizar entrevistas y encuestas para identificar las necesidades específicas de los ciudadanos.",
-                planDeTrabajo2
+                planDeTrabajo2, 25
         );
         actividad3.setFechaLimite(LocalDate.of(2025, 5, 15));
 
@@ -210,7 +235,7 @@ public class SetupDataBase implements CommandLineRunner {
                 1,
                 "Análisis de Requisitos Técnicos",
                 "Analizar los requisitos técnicos para la implementación de la plataforma de telemedicina.",
-                planDeTrabajo3
+                planDeTrabajo3, 25
         );
         actividad4.setFechaLimite(LocalDate.of(2025, 5, 20));
 
@@ -339,5 +364,11 @@ public class SetupDataBase implements CommandLineRunner {
         System.out.println("Entidades registradas: " + entidadRepository.count());
         System.out.println("Planes de trabajo creados: " + planDeTrabajoRepository.count());
         System.out.println("Entregas registradas: " + entregaRepository.count());
+    }
+
+    @Override
+    @Transactional
+    public void run(String... args) throws Exception {
+        cargarDatos();
     }
 }

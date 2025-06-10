@@ -41,8 +41,7 @@ public abstract class Usuario {
 
     public abstract String getRol();
 
-
-    protected Long getNumTelefono() {
+    public Long getNumTelefono() {
         return this.numTelefono;
     }
 }

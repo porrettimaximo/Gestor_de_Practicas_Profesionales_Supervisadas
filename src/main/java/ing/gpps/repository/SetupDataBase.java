@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import ing.gpps.entity.institucional.TipoEntidad;
 
@@ -26,7 +25,7 @@ public class SetupDataBase implements CommandLineRunner {
     private final PlanDeTrabajoRepository planDeTrabajoRepository;
     private final EntidadService entidadService;
     private final EstudianteService estudianteService;
-    private final AreaRepository areaRepository;
+    private AreaRepository areaRepository;
     private final NotificacionRepository notificacionRepository;
 
     @Autowired
@@ -34,7 +33,7 @@ public class SetupDataBase implements CommandLineRunner {
                          ProyectoRepository proyectoRepository, EntregaRepository entregaRepository,
                          EntidadRepository entidadRepository, PlanDeTrabajoRepository planDeTrabajoRepository,
                          EntidadService entidadService,
-                         AreaRepository areaRepository, NotificacionRepository notificacionRepository) {
+                         AreaRepository areaRepository, EstudianteService estudianteService, NotificacionRepository notificacionRepository) {
         this.usuarioRepository = usuarioRepository;
         this.usuarioService = usuarioService;
         this.proyectoRepository = proyectoRepository;

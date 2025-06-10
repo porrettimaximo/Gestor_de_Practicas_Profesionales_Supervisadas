@@ -89,8 +89,8 @@ public class DemoApplication {
 				entidadRepository,
 				planDeTrabajoRepository,
 				entidadService,
-				estudianteService,
 					areaRepository,
+				estudianteService,
                     notificacionRepository
 			);
 

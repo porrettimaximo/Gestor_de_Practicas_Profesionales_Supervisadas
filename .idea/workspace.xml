@@ -5,6 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8a4dffd5-889c-4703-adf3-92d1edf6cbdc" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ing/gpps/DemoApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/DemoApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ing/gpps/entity/institucional/Entrega.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/entity/institucional/Entrega.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ing/gpps/repository/SetupDataBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/repository/SetupDataBase.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/templates/indexAlumnoSinPPS.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/templates/indexAlumnoSinPPS.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -20,6 +24,9 @@
         <option value="Class" />
       </list>
     </option>
+  </component>
+  <component name="Git.Merge.Settings">
+    <option name="BRANCH" value="origin/ImplementacionSubirEntregaLocal-25/5" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
@@ -56,20 +63,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.DemoApplication.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.NotificarServiceTest.executor&quot;: &quot;Run&quot;,
-    &quot;Maven.demo [org.apache.maven.plugins:maven-clean-plugin:3.4.1:clean].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.demo [org.apache.maven.plugins:maven-jar-plugin:3.4.2:jar].executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;ImplementacionSubirEntregaLocal-25/5&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/Documents/UNRN/3-año/3-Ingenieria de Software/repoPorreti&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.DemoApplication.executor": "Run",
+    "JUnit.NotificarServiceTest.executor": "Run",
+    "Maven.demo [org.apache.maven.plugins:maven-clean-plugin:3.4.1:clean].executor": "Run",
+    "Maven.demo [org.apache.maven.plugins:maven-jar-plugin:3.4.2:jar].executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main2.0-EntregasYActividades",
+    "last_opened_file_path": "D:/Documents/UNRN/3-año/3-Ingenieria de Software/repoPorreti",
+    "settings.editor.selected.configurable": "preferences.pluginManager"
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected="Application.DemoApplication">
     <configuration name="DemoApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="ing.gpps.DemoApplication" />
@@ -126,6 +133,28 @@
       <updated>1747742841486</updated>
     </task>
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/ing/gpps/controller/AdminController.java</url>
+          <line>206</line>
+          <option name="timeStamp" value="14" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/II_RepoProyectoDOS$NotificarServiceTest.ic" NAME="NotificarServiceTest Coverage Results" MODIFIED="1748611585914" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="true">

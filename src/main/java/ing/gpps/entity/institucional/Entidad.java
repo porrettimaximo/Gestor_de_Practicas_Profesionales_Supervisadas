@@ -53,4 +53,3 @@ public class Entidad {
         return cuit;
     }
 }
-

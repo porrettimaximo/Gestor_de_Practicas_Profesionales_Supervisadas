@@ -89,7 +89,7 @@ public class DocenteSupervisorController {
                 logger.error("Error al obtener proyectos del tutor: {}", tutor.getId());
                 return "redirect:/error";
             }
-            
+
             model.addAttribute("tutor", tutor);
             model.addAttribute("proyectos", proyectos);
             model.addAttribute("menuItems", Map.of(
@@ -97,7 +97,7 @@ public class DocenteSupervisorController {
                 "proyectos", "Mis Proyectos",
                 "estudiantes", "Estudiantes Asignados"
             ));
-            
+
             return "indexDocenteSupervisor";
         } catch (Exception e) {
             logger.error("Error al cargar el dashboard: {}", e.getMessage());
@@ -107,7 +107,7 @@ public class DocenteSupervisorController {
 
     @GetMapping("/proyecto/{cuitEntidad}/{titulo}")
     @Transactional(readOnly = true)
-    public String verProyecto(@PathVariable Long cuitEntidad, 
+    public String verProyecto(@PathVariable Long cuitEntidad,
                             @PathVariable String titulo,
                             Model model) {
         try {
@@ -141,7 +141,7 @@ public class DocenteSupervisorController {
             }
 
             if (proyecto.getTutorUNRN() == null || !proyecto.getTutorUNRN().getId().equals(tutor.getId())) {
-                logger.warn("Intento de acceso no autorizado al proyecto {} por el tutor {}", 
+                logger.warn("Intento de acceso no autorizado al proyecto {} por el tutor {}",
                           proyecto.getProyectoId(), tutor.getId());
                 return "redirect:/docente-supervisor/dashboard";
             }
@@ -191,7 +191,7 @@ public class DocenteSupervisorController {
 
             DocenteSupervisor tutor = (DocenteSupervisor) userDetails.getUsuario();
             Proyecto proyecto = proyectoService.getProyectoByTituloAndCuit(titulo, cuit);
-            
+
             if (proyecto == null || proyecto.getTutorUNRN() == null || !proyecto.getTutorUNRN().getId().equals(tutor.getId())) {
                 logger.warn("Intento de crear actividad en proyecto no autorizado");
                 return "redirect:/docente-supervisor/dashboard";
@@ -206,13 +206,13 @@ public class DocenteSupervisorController {
             int numeroActividad = planDeTrabajo.getActividades().size() + 1;
             Actividad actividad = new Actividad(numeroActividad, actividadRequest.getNombre(), actividadRequest.getDescripcion(), planDeTrabajo);
             actividad.setHoras(actividadRequest.getHoras());
-            
+
             // Parsear manualmente la fecha
             LocalDate fechaLimite = LocalDate.parse(fechaLimiteStr);
             actividad.setFechaLimite(fechaLimite);
 
             docenteSupervisorService.crearActividad(cuit.toString(), titulo, actividad);
-            
+
             return "redirect:/docente-supervisor/proyecto/" + cuit + "/" + titulo;
         } catch (Exception e) {
             logger.error("Error al crear actividad: {}", e.getMessage(), e);
@@ -239,7 +239,7 @@ public class DocenteSupervisorController {
             }
 
             DocenteSupervisor tutor = (DocenteSupervisor) userDetails.getUsuario();
-            
+
             // Obtener la actividad y verificar que pertenece a un proyecto del tutor
             Actividad actividad = docenteSupervisorService.getActividadById(actividadId);
             if (actividad == null) {
@@ -269,7 +269,7 @@ public class DocenteSupervisorController {
             }
 
             docenteSupervisorService.guardarActividad(actividad);
-            
+
             return "redirect:/docente-supervisor/proyecto/" + proyecto.getProyectoId().cuitEntidad() + "/" + proyecto.getProyectoId().titulo();
         } catch (Exception e) {
             logger.error("Error al cambiar estado de actividad: {}", e.getMessage(), e);
@@ -296,7 +296,7 @@ public class DocenteSupervisorController {
             }
 
             DocenteSupervisor tutor = (DocenteSupervisor) userDetails.getUsuario();
-            
+
             // Obtener la entrega y verificar que pertenece a un proyecto del tutor
             Entrega entrega = docenteSupervisorService.getEntregaById(entregaId);
             if (entrega == null) {
@@ -326,7 +326,7 @@ public class DocenteSupervisorController {
             }
 
             docenteSupervisorService.guardarEntrega(entrega);
-            
+
             return "redirect:/docente-supervisor/proyecto/" + proyecto.getProyectoId().cuitEntidad() + "/" + proyecto.getProyectoId().titulo();
         } catch (Exception e) {
             logger.error("Error al cambiar estado de entrega: {}", e.getMessage(), e);
@@ -373,7 +373,7 @@ public class DocenteSupervisorController {
         try {
             ActividadId actividadId = new ActividadId(numero, new PlanDeTrabajoId(planNumero, new ProyectoId(proyectoTitulo, proyectoCuit)));
             Actividad actividad = docenteSupervisorService.getActividadById(actividadId.numero());
-            
+
             if (actividad == null || actividad.getRutaArchivo() == null) {
                 return ResponseEntity.notFound().build();
             }

@@ -35,6 +35,7 @@ public class DemoApplication {
 	private final EstudianteRepository estudianteRepository;
 	private final EstudianteService estudianteService;
     private final AreaRepository areaRepository;
+    private final NotificacionRepository notificacionRepository;
 
 	@Autowired
 	public DemoApplication(UsuarioRepository usuarioRepository,
@@ -50,7 +51,8 @@ public class DemoApplication {
 						 InformeService informeService,
 						 EstudianteRepository estudianteRepository,
 						 EstudianteService estudianteService,
-                           AreaRepository areaRepository) {
+                           AreaRepository areaRepository,
+                           NotificacionRepository notificacionRepository) {
 		this.usuarioRepository = usuarioRepository;
 		this.usuarioService = usuarioService;
 		this.proyectoRepository = proyectoRepository;
@@ -65,6 +67,7 @@ public class DemoApplication {
 		this.estudianteRepository = estudianteRepository;
 		this.estudianteService = estudianteService;
         this.areaRepository = areaRepository;
+        this.notificacionRepository = notificacionRepository;
 	}
 
 	public static void main(String[] args) {
@@ -87,7 +90,8 @@ public class DemoApplication {
 				planDeTrabajoRepository,
 				entidadService,
 				estudianteService,
-					areaRepository
+					areaRepository,
+                    notificacionRepository
 			);
 
 			// Verificar datos cargados

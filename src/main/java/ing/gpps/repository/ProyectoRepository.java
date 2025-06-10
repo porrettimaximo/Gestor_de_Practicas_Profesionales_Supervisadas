@@ -16,10 +16,10 @@ import java.util.Optional;
 public interface ProyectoRepository extends JpaRepository<Proyecto, ProyectoId> {
     List<Proyecto> findByTutorUNRN(DocenteSupervisor tutor);
     Proyecto findByProyectoId_TituloAndProyectoId_CuitEntidad(String titulo, Long cuitEntidad);
-    
+
     @Query("SELECT p FROM Proyecto p WHERE p.estudiante.id = :estudianteId")
     List<Proyecto> findByEstudiante(@Param("estudianteId") Long estudianteId);
-    
+
     boolean existsByProyectoId_Titulo(String titulo);
     Optional<Proyecto> findByProyectoId_Titulo(String titulo);
 }

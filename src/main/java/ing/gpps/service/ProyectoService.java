@@ -1,6 +1,7 @@
 package ing.gpps.service;
 
 import ing.gpps.entity.Solicitud;
+import ing.gpps.entity.institucional.Actividad;
 import ing.gpps.entity.users.Estudiante;
 import ing.gpps.entity.users.DocenteSupervisor;
 import ing.gpps.entity.institucional.Proyecto;
@@ -183,5 +184,28 @@ public class ProyectoService {
         }
 
         solicitudRepository.delete(solicitud);
+    }
+
+    //Calcular progreso de un proyecto
+    public double calcularProgreso(Proyecto proyecto) {
+        if (proyecto == null || proyecto.getPlanDeTrabajo() == null) {
+            return 0.0;
+        }
+
+        List<Actividad> actividades = proyecto.getPlanDeTrabajo().getActividades();
+        if (actividades == null || actividades.isEmpty()) {
+            return 0.0;
+        }
+
+        int horasTotales = actividades.stream()
+                .mapToInt(Actividad::getCantidadHoras)
+                .sum();
+
+        int horasCompletadas = actividades.stream()
+                .filter(a -> a.getEstado() == Actividad.EstadoActividad.COMPLETADA)
+                .mapToInt(Actividad::getCantidadHoras)
+                .sum();
+
+        return (double) horasCompletadas / horasTotales * 100;
     }
 }

@@ -33,24 +33,25 @@ public class DemoApplication {
     private final AreaRepository areaRepository;
     private final NotificacionRepository notificacionRepository;
     private final TutorRepository tutorRepository;
+	private final SolicitudRepository solicitudRepository;
 
 	@Autowired
 	public DemoApplication(UsuarioRepository usuarioRepository,
-						 UsuarioService usuarioService,
-						 ProyectoRepository proyectoRepository,
-						 EntregaRepository entregaRepository,
-						 EntidadRepository entidadRepository,
-						 EntidadService entidadService,
-						 PlanDeTrabajoRepository planDeTrabajoRepository,
-						 ActividadRepository actividadRepository,
-						 ActividadService actividadService,
-						 InformeRepository informeRepository,
-						 InformeService informeService,
-						 EstudianteRepository estudianteRepository,
-						 EstudianteService estudianteService,
+                           UsuarioService usuarioService,
+                           ProyectoRepository proyectoRepository,
+                           EntregaRepository entregaRepository,
+                           EntidadRepository entidadRepository,
+                           EntidadService entidadService,
+                           PlanDeTrabajoRepository planDeTrabajoRepository,
+                           ActividadRepository actividadRepository,
+                           ActividadService actividadService,
+                           InformeRepository informeRepository,
+                           InformeService informeService,
+                           EstudianteRepository estudianteRepository,
+                           EstudianteService estudianteService,
                            AreaRepository areaRepository,
                            NotificacionRepository notificacionRepository,
-                           TutorRepository tutorRepository) {
+                           TutorRepository tutorRepository, SolicitudRepository solicitudRepository) {
 		this.usuarioRepository = usuarioRepository;
 		this.usuarioService = usuarioService;
 		this.proyectoRepository = proyectoRepository;
@@ -67,7 +68,8 @@ public class DemoApplication {
         this.areaRepository = areaRepository;
         this.notificacionRepository = notificacionRepository;
         this.tutorRepository = tutorRepository;
-	}
+        this.solicitudRepository = solicitudRepository;
+    }
 
 	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
@@ -92,7 +94,8 @@ public class DemoApplication {
 				estudianteService,
                     notificacionRepository,
 					tutorRepository,
-					actividadRepository
+					actividadRepository,
+					solicitudRepository
 			);
 
 			// Verificar datos cargados

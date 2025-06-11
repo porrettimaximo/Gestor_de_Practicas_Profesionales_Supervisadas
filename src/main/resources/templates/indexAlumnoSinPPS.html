@@ -372,85 +372,106 @@
         <div class="dashboard">
             <div class="dashboard-card">
                 <div class="pps-list">
-                    <div class="pps-card inscripto">
+                    <!-- Proyectos Postulados -->
+                    <div th:if="${proyectosPostulados != null and !proyectosPostulados.empty}" th:each="proyecto : ${proyectosPostulados}" class="pps-card">
+                        <div th:text="${'Proyecto postulado: ' + proyecto.titulo}" style="display: none;"></div>
                         <div class="pps-info">
                             <div class="status-badge pendiente">
                                 <i class="fas fa-clock"></i>
                                 En proceso de aceptación
                             </div>
-                            <div class="pps-title">Desarrollo de Aplicación de Ventas</div>
+                            <div class="pps-title" th:text="${proyecto.titulo}">Desarrollo de Aplicación de Ventas</div>
                             <div class="pps-details">
                                 <div class="pps-detail">
                                     <span class="detail-label">Entidad</span>
-                                    <span class="detail-value">Empresa Altec</span>
+                                    <span class="detail-value" th:text="${proyecto.entidad.nombre}">Empresa Altec</span>
                                 </div>
                                 <div class="pps-detail">
                                     <span class="detail-label">Tutor UNRN</span>
-                                    <span class="detail-value">Dra. María González</span>
+                                    <span class="detail-value" th:text="${proyecto.tutorUNRN != null ? proyecto.tutorUNRN.nombre + ' ' + proyecto.tutorUNRN.apellido : 'No asignado'}">Dra. María González</span>
                                 </div>
                                 <div class="pps-detail">
                                     <span class="detail-label">Tutor Externo</span>
-                                    <span class="detail-value">Ing. Juan Pérez</span>
+                                    <span class="detail-value" th:text="${proyecto.tutorExterno != null ? proyecto.tutorExterno.nombre + ' ' + proyecto.tutorExterno.apellido : 'No asignado'}">Ing. Juan Pérez</span>
                                 </div>
                                 <div class="pps-detail">
                                     <span class="detail-label">Fecha de inicio</span>
-                                    <span class="detail-value">15/03/2025</span>
+                                    <span class="detail-value" th:text="${proyecto.planDeTrabajo != null ? #temporals.format(proyecto.planDeTrabajo.fechaInicio, 'dd/MM/yyyy') : 'No definida'}">15/03/2025</span>
                                 </div>
                                 <div class="pps-detail">
                                     <span class="detail-label">Duración estimada</span>
-                                    <span class="detail-value">3 meses</span>
+                                    <span class="detail-value" th:text="${proyecto.planDeTrabajo != null ? 'Del ' + #temporals.format(proyecto.planDeTrabajo.fechaInicio, 'dd/MM/yyyy') + ' al ' + #temporals.format(proyecto.planDeTrabajo.fechaFin, 'dd/MM/yyyy') : 'No definida'}">3 meses</span>
+                                </div>
+                                <div class="pps-detail">
+                                    <span class="detail-label">Postulantes</span>
+                                    <span class="detail-value" th:text="${cantidadPostulantes != null ? (cantidadPostulantes.get(proyecto) != null ? cantidadPostulantes.get(proyecto) : 0) : 0}">0</span>
                                 </div>
                             </div>
                             <div class="status-info">
                                 <p><strong>Estado actual:</strong> En revisión por el tutor UNRN</p>
-                                <p><strong>Fecha de solicitud:</strong> 01/03/2025</p>
+                                <p><strong>Fecha de solicitud:</strong> <span th:text="${proyecto.solicitudes != null and !proyecto.solicitudes.empty ? #temporals.format(proyecto.solicitudes[0].fechaSolicitud, 'dd/MM/yyyy') : 'No disponible'}">01/03/2025</span></p>
                                 <p><strong>Tiempo estimado de respuesta:</strong> 5 días hábiles</p>
                             </div>
                         </div>
                         <div class="pps-actions">
-                            <button class="btn primary">
+                            <a th:href="@{/estudiante-sin-pps/proyecto/{cuit}/{titulo}(cuit=${proyecto.entidad.cuit}, titulo=${proyecto.titulo})}" class="btn primary">
                                 <i class="fas fa-eye"></i> Ver Detalles
-                            </button>
-                            <button class="btn secondary">
-                                <i class="fas fa-times"></i> Cancelar Solicitud
-                            </button>
+                            </a>
+                            <form th:action="@{/estudiante-sin-pps/solicitud/{id}/cancelar(id=${proyecto.solicitudes != null and !proyecto.solicitudes.empty ? proyecto.solicitudes[0].id : ''})}" method="post" style="display: inline;">
+                                <button type="submit" class="btn secondary">
+                                    <i class="fas fa-times"></i> Cancelar Solicitud
+                                </button>
+                            </form>
                         </div>
                     </div>
 
-                    <div class="pps-card">
+                    <!-- Proyectos Disponibles -->
+                    <div th:if="${proyectosDisponibles != null and !proyectosDisponibles.empty}" th:each="proyecto : ${proyectosDisponibles}" class="pps-card" th:unless="${proyectosPostulados != null and !proyectosPostulados.empty and proyectosPostulados.contains(proyecto)}">
+                        <div th:text="${'Proyecto disponible: ' + proyecto.titulo}" style="display: none;"></div>
                         <div class="pps-info">
-                            <div class="pps-title">Implementación de Sistema de Turnos Online</div>
+                            <div class="pps-title" th:text="${proyecto.titulo}">Implementación de Sistema de Turnos Online</div>
                             <div class="pps-details">
                                 <div class="pps-detail">
                                     <span class="detail-label">Entidad</span>
-                                    <span class="detail-value">Clínica Patagonia</span>
+                                    <span class="detail-value" th:text="${proyecto.entidad.nombre}">Clínica Patagonia</span>
                                 </div>
                                 <div class="pps-detail">
                                     <span class="detail-label">Tutor UNRN</span>
-                                    <span class="detail-value">Lic. Paula Díaz</span>
+                                    <span class="detail-value" th:text="${proyecto.tutorUNRN != null ? proyecto.tutorUNRN.nombre + ' ' + proyecto.tutorUNRN.apellido : 'No asignado'}">Lic. Paula Díaz</span>
                                 </div>
                                 <div class="pps-detail">
                                     <span class="detail-label">Tutor Externo</span>
-                                    <span class="detail-value">Ing. Roberto Álvarez</span>
+                                    <span class="detail-value" th:text="${proyecto.tutorExterno != null ? proyecto.tutorExterno.nombre + ' ' + proyecto.tutorExterno.apellido : 'No asignado'}">Ing. Roberto Álvarez</span>
                                 </div>
                                 <div class="pps-detail">
                                     <span class="detail-label">Fecha de inicio</span>
-                                    <span class="detail-value">01/04/2025</span>
+                                    <span class="detail-value" th:text="${proyecto.planDeTrabajo != null ? #temporals.format(proyecto.planDeTrabajo.fechaInicio, 'dd/MM/yyyy') : 'No definida'}">01/04/2025</span>
                                 </div>
                                 <div class="pps-detail">
                                     <span class="detail-label">Duración estimada</span>
-                                    <span class="detail-value">4 meses</span>
+                                    <span class="detail-value" th:text="${proyecto.planDeTrabajo != null ? 'Del ' + #temporals.format(proyecto.planDeTrabajo.fechaInicio, 'dd/MM/yyyy') + ' al ' + #temporals.format(proyecto.planDeTrabajo.fechaFin, 'dd/MM/yyyy') : 'No definida'}">4 meses</span>
+                                </div>
+                                <div class="pps-detail">
+                                    <span class="detail-label">Postulantes</span>
+                                    <span class="detail-value" th:text="${cantidadPostulantes != null ? (cantidadPostulantes.get(proyecto) != null ? cantidadPostulantes.get(proyecto) : 0) : 0}">0</span>
                                 </div>
                             </div>
                         </div>
                         <div class="pps-actions">
-                            <button class="btn primary">
+                            <a th:href="@{/estudiante-sin-pps/proyecto/{cuit}/{titulo}(cuit=${proyecto.entidad.cuit}, titulo=${proyecto.titulo})}" class="btn primary">
                                 <i class="fas fa-eye"></i> Ver Detalles
-                            </button>
-                            <button class="btn secondary">
-                                <i class="fas fa-plus"></i> Inscribirse
-                            </button>
+                            </a>
+                            <form th:action="@{/estudiante-sin-pps/proyecto/{cuit}/{titulo}/inscribirse(cuit=${proyecto.entidad.cuit}, titulo=${proyecto.titulo})}" method="post" style="display: inline;">
+                                <button type="submit" class="btn secondary">
+                                    <i class="fas fa-plus"></i> Inscribirse
+                                </button>
+                            </form>
                         </div>
+                    </div>
+
+                    <!-- Mensaje cuando no hay proyectos -->
+                    <div th:if="${(proyectosPostulados == null or proyectosPostulados.empty) and (proyectosDisponibles == null or proyectosDisponibles.empty)}" class="pps-card" style="text-align: center; padding: 40px;">
+                        <p style="color: #6c757d; font-size: 1.1em;">No hay proyectos disponibles en este momento</p>
                     </div>
                 </div>
             </div>
@@ -464,9 +485,9 @@
     </footer>
 
     <script>
-        document.getElementById('propuesta-select').addEventListener('change', function() {
+        document.getElementById('admin-select').addEventListener('change', function() {
             if (this.value === 'logout') {
-                window.location.href = 'login.html';
+                document.getElementById('logoutForm').submit();
             }
         });
     </script>

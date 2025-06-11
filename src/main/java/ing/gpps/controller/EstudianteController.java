@@ -36,6 +36,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.Collections;
+import java.util.Map;
 
 import static java.lang.Integer.valueOf;
 
@@ -91,31 +92,18 @@ public class EstudianteController {
                         model.addAttribute("estudiante", estudiante);
 
                         List<Proyecto> proyectos = estudianteService.obtenerProyectosPorEstudiante(estudiante);
-
-                        if (proyectos != null && !proyectos.isEmpty()) {
+                        if (!proyectos.isEmpty()) {
                             Proyecto proyectoActual = proyectos.get(0);
                             model.addAttribute("proyecto", proyectoActual);
 
-                            // Verificar si el docente supervisor es nulo
-                            if (proyectoActual.getTutorUNRN() == null) {
-                                logger.warn("El proyecto del estudiante {} {} (ID: {}) no tiene un Docente Supervisor asignado.", 
-                                            estudiante.getNombre(), estudiante.getApellido(), estudiante.getId());
-                            }
-
-                            PlanDeTrabajo planDeTrabajo = proyectoActual.getPlanDeTrabajo();
-                            if (planDeTrabajo != null) {
-                                model.addAttribute("planDeTrabajo", planDeTrabajo);
-
-                                logger.info("PlanDeTrabajo no es nulo. Intentando obtener actividades para el plan de trabajo ID: {}", planDeTrabajo.getPlanDeTrabajoId());
-                                List<Actividad> actividades = actividadService.obtenerActividadesPorPlanDeTrabajo(planDeTrabajo);
-                                logger.info("Resultado de obtenerActividadesPorPlanDeTrabajo: {}", actividades != null ? "Lista (tamaño: " + actividades.size() + ")" : "null");
-
+                            if (proyectoActual.getPlanDeTrabajo() != null) {
+                                model.addAttribute("planDeTrabajo", proyectoActual.getPlanDeTrabajo());
+                                List<Actividad> actividades = proyectoActual.getPlanDeTrabajo().getActividades();
                                 model.addAttribute("actividades", actividades != null ? actividades : Collections.emptyList());
 
-                                logger.info("Intentando obtener entregas para el proyecto ID: {}", proyectoActual.getProyectoId());
+                                logger.info("Intentando obtener entregas para el estudiante ID: {}", estudiante.getId());
                                 List<Entrega> entregas = entregaService.buscarPorProyecto(proyectoActual);
-                                logger.info("Resultado de buscarPorProyecto (Entregas): {}", entregas != null ? "Lista (tamaño: " + entregas.size() + ")" : "null");
-
+                                logger.info("Resultado de buscarPorProyecto: {}", entregas != null ? "Lista (tamaño: " + entregas.size() + ")" : "null");
                                 model.addAttribute("entregas", entregas != null ? entregas : Collections.emptyList());
 
                                 logger.info("Intentando obtener informes para el estudiante ID: {}", estudiante.getId());
@@ -138,7 +126,7 @@ public class EstudianteController {
                                 model.addAttribute("actividades", Collections.emptyList());
                                 model.addAttribute("entregas", Collections.emptyList());
                                 model.addAttribute("informes", Collections.emptyList());
-                                return "indexAlumno";
+                                return "redirect:/estudiante-sin-pps/dashboard";
                             }
                         } else {
                             logger.warn("El estudiante no tiene proyectos asignados: {} {}", estudiante.getNombre(), estudiante.getApellido());
@@ -147,7 +135,7 @@ public class EstudianteController {
                             model.addAttribute("actividades", Collections.emptyList());
                             model.addAttribute("entregas", Collections.emptyList());
                             model.addAttribute("informes", Collections.emptyList());
-                            return "indexAlumnoSinPPS";
+                            return "redirect:/estudiante-sin-pps/dashboard";
                         }
                     }
                 }
@@ -229,22 +217,6 @@ public class EstudianteController {
             logger.error("Error al crear informe: {}", e.getMessage());
             return "redirect:/estudiante/dashboard?error=error_crear_informe";
         }
-    }
-
-    @GetMapping("/sin-pps")
-    public String sinPPS(Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated()) {
-            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-            Usuario usuario = userDetails.getUsuario();
-
-            if (usuario instanceof Estudiante) {
-                Estudiante estudiante = (Estudiante) usuario;
-                model.addAttribute("estudiante", estudiante);
-                return "indexAlumnoSinPPS";
-            }
-        }
-        return "redirect:/login";
     }
 
     @GetMapping("/entregas/hechas")
@@ -433,5 +405,91 @@ public class EstudianteController {
             logger.error("Error al descargar el archivo de la entrega {}: {}", id, e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    @GetMapping("/estudiante-sin-pps/proyecto/{cuit}/{titulo}")
+    public String verDetalleProyecto(@PathVariable Long cuit, 
+                                   @PathVariable String titulo, 
+                                   Model model) {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication != null && authentication.isAuthenticated()) {
+                Object principal = authentication.getPrincipal();
+
+                if (principal instanceof CustomUserDetails) {
+                    CustomUserDetails userDetails = (CustomUserDetails) principal;
+                    Usuario usuario = userDetails.getUsuario();
+
+                    if (usuario instanceof Estudiante) {
+                        Estudiante estudiante = (Estudiante) usuario;
+                        model.addAttribute("estudiante", estudiante);
+
+                        Proyecto proyecto = proyectoService.getProyectoByTituloAndCuit(titulo, cuit);
+                        if (proyecto != null) {
+                            model.addAttribute("proyecto", proyecto);
+                            return "detalleProyecto";
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            logger.error("Error al ver detalle del proyecto: {}", e.getMessage(), e);
+        }
+        return "redirect:/estudiante-sin-pps/dashboard";
+    }
+
+    @PostMapping("/estudiante-sin-pps/proyecto/{cuit}/{titulo}/inscribirse")
+    public String inscribirseEnProyecto(@PathVariable Long cuit, 
+                                      @PathVariable String titulo, 
+                                      RedirectAttributes redirectAttributes) {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication != null && authentication.isAuthenticated()) {
+                Object principal = authentication.getPrincipal();
+
+                if (principal instanceof CustomUserDetails) {
+                    CustomUserDetails userDetails = (CustomUserDetails) principal;
+                    Usuario usuario = userDetails.getUsuario();
+
+                    if (usuario instanceof Estudiante) {
+                        Estudiante estudiante = (Estudiante) usuario;
+                        proyectoService.inscribirEstudianteEnProyecto(titulo, cuit, estudiante);
+                        redirectAttributes.addFlashAttribute("mensaje", "Te has inscrito exitosamente al proyecto");
+                        return "redirect:/estudiante-sin-pps/dashboard";
+                    }
+                }
+            }
+        } catch (Exception e) {
+            logger.error("Error al inscribirse en el proyecto: {}", e.getMessage(), e);
+            redirectAttributes.addFlashAttribute("error", "Error al inscribirse en el proyecto: " + e.getMessage());
+        }
+        return "redirect:/estudiante-sin-pps/dashboard";
+    }
+
+    @PostMapping("/estudiante-sin-pps/solicitud/{id}/cancelar")
+    public String cancelarSolicitud(@PathVariable Long id, 
+                                  RedirectAttributes redirectAttributes) {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication != null && authentication.isAuthenticated()) {
+                Object principal = authentication.getPrincipal();
+
+                if (principal instanceof CustomUserDetails) {
+                    CustomUserDetails userDetails = (CustomUserDetails) principal;
+                    Usuario usuario = userDetails.getUsuario();
+
+                    if (usuario instanceof Estudiante) {
+                        Estudiante estudiante = (Estudiante) usuario;
+                        proyectoService.cancelarSolicitud(id, estudiante);
+                        redirectAttributes.addFlashAttribute("mensaje", "Solicitud cancelada exitosamente");
+                        return "redirect:/estudiante-sin-pps/dashboard";
+                    }
+                }
+            }
+        } catch (Exception e) {
+            logger.error("Error al cancelar la solicitud: {}", e.getMessage(), e);
+            redirectAttributes.addFlashAttribute("error", "Error al cancelar la solicitud: " + e.getMessage());
+        }
+        return "redirect:/estudiante-sin-pps/dashboard";
     }
 }

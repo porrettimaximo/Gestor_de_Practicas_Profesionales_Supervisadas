@@ -1,5 +1,6 @@
 package ing.gpps.repository;
 
+import ing.gpps.entity.Solicitud;
 import ing.gpps.entity.institucional.*;
 import ing.gpps.entity.users.*;
 import ing.gpps.service.EntidadService;
@@ -31,6 +32,7 @@ public class SetupDataBase implements CommandLineRunner {
     private final NotificacionRepository notificacionRepository;
     private final TutorRepository tutorRepository;
     private final ActividadRepository actividadRepository;
+    private SolicitudRepository solicitudRepository;
 
     @Autowired
     public SetupDataBase(UsuarioRepository usuarioRepository, UsuarioService usuarioService,
@@ -38,7 +40,8 @@ public class SetupDataBase implements CommandLineRunner {
                          EntidadRepository entidadRepository, PlanDeTrabajoRepository planDeTrabajoRepository,
                          EntidadService entidadService,
                          AreaRepository areaRepository, EstudianteService estudianteService, NotificacionRepository notificacionRepository,
-                         TutorRepository tutorRepository, ActividadRepository actividadRepository) {
+                         TutorRepository tutorRepository, ActividadRepository actividadRepository,
+                         SolicitudRepository solicitudRepository) {
         this.usuarioRepository = usuarioRepository;
         this.usuarioService = usuarioService;
         this.proyectoRepository = proyectoRepository;
@@ -51,6 +54,7 @@ public class SetupDataBase implements CommandLineRunner {
         this.tutorRepository = tutorRepository;
         this.actividadRepository = actividadRepository;
         this.areaRepository = areaRepository;
+        this.solicitudRepository = solicitudRepository;
     }
 
     // Asegurar que el usuario porrettimaxi tiene un proyecto asignado
@@ -145,16 +149,27 @@ public class SetupDataBase implements CommandLineRunner {
                 entidad3
         );
 
+        // Crear proyectos
+        Proyecto proyecto4 = new Proyecto(
+                "Aplicación de gestión de inventario y ventas",
+                "Desarrollo de una aplicación web para gestión de inventario y ventas. Incluye interfaz intuitiva para seguimiento de productos, gestión de ventas y generación de informes.",
+                tutorUNRN2,
+                tutorExterno,
+                entidad1
+        );
+
         Area area0 = new Area("Desarrollo de Software");
         areaRepository.save(area0); // Guardar el área en la base de datos
 
         proyecto1.setArea(area0);
+        proyecto2.setArea(area0);
 
         // Agregar objetivos
         // Guardar los proyectos primero
         proyectoRepository.save(proyecto1);
         proyectoRepository.save(proyecto2);
         proyectoRepository.save(proyecto3);
+        proyectoRepository.save(proyecto4);
 
         // Ahora asignamos los estudiantes a los proyectos
         managedEstudiante2.asignarProyecto(proyecto1);
@@ -183,9 +198,16 @@ public class SetupDataBase implements CommandLineRunner {
         proyecto3.addObjetivo("Crear el módulo de seguimiento de pacientes.");
         proyecto3.addObjetivo("Desarrollar el sistema de agenda médica.");
 
+        //agregar objetivos al proyecto4
+        proyecto4.addObjetivo("Desarrollar una interfaz de usuario intuitiva y responsive.");
+        proyecto4.addObjetivo("Implementar un sistema de gestión de inventario con alertas de stock.");
+        proyecto4.addObjetivo("Crear un módulo de ventas con generación de facturas.");
+        proyecto4.addObjetivo("Desarrollar un panel de administración para la gestión de usuarios y permisos.");
+
         proyecto1.setProgreso(75);
         proyecto2.setProgreso(30);
         proyecto3.setProgreso(15);
+        proyecto4.setProgreso(0);
 
         // Crear planes de trabajo
         PlanDeTrabajo planDeTrabajo1 = new PlanDeTrabajo(
@@ -207,6 +229,13 @@ public class SetupDataBase implements CommandLineRunner {
                 LocalDate.now(),
                 LocalDate.of(2025, 10, 31),
                 proyecto3
+        );
+
+        PlanDeTrabajo planDeTrabajo4 = new PlanDeTrabajo(
+                1,
+                LocalDate.now(),
+                LocalDate.of(2025, 12, 1),
+                proyecto4
         );
 
         // Crear actividades para cada plan de trabajo
@@ -242,10 +271,18 @@ public class SetupDataBase implements CommandLineRunner {
         );
         actividad4.setFechaLimite(LocalDate.of(2025, 5, 20));
 
+        Actividad actividad5 = new Actividad(
+                1,
+                "Desarrollo de Interfaz de Usuario",
+                "Diseñar y desarrollar la interfaz de usuario de la aplicación de gestión de inventario y ventas.",
+                planDeTrabajo4, 100
+        );
+
         planDeTrabajo1.addActividad(actividad1);
         planDeTrabajo1.addActividad(actividad2);
         planDeTrabajo2.addActividad(actividad3);
         planDeTrabajo3.addActividad(actividad4);
+        planDeTrabajo4.addActividad(actividad5);
 
         // Crear entregas
         Entrega entrega1 = new Entrega(
@@ -276,10 +313,18 @@ public class SetupDataBase implements CommandLineRunner {
                 actividad4
         );
 
+        Entrega entrega6 = new Entrega(
+                "Entrega 1: Interfaz de Usuario",
+                "Documento con el diseño de la interfaz de usuario de la aplicación de gestión de inventario y ventas",
+                LocalDate.of(2025, 6, 15),
+                actividad5
+        );
+
         // Guardar planes de trabajo
         planDeTrabajoRepository.save(planDeTrabajo1);
         planDeTrabajoRepository.save(planDeTrabajo2);
         planDeTrabajoRepository.save(planDeTrabajo3);
+        planDeTrabajoRepository.save(planDeTrabajo4);
 
         // Guardar entregas
         entregaRepository.save(entrega1);
@@ -287,6 +332,8 @@ public class SetupDataBase implements CommandLineRunner {
 
         entregaRepository.save(entrega4);
         entregaRepository.save(entrega5);
+
+        entregaRepository.save(entrega6);
 
         // Simular entregas realizadas y aprobadas
         entrega1.setEstado(Entrega.EstadoEntrega.APROBADO);
@@ -308,16 +355,6 @@ public class SetupDataBase implements CommandLineRunner {
                 "2984123456"
         );
         entidadService.registrarEntidad(nuevaEntidad);
-
-        Proyecto p = new Proyecto("Desarrollo IA",
-                "Desarrollo de un sistema de IA para optimización de procesos industriales.",
-                null,
-                null,
-                tutorExterno,
-                nuevaEntidad
-        );
-
-        proyectoRepository.save(p);
 
         //Crea cinco áreas distintas
         List<Proyecto> proyectosArea1 = new ArrayList<>();
@@ -357,6 +394,10 @@ public class SetupDataBase implements CommandLineRunner {
         tutorRepository.save(tutorExterno2);
 
         usuarioService.registrarUsuario(adminEntidad);
+
+        Solicitud solicitud = new Solicitud(estudiante4, proyecto4);
+
+        //solicitudRepository.save(solicitud);
 
         System.out.println("Administrador de entidad cargado: " + adminEntidad.getNombre() + " (" + adminEntidad.getEmail() + ")");
 

@@ -41,6 +41,10 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
     private String determineTargetUrl(CustomUserDetails userDetails) {
         if (userDetails.getUsuario() instanceof Estudiante) {
+            Estudiante estudiante = (Estudiante) userDetails.getUsuario();
+            if (estudiante.getProyecto() == null) {
+                return "/estudiante-sin-pps/dashboard";
+            }
             return "/estudiante/dashboard";
         } else if (userDetails.getUsuario() instanceof DocenteSupervisor) {
             return "/docente-supervisor/dashboard";

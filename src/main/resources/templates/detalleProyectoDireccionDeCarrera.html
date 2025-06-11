@@ -377,8 +377,8 @@
             <div class="section-card">
                 <h4>Estado del Proyecto</h4>
                 <div class="section-info" th:if="${proyecto != null}">
-                    <p><strong>Progreso:</strong> <span >0%</span></p>
-                    <p><strong>Horas Completadas:</strong> <span>0</span></p>
+                    <p><strong>Progreso:</strong> <span th:text="${progreso + '%'}">0%</span></p>
+                    <p><strong>Horas Completadas:</strong> <span th:text="${horasCompletadas}">0</span></p>
                     <p><strong>Horas Totales:</strong> <span>200</span></p>
                 </div>
                 <div class="section-info" th:unless="${proyecto != null}">
@@ -400,7 +400,7 @@
                     </div>
                     <p th:text="${actividad.descripcion != null ? actividad.descripcion : 'No hay descripción disponible'}">Descripción de la actividad</p>
                     <div class="section-info">
-                        <p><strong>Horas Estimadas:</strong> <span th:text="${actividad.horas != null ? actividad.horas : 'No disponible'}">0</span></p>
+                        <p><strong>Horas Estimadas:</strong> <span th:text="${actividad.cantidadHoras != null ? actividad.cantidadHoras : 'No disponible'}">0</span></p>
                         <p><strong>Fecha Límite:</strong> 
                             <span th:if="${actividad.fechaLimite != null}" 
                                   th:text="${#temporals.format(actividad.fechaLimite, 'dd/MM/yyyy')}">01/01/2024</span>

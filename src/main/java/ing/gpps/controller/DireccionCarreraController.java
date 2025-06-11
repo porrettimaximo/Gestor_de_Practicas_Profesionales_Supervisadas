@@ -114,7 +114,14 @@ public class DireccionCarreraController {
                 return "redirect:/direccion/dashboard";
             }
 
+            int horasCompletadas = proyectoService.calcularHorasCompletadas(proyecto);
+
+            double progreso = proyectoService.calcularProgreso(proyecto);
+
             model.addAttribute("proyecto", proyecto);
+            model.addAttribute("horasCompletadas", horasCompletadas);
+            model.addAttribute("progreso", progreso);
+
             return "detalleProyectoDireccionDeCarrera";
         } catch (Exception e) {
             logger.error("Error al ver detalle del proyecto: {}", e.getMessage());

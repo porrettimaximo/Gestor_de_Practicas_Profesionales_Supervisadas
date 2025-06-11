@@ -208,4 +208,20 @@ public class ProyectoService {
 
         return (double) horasCompletadas / horasTotales * 100;
     }
+
+    public int calcularHorasCompletadas(Proyecto proyecto) {
+        if (proyecto == null || proyecto.getPlanDeTrabajo() == null) {
+            return 0;
+        }
+
+        List<Actividad> actividades = proyecto.getPlanDeTrabajo().getActividades();
+        if (actividades == null || actividades.isEmpty()) {
+            return 0;
+        }
+
+        return actividades.stream()
+                .filter(a -> a.getEstado() == Actividad.EstadoActividad.COMPLETADA)
+                .mapToInt(Actividad::getCantidadHoras)
+                .sum();
+    }
 }

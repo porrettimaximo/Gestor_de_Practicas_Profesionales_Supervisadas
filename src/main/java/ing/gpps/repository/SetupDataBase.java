@@ -251,7 +251,7 @@ public class SetupDataBase implements CommandLineRunner {
                 2,
                 "Diseño de Arquitectura",
                 "Diseñar la arquitectura del sistema, incluyendo diagramas de clases, secuencia y componentes.",
-                planDeTrabajo1, 50
+                planDeTrabajo1, 100
         );
         actividad2.setFechaLimite(LocalDate.of(2025, 5, 15));
 

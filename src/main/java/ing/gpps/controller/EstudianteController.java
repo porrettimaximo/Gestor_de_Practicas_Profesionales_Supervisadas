@@ -36,6 +36,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.Collections;
+import java.util.Map;
 
 import static java.lang.Integer.valueOf;
 
@@ -431,6 +432,134 @@ public class EstudianteController {
                     .body(resource);
         } catch (Exception e) {
             logger.error("Error al descargar el archivo de la entrega {}: {}", id, e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping("/estudiante-sin-pps/proyecto/{cuit}/{titulo}")
+    public String verDetalleProyecto(@PathVariable Long cuit,
+                                   @PathVariable String titulo,
+                                   Model model) {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication != null && authentication.isAuthenticated()) {
+                Object principal = authentication.getPrincipal();
+
+                if (principal instanceof CustomUserDetails) {
+                    CustomUserDetails userDetails = (CustomUserDetails) principal;
+                    Usuario usuario = userDetails.getUsuario();
+
+                    if (usuario instanceof Estudiante) {
+                        Estudiante estudiante = (Estudiante) usuario;
+                        model.addAttribute("estudiante", estudiante);
+
+                        Proyecto proyecto = proyectoService.getProyectoByTituloAndCuit(titulo, cuit);
+                        if (proyecto != null) {
+                            model.addAttribute("proyecto", proyecto);
+                            return "detalleProyecto";
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            logger.error("Error al ver detalle del proyecto: {}", e.getMessage(), e);
+        }
+        return "redirect:/estudiante-sin-pps/dashboard";
+    }
+
+    @PostMapping("/estudiante-sin-pps/proyecto/{cuit}/{titulo}/inscribirse")
+    public String inscribirseEnProyecto(@PathVariable Long cuit,
+                                      @PathVariable String titulo,
+                                      RedirectAttributes redirectAttributes) {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication != null && authentication.isAuthenticated()) {
+                Object principal = authentication.getPrincipal();
+
+                if (principal instanceof CustomUserDetails) {
+                    CustomUserDetails userDetails = (CustomUserDetails) principal;
+                    Usuario usuario = userDetails.getUsuario();
+
+                    if (usuario instanceof Estudiante) {
+                        Estudiante estudiante = (Estudiante) usuario;
+                        proyectoService.inscribirEstudianteEnProyecto(titulo, cuit, estudiante);
+                        redirectAttributes.addFlashAttribute("mensaje", "Te has inscrito exitosamente al proyecto");
+                        return "redirect:/estudiante-sin-pps/dashboard";
+                    }
+                }
+            }
+        } catch (Exception e) {
+            logger.error("Error al inscribirse en el proyecto: {}", e.getMessage(), e);
+            redirectAttributes.addFlashAttribute("error", "Error al inscribirse en el proyecto: " + e.getMessage());
+        }
+        return "redirect:/estudiante-sin-pps/dashboard";
+    }
+
+    @PostMapping("/estudiante-sin-pps/solicitud/{id}/cancelar")
+    public String cancelarSolicitud(@PathVariable Long id,
+                                  RedirectAttributes redirectAttributes) {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication != null && authentication.isAuthenticated()) {
+                Object principal = authentication.getPrincipal();
+
+                if (principal instanceof CustomUserDetails) {
+                    CustomUserDetails userDetails = (CustomUserDetails) principal;
+                    Usuario usuario = userDetails.getUsuario();
+
+                    if (usuario instanceof Estudiante) {
+                        Estudiante estudiante = (Estudiante) usuario;
+                        proyectoService.cancelarSolicitud(id, estudiante);
+                        redirectAttributes.addFlashAttribute("mensaje", "Solicitud cancelada exitosamente");
+                        return "redirect:/estudiante-sin-pps/dashboard";
+                    }
+                }
+            }
+        } catch (Exception e) {
+            logger.error("Error al cancelar la solicitud: {}", e.getMessage(), e);
+            redirectAttributes.addFlashAttribute("error", "Error al cancelar la solicitud: " + e.getMessage());
+        }
+        return "redirect:/estudiante-sin-pps/dashboard";
+    }
+
+    @GetMapping("/descargarActividad/{numero}/{planNumero}/{proyectoTitulo}/{proyectoCuit}")
+    public ResponseEntity<Resource> descargarActividad(
+            @PathVariable int numero,
+            @PathVariable int planNumero,
+            @PathVariable String proyectoTitulo,
+            @PathVariable Long proyectoCuit) {
+        try {
+            ProyectoId proyectoId = new ProyectoId(proyectoTitulo, proyectoCuit);
+            PlanDeTrabajoId planDeTrabajoId = new PlanDeTrabajoId(planNumero, proyectoId);
+            ActividadId actividadId = new ActividadId(numero, planDeTrabajoId);
+
+            Optional<Actividad> actividadOpt = actividadService.obtenerActividadPorId(actividadId);
+            if (!actividadOpt.isPresent() || actividadOpt.get().getRutaArchivo() == null) {
+                return ResponseEntity.notFound().build();
+            }
+
+            Actividad actividad = actividadOpt.get();
+            Path filePath = Paths.get(actividad.getRutaArchivo());
+
+            if (!Files.exists(filePath) || !Files.isReadable(filePath)) {
+                logger.warn("Archivo no encontrado o no legible en la ruta: {}. Actividad Numero: {}, Plan: {}, Proyecto: {}, Cuit: {}", filePath, numero, planNumero, proyectoTitulo, proyectoCuit);
+                return ResponseEntity.notFound().build();
+            }
+
+            Resource resource = new FileSystemResource(filePath.toFile());
+            String contentType = Files.probeContentType(filePath);
+            if (contentType == null) {
+                contentType = "application/octet-stream";
+            }
+
+            String filename = filePath.getFileName().toString();
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(contentType))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
+                    .body(resource);
+        } catch (Exception e) {
+            logger.error("Error al descargar archivo de actividad para Numero: {}, Plan: {}, Proyecto: {}, Cuit: {}. Error: {}", numero, planNumero, proyectoTitulo, proyectoCuit, e.getMessage(), e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }

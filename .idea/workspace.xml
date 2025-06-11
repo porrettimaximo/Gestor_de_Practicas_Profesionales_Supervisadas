@@ -4,14 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8a4dffd5-889c-4703-adf3-92d1edf6cbdc" name="Changes" comment="merge funcional notificaciones">
+    <list default="true" id="8a4dffd5-889c-4703-adf3-92d1edf6cbdc" name="Changes" comment="DocenteSupervisor y estudianteSinPPS">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ing/gpps/controller/AdminEntidadController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/controller/AdminEntidadController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ing/gpps/entity/institucional/Proyecto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/entity/institucional/Proyecto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ing/gpps/repository/PlanDeTrabajoRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/repository/PlanDeTrabajoRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ing/gpps/service/AdminEntidadService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/service/AdminEntidadService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/indexAdminEntidad.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/indexAdminEntidad.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ing/gpps/controller/DireccionCarreraController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/controller/DireccionCarreraController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ing/gpps/service/ProyectoService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/service/ProyectoService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/detalleProyectoDireccionDeCarrera.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/detalleProyectoDireccionDeCarrera.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,7 +44,7 @@
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/L-Salvo/gpps.git&quot;,
-    &quot;accountId&quot;: &quot;3cdb0cf6-98e0-477e-adf0-45033d6fc656&quot;
+    &quot;accountId&quot;: &quot;06c589a1-3503-4190-b8f8-1e390d41c1ff&quot;
   }
 }</component>
   <component name="MavenImportPreferences">
@@ -57,32 +54,40 @@
       </MavenGeneralSettings>
     </option>
   </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 6
 }</component>
   <component name="ProjectId" id="2xML9BqufsyU296fmMvKhNX4q7F" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
-    <ConfirmationsSetting value="2" id="Add" />
-  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.DemoApplication.executor&quot;: &quot;Run&quot;,
-    &quot;JUnit.NotificarServiceTest.executor&quot;: &quot;Run&quot;,
-    &quot;Maven.demo [org.apache.maven.plugins:maven-clean-plugin:3.3.2:clean].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.demo [org.apache.maven.plugins:maven-clean-plugin:3.4.1:clean].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.demo [org.apache.maven.plugins:maven-jar-plugin:3.4.2:jar].executor&quot;: &quot;Run&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main2.0-EntregasYActividades&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/Documents/UNRN/3-año/3-Ingenieria de Software/repoPorreti&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.DemoApplication.executor": "Run",
+    "JUnit.NotificarServiceTest.executor": "Run",
+    "Maven.demo [org.apache.maven.plugins:maven-clean-plugin:3.3.2:clean].executor": "Run",
+    "Maven.demo [org.apache.maven.plugins:maven-clean-plugin:3.4.1:clean].executor": "Run",
+    "Maven.demo [org.apache.maven.plugins:maven-jar-plugin:3.4.2:jar].executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main2.0-EntregasYActividades",
+    "last_opened_file_path": "C:/Users/1lau_/Downloads/demo/gpps/src/main/resources/templates",
+    "settings.editor.selected.configurable": "preferences.pluginManager"
   }
-}</component>
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="ing.gpps.repository" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\1lau_\Downloads\demo\gpps\src\main\resources\templates" />
+    </key>
+  </component>
   <component name="RunManager" selected="Application.DemoApplication">
     <configuration name="DemoApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="ing.gpps.DemoApplication" />
@@ -148,7 +153,15 @@
       <option name="project" value="LOCAL" />
       <updated>1749517478901</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="DocenteSupervisor y estudianteSinPPS">
+      <option name="closed" value="true" />
+      <created>1749679043526</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1749679043526</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -164,20 +177,41 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="merge funcional notificaciones" />
-    <option name="LAST_COMMIT_MESSAGE" value="merge funcional notificaciones" />
+    <MESSAGE value="DocenteSupervisor y estudianteSinPPS" />
+    <option name="LAST_COMMIT_MESSAGE" value="DocenteSupervisor y estudianteSinPPS" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
+        <line-breakpoint type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/ing/gpps/controller/AdminController.java</url>
           <line>206</line>
           <option name="timeStamp" value="14" />
         </line-breakpoint>
+        <line-breakpoint type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/ing/gpps/repository/PlanDeTrabajoRepository.java</url>
+          <line>14</line>
+          <option name="timeStamp" value="15" />
+        </line-breakpoint>
+        <line-breakpoint type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/ing/gpps/controller/DireccionCarreraController.java</url>
+          <line>91</line>
+          <option name="timeStamp" value="17" />
+        </line-breakpoint>
+        <line-breakpoint type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/ing/gpps/controller/DireccionCarreraController.java</url>
+          <line>74</line>
+          <option name="timeStamp" value="18" />
+        </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/ing/gpps/repository/SetupDataBase.java</url>
-          <line>78</line>
-          <option name="timeStamp" value="16" />
+          <url>file://$PROJECT_DIR$/src/main/java/ing/gpps/controller/EstudianteSinPPSController.java</url>
+          <line>97</line>
+          <option name="timeStamp" value="20" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/ing/gpps/controller/DireccionCarreraController.java</url>
+          <line>116</line>
+          <option name="timeStamp" value="22" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

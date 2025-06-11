@@ -1,5 +1,6 @@
 package ing.gpps.repository;
 
+import ing.gpps.entity.Solicitud;
 import ing.gpps.entity.institucional.Proyecto;
 import ing.gpps.entity.idClasses.ProyectoId;
 import ing.gpps.entity.users.DocenteSupervisor;
@@ -38,4 +39,8 @@ public interface ProyectoRepository extends JpaRepository<Proyecto, ProyectoId> 
     Optional<Proyecto> findByProyectoId(ProyectoId id);
 
     List<Proyecto> findAllByProyectoIdCuitEntidad(Long cuitEntidad);
+
+    List<Proyecto> findByEstado(Proyecto.EstadoProyecto estado);
+    @Query("SELECT DISTINCT p FROM Proyecto p JOIN Solicitud s ON s.proyecto = p WHERE s.solicitante = :estudiante AND s.estado = :estado")
+    List<Proyecto> findBySolicitudes_EstudianteAndSolicitudes_Estado(@Param("estudiante") Estudiante estudiante, @Param("estado") Solicitud.EstadoSolicitud estado);
 }

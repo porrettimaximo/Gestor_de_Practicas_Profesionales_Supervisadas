@@ -1,5 +1,6 @@
 package ing.gpps.entity.institucional;
 
+import ing.gpps.entity.Solicitud;
 import ing.gpps.entity.idClasses.ProyectoId;
 import ing.gpps.entity.users.DocenteSupervisor;
 import ing.gpps.entity.users.Estudiante;
@@ -49,6 +50,9 @@ public class Proyecto {
     @JoinColumn(name = "tutor_externo_id")
     private TutorExterno tutorExterno;
 
+    @OneToMany(mappedBy = "proyecto", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Solicitud> solicitudes = new ArrayList<>();
+
     @ElementCollection
     private List<String> objetivos = new ArrayList<>();
 
@@ -71,6 +75,16 @@ public class Proyecto {
         this.progreso = 0;
         this.proyectoId = new ProyectoId(titulo, entidad.getCuit());
         this.estado = EstadoProyecto.EN_CURSO;
+    }
+    public Proyecto(String titulo, String descripcion,
+                    DocenteSupervisor tutorUNRN, TutorExterno tutorExterno, Entidad entidad) {
+        this.descripcion = descripcion;
+        this.tutorUNRN = tutorUNRN;
+        this.tutorExterno = tutorExterno;
+        this.entidad = entidad;
+        this.progreso = 0;
+        this.proyectoId = new ProyectoId(titulo, entidad.getCuit());
+        this.estado = EstadoProyecto.EN_ESPERA;
     }
 
     public void addObjetivo(String objetivo) {
@@ -108,6 +122,7 @@ public class Proyecto {
         this.estudiante = e;
         if (e != null) {
             e.setProyecto(this);
+            this.estudiante = e;
         }
         estado = EstadoProyecto.EN_CURSO;
     }
@@ -150,6 +165,10 @@ public class Proyecto {
 
         public String getLabel() {
             return label;
+        }
+
+        public boolean isActivo() {
+            return this == EN_CURSO;
         }
     }
 }

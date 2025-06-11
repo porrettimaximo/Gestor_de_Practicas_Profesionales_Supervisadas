@@ -381,6 +381,7 @@
                         <th>Estado</th>
                         <th>Comentarios</th>
                         <th>Acciones</th>
+                        <th>Archivo</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -407,6 +408,19 @@
                             <button class="action-button" th:onclick="'cambiarEstadoActividad(' + ${actividad.actividadId.numero} + ')'">
                                 <i class="fas fa-edit"></i> Cambiar Estado
                             </button>
+                        </td>
+                        <td>
+                            <a th:if="${actividad.rutaArchivo != null}" 
+                               th:href="@{/docente-supervisor/descargarActividad/{numero}/{planNumero}/{proyectoTitulo}/{proyectoCuit}(
+                                   numero=${actividad.actividadId.numero},
+                                   planNumero=${actividad.actividadId.planDeTrabajoId.numero},
+                                   proyectoTitulo=${actividad.actividadId.planDeTrabajoId.proyectoId.titulo},
+                                   proyectoCuit=${actividad.actividadId.planDeTrabajoId.proyectoId.cuitEntidad}
+                               )}" 
+                               class="btn small">
+                                <i class="fas fa-download"></i> Descargar
+                            </a>
+                            <span th:unless="${actividad.rutaArchivo != null}" class="no-file">Sin archivo</span>
                         </td>
                     </tr>
                 </tbody>
@@ -519,7 +533,9 @@
         <div class="modal-content">
             <span class="close" onclick="closeCreateActivityModal()">&times;</span>
             <h3>Crear Nueva Actividad</h3>
-            <form th:action="@{/docente-supervisor/proyecto/{cuit}/{titulo}/actividad/crear(cuit=${proyecto.proyectoId.cuitEntidad},titulo=${proyecto.proyectoId.titulo})}" method="POST">
+            <form th:action="@{/docente-supervisor/proyecto/{cuit}/{titulo}/actividad/crear(cuit=${proyecto.proyectoId.cuitEntidad},titulo=${proyecto.proyectoId.titulo})}" 
+                  method="POST" 
+                  enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="nombre">Nombre de la Actividad</label>
                     <input type="text" id="nombre" name="nombre" required>
@@ -537,6 +553,11 @@
                     <input type="date" id="fechaLimite" name="fechaLimite" required 
                            th:min="${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}"
                            th:value="${#temporals.format(#temporals.createNow().plusDays(7), 'yyyy-MM-dd')}">
+                </div>
+                <div class="form-group">
+                    <label for="archivo">Archivo de la Actividad</label>
+                    <input type="file" id="archivo" name="archivo" accept=".pdf,.doc,.docx,.txt">
+                    <small class="form-text text-muted">Formatos permitidos: PDF, DOC, DOCX, TXT</small>
                 </div>
                 <button type="submit" class="submit-button">Crear Actividad</button>
             </form>

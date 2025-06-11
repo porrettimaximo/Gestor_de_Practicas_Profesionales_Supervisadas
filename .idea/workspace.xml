@@ -5,16 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8a4dffd5-889c-4703-adf3-92d1edf6cbdc" name="Changes" comment="merge funcional notificaciones">
-      <change afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/controller/NotificacionController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/service/NotificacionVisualService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ing/gpps/notificaciones/Notificacion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/notificaciones/Notificacion.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ing/gpps/repository/NotificacionRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/repository/NotificacionRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/indexAdminEntidad.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/indexAdminEntidad.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ing/gpps/controller/DocenteSupervisorController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/controller/DocenteSupervisorController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ing/gpps/controller/EstudianteController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/controller/EstudianteController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/templates/indexAlumno.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/indexAlumno.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/indexAlumnoSinPPS.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/indexAlumnoSinPPS.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/indexDocenteSupervisor.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/indexDocenteSupervisor.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/indexEntidad.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/indexEntidad.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/indexDocenteSupervisorProyecto.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/indexDocenteSupervisorProyecto.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,6 +59,7 @@
   &quot;associatedIndex&quot;: 6
 }</component>
   <component name="ProjectId" id="2xML9BqufsyU296fmMvKhNX4q7F" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />

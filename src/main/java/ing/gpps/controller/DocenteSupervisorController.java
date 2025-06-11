@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -38,6 +39,7 @@ import java.time.LocalDate;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.io.IOException;
 
 @Controller
 @RequestMapping("/docente-supervisor")
@@ -175,7 +177,8 @@ public class DocenteSupervisorController {
     public String crearActividad(@PathVariable Long cuit,
                                @PathVariable String titulo,
                                @ModelAttribute ActividadRequest actividadRequest,
-                               @RequestParam("fechaLimite") String fechaLimiteStr) {
+                               @RequestParam("fechaLimite") String fechaLimiteStr,
+                               @RequestParam(value = "archivo", required = false) MultipartFile archivo) {
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             if (auth == null || !auth.isAuthenticated() || !(auth.getPrincipal() instanceof CustomUserDetails)) {
@@ -210,6 +213,35 @@ public class DocenteSupervisorController {
             // Parsear manualmente la fecha
             LocalDate fechaLimite = LocalDate.parse(fechaLimiteStr);
             actividad.setFechaLimite(fechaLimite);
+
+            // Manejar la subida del archivo si existe
+            if (archivo != null && !archivo.isEmpty()) {
+                try {
+                    // Crear la estructura de directorios
+                    String proyectoPath = uploadPath + "/" + titulo;
+                    String actividadPath = proyectoPath + "/actividades";
+                    Path proyectoDir = Paths.get(proyectoPath);
+                    Path actividadDir = Paths.get(actividadPath);
+
+                    // Crear los directorios si no existen
+                    Files.createDirectories(actividadDir);
+
+                    // Generar nombre único para el archivo
+                    String originalFilename = archivo.getOriginalFilename();
+                    String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+                    String newFilename = "actividad_" + numeroActividad + "_" + System.currentTimeMillis() + extension;
+
+                    // Guardar el archivo
+                    Path filePath = actividadDir.resolve(newFilename);
+                    Files.copy(archivo.getInputStream(), filePath);
+
+                    // Guardar la ruta en la actividad
+                    actividad.setRutaArchivo(actividadPath + "/" + newFilename);
+                } catch (IOException e) {
+                    logger.error("Error al guardar el archivo de la actividad: {}", e.getMessage());
+                    // Continuar con la creación de la actividad incluso si falla la subida del archivo
+                }
+            }
 
             docenteSupervisorService.crearActividad(cuit.toString(), titulo, actividad);
 
@@ -371,28 +403,30 @@ public class DocenteSupervisorController {
             @PathVariable String proyectoTitulo,
             @PathVariable Long proyectoCuit) {
         try {
+            // Obtener la actividad
             ActividadId actividadId = new ActividadId(numero, new PlanDeTrabajoId(planNumero, new ProyectoId(proyectoTitulo, proyectoCuit)));
-            Actividad actividad = docenteSupervisorService.getActividadById(actividadId.numero());
-
+            Actividad actividad = docenteSupervisorService.getActividadById(numero);
+            
             if (actividad == null || actividad.getRutaArchivo() == null) {
                 return ResponseEntity.notFound().build();
             }
 
-            Path filePath = Paths.get(uploadPath, actividad.getRutaArchivo());
-            Resource resource = new FileSystemResource(filePath.toFile());
+            // Crear el recurso del archivo
+            Path filePath = Paths.get(actividad.getRutaArchivo());
+            Resource resource = new FileSystemResource(filePath);
 
+            // Verificar que el archivo existe
             if (!resource.exists()) {
                 return ResponseEntity.notFound().build();
             }
 
-            String contentType = Files.probeContentType(filePath);
-            if (contentType == null) {
-                contentType = "application/octet-stream";
-            }
+            // Configurar los headers de la respuesta
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filePath.getFileName().toString() + "\"");
+            headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM_VALUE);
 
             return ResponseEntity.ok()
-                    .contentType(MediaType.parseMediaType(contentType))
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                    .headers(headers)
                     .body(resource);
         } catch (Exception e) {
             logger.error("Error al descargar el archivo de la actividad: {}", e.getMessage());

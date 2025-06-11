@@ -434,4 +434,46 @@ public class EstudianteController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    @GetMapping("/descargarActividad/{numero}/{planNumero}/{proyectoTitulo}/{proyectoCuit}")
+    public ResponseEntity<Resource> descargarActividad(
+            @PathVariable int numero,
+            @PathVariable int planNumero,
+            @PathVariable String proyectoTitulo,
+            @PathVariable Long proyectoCuit) {
+        try {
+            ProyectoId proyectoId = new ProyectoId(proyectoTitulo, proyectoCuit);
+            PlanDeTrabajoId planDeTrabajoId = new PlanDeTrabajoId(planNumero, proyectoId);
+            ActividadId actividadId = new ActividadId(numero, planDeTrabajoId);
+
+            Optional<Actividad> actividadOpt = actividadService.obtenerActividadPorId(actividadId);
+            if (!actividadOpt.isPresent() || actividadOpt.get().getRutaArchivo() == null) {
+                return ResponseEntity.notFound().build();
+            }
+
+            Actividad actividad = actividadOpt.get();
+            Path filePath = Paths.get(actividad.getRutaArchivo());
+
+            if (!Files.exists(filePath) || !Files.isReadable(filePath)) {
+                logger.warn("Archivo no encontrado o no legible en la ruta: {}. Actividad Numero: {}, Plan: {}, Proyecto: {}, Cuit: {}", filePath, numero, planNumero, proyectoTitulo, proyectoCuit);
+                return ResponseEntity.notFound().build();
+            }
+
+            Resource resource = new FileSystemResource(filePath.toFile());
+            String contentType = Files.probeContentType(filePath);
+            if (contentType == null) {
+                contentType = "application/octet-stream";
+            }
+
+            String filename = filePath.getFileName().toString();
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(contentType))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
+                    .body(resource);
+        } catch (Exception e) {
+            logger.error("Error al descargar archivo de actividad para Numero: {}, Plan: {}, Proyecto: {}, Cuit: {}. Error: {}", numero, planNumero, proyectoTitulo, proyectoCuit, e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }

@@ -522,6 +522,7 @@
                             <th>Fecha Límite</th>
                             <th>Estado</th>
                             <th>Comentarios</th>
+                            <th>Archivo</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -542,6 +543,14 @@
                                       th:text="${actividad.comentarios}">Comentarios</span>
                                 <span th:unless="${actividad.comentarios != null && !actividad.comentarios.isEmpty()}"
                                       class="no-comment">Sin comentarios</span>
+                            </td>
+                            <td>
+                                <a th:if="${actividad.rutaArchivo != null}" 
+                                   th:href="@{/estudiante/descargarActividad/{numero}/{planNumero}/{proyectoTitulo}/{proyectoCuit}(numero=${actividad.actividadId.numero}, planNumero=${actividad.actividadId.planDeTrabajoId.numero}, proyectoTitulo=${actividad.actividadId.planDeTrabajoId.proyectoId.titulo}, proyectoCuit=${actividad.actividadId.planDeTrabajoId.proyectoId.cuitEntidad})}" 
+                                   class="btn small">
+                                    <i class="fas fa-download"></i> Descargar
+                                </a>
+                                <span th:unless="${actividad.rutaArchivo != null}" class="no-file">Sin archivo</span>
                             </td>
                             <td>
                                 <div class="document-actions">

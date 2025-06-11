@@ -132,9 +132,9 @@ public class Proyecto {
             this.entidad.removeProyecto(this);
         }
         this.entidad = entidad;
-        if (entidad != null) {
-            entidad.addProyecto(this);
-        }
+//        if (entidad != null) {
+//            entidad.addProyecto(this);
+//        }
     }
 
     public enum EstadoProyecto {

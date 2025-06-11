@@ -11,6 +11,7 @@ import ing.gpps.entity.users.TutorExterno;
 import ing.gpps.repository.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -38,6 +39,7 @@ public class AdminEntidadService {
     // ✅ AGREGAR ENTITYMANAGER
     @Autowired
     private EntidadService entidadService;
+    @PersistenceContext
     private EntityManager entityManager;
 
     public AdminEntidadService(AdminEntidadRepository adminEntidadRepository, TutorRepository tutorRepository, EntidadRepository entidadRepository, ProyectoRepository proyectoRepository, PlanDeTrabajoRepository planDeTrabajoRepository, ActividadRepository actividadRepository, EstudianteRepository estuditanteRepository, UsuarioService usuarioService, AreaRepository areaRepository) {
@@ -117,6 +119,8 @@ public class AdminEntidadService {
         return proyectos;
     }
 
+    //MODIFICAR LA CARGA DE ACTIVIDADES: REEMPLAZAR "ADJUNTA ARCHIVO" POR FECHA LIMITE
+
     @Transactional
     public void generarPlanDeTrabajo(List<Actividad> actividadesFormulario, int numeroPlan, LocalDate inicio, LocalDate fin, String tituloProyecto, Long cuitEntidad) {
         System.out.println("🚀 Iniciando generación de plan de trabajo...");
@@ -124,6 +128,7 @@ public class AdminEntidadService {
         if (actividadesFormulario == null || actividadesFormulario.isEmpty()) {
             throw new IllegalArgumentException("La lista de actividades no puede ser nula o vacía.");
         }
+        validarCantidadHoras(actividadesFormulario);
 
         // 1. Crear el ID del proyecto y plan
         ProyectoId proyectoId = new ProyectoId(tituloProyecto, cuitEntidad);
@@ -172,6 +177,7 @@ public class AdminEntidadService {
             nuevaActividad.setNombre(actividadFormulario.getNombre());
             nuevaActividad.setDescripcion(actividadFormulario.getDescripcion());
             nuevaActividad.setCantidadHoras(actividadFormulario.getCantidadHoras());
+            nuevaActividad.setFechaLimite(actividadFormulario.getFechaLimite());
 
             // Asignar IDs manualmente
             ActividadId actividadId = new ActividadId(i + 1, planId);
@@ -186,6 +192,19 @@ public class AdminEntidadService {
         // 9. Flush final
         entityManager.flush();
         System.out.println("🎉 Plan de trabajo guardado correctamente con " + actividadesFormulario.size() + " actividades");
+    }
+
+    private void validarCantidadHoras(List<Actividad> actividadesFormulario) {
+        int cantidadHoras = 0;
+        for (Actividad a : actividadesFormulario) {
+            if (a.getCantidadHoras() <= 0 || a.getCantidadHoras() > 200) {
+                throw new IllegalArgumentException("La cantidad de horas debe ser un número positivo y no puede superar las 200 horas.");
+            }
+            cantidadHoras += a.getCantidadHoras();
+        }
+        if(cantidadHoras > 200) {
+            throw new IllegalArgumentException("La cantidad total de horas no puede superar las 200.");
+        }
     }
 
     @Transactional
@@ -203,7 +222,7 @@ public class AdminEntidadService {
     }
 
 
-    public void modificarActividades(Actividad actividad, Long cuitEntidad, int cantidadHoras, String nombre, String descripcion, boolean adjuntaArchivo) {
+    public void modificarActividades(Actividad actividad, Long cuitEntidad, int cantidadHoras, String nombre, String descripcion, LocalDate adjuntaArchivo) {
         if (actividad == null) {
             throw new IllegalArgumentException("La lista de actividades no puede estar vacía.");
         }

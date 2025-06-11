@@ -5,16 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8a4dffd5-889c-4703-adf3-92d1edf6cbdc" name="Changes" comment="merge funcional notificaciones">
-      <change afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/controller/NotificacionController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/service/NotificacionVisualService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ing/gpps/notificaciones/Notificacion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/notificaciones/Notificacion.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ing/gpps/repository/NotificacionRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/repository/NotificacionRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ing/gpps/controller/AdminEntidadController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/controller/AdminEntidadController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ing/gpps/entity/institucional/Proyecto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/entity/institucional/Proyecto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ing/gpps/repository/PlanDeTrabajoRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/repository/PlanDeTrabajoRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ing/gpps/service/AdminEntidadService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/service/AdminEntidadService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/templates/indexAdminEntidad.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/indexAdminEntidad.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/indexAlumno.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/indexAlumno.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/indexAlumnoSinPPS.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/indexAlumnoSinPPS.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/indexDocenteSupervisor.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/indexDocenteSupervisor.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/indexEntidad.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/indexEntidad.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,6 +61,9 @@
   &quot;associatedIndex&quot;: 6
 }</component>
   <component name="ProjectId" id="2xML9BqufsyU296fmMvKhNX4q7F" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -173,11 +173,6 @@
           <url>file://$PROJECT_DIR$/src/main/java/ing/gpps/controller/AdminController.java</url>
           <line>206</line>
           <option name="timeStamp" value="14" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/ing/gpps/repository/PlanDeTrabajoRepository.java</url>
-          <line>14</line>
-          <option name="timeStamp" value="15" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/ing/gpps/repository/SetupDataBase.java</url>

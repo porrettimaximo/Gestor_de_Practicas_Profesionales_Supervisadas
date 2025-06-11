@@ -92,18 +92,31 @@ public class EstudianteController {
                         model.addAttribute("estudiante", estudiante);
 
                         List<Proyecto> proyectos = estudianteService.obtenerProyectosPorEstudiante(estudiante);
-                        if (!proyectos.isEmpty()) {
+
+                        if (proyectos != null && !proyectos.isEmpty()) {
                             Proyecto proyectoActual = proyectos.get(0);
                             model.addAttribute("proyecto", proyectoActual);
 
-                            if (proyectoActual.getPlanDeTrabajo() != null) {
-                                model.addAttribute("planDeTrabajo", proyectoActual.getPlanDeTrabajo());
-                                List<Actividad> actividades = proyectoActual.getPlanDeTrabajo().getActividades();
+                            // Verificar si el docente supervisor es nulo
+                            if (proyectoActual.getTutorUNRN() == null) {
+                                logger.warn("El proyecto del estudiante {} {} (ID: {}) no tiene un Docente Supervisor asignado.", 
+                                            estudiante.getNombre(), estudiante.getApellido(), estudiante.getId());
+                            }
+
+                            PlanDeTrabajo planDeTrabajo = proyectoActual.getPlanDeTrabajo();
+                            if (planDeTrabajo != null) {
+                                model.addAttribute("planDeTrabajo", planDeTrabajo);
+
+                                logger.info("PlanDeTrabajo no es nulo. Intentando obtener actividades para el plan de trabajo ID: {}", planDeTrabajo.getPlanDeTrabajoId());
+                                List<Actividad> actividades = actividadService.obtenerActividadesPorPlanDeTrabajo(planDeTrabajo);
+                                logger.info("Resultado de obtenerActividadesPorPlanDeTrabajo: {}", actividades != null ? "Lista (tamaño: " + actividades.size() + ")" : "null");
+
                                 model.addAttribute("actividades", actividades != null ? actividades : Collections.emptyList());
 
-                                logger.info("Intentando obtener entregas para el estudiante ID: {}", estudiante.getId());
+                                logger.info("Intentando obtener entregas para el proyecto ID: {}", proyectoActual.getProyectoId());
                                 List<Entrega> entregas = entregaService.buscarPorProyecto(proyectoActual);
-                                logger.info("Resultado de buscarPorProyecto: {}", entregas != null ? "Lista (tamaño: " + entregas.size() + ")" : "null");
+                                logger.info("Resultado de buscarPorProyecto (Entregas): {}", entregas != null ? "Lista (tamaño: " + entregas.size() + ")" : "null");
+
                                 model.addAttribute("entregas", entregas != null ? entregas : Collections.emptyList());
 
                                 logger.info("Intentando obtener informes para el estudiante ID: {}", estudiante.getId());
@@ -126,7 +139,7 @@ public class EstudianteController {
                                 model.addAttribute("actividades", Collections.emptyList());
                                 model.addAttribute("entregas", Collections.emptyList());
                                 model.addAttribute("informes", Collections.emptyList());
-                                return "redirect:/estudiante-sin-pps/dashboard";
+                                return "indexAlumno";
                             }
                         } else {
                             logger.warn("El estudiante no tiene proyectos asignados: {} {}", estudiante.getNombre(), estudiante.getApellido());
@@ -135,7 +148,7 @@ public class EstudianteController {
                             model.addAttribute("actividades", Collections.emptyList());
                             model.addAttribute("entregas", Collections.emptyList());
                             model.addAttribute("informes", Collections.emptyList());
-                            return "redirect:/estudiante-sin-pps/dashboard";
+                            return "indexAlumnoSinPPS";
                         }
                     }
                 }
@@ -217,6 +230,22 @@ public class EstudianteController {
             logger.error("Error al crear informe: {}", e.getMessage());
             return "redirect:/estudiante/dashboard?error=error_crear_informe";
         }
+    }
+
+    @GetMapping("/sin-pps")
+    public String sinPPS(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            Usuario usuario = userDetails.getUsuario();
+
+            if (usuario instanceof Estudiante) {
+                Estudiante estudiante = (Estudiante) usuario;
+                model.addAttribute("estudiante", estudiante);
+                return "indexAlumnoSinPPS";
+            }
+        }
+        return "redirect:/login";
     }
 
     @GetMapping("/entregas/hechas")
@@ -408,8 +437,8 @@ public class EstudianteController {
     }
 
     @GetMapping("/estudiante-sin-pps/proyecto/{cuit}/{titulo}")
-    public String verDetalleProyecto(@PathVariable Long cuit, 
-                                   @PathVariable String titulo, 
+    public String verDetalleProyecto(@PathVariable Long cuit,
+                                   @PathVariable String titulo,
                                    Model model) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -439,8 +468,8 @@ public class EstudianteController {
     }
 
     @PostMapping("/estudiante-sin-pps/proyecto/{cuit}/{titulo}/inscribirse")
-    public String inscribirseEnProyecto(@PathVariable Long cuit, 
-                                      @PathVariable String titulo, 
+    public String inscribirseEnProyecto(@PathVariable Long cuit,
+                                      @PathVariable String titulo,
                                       RedirectAttributes redirectAttributes) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -467,7 +496,7 @@ public class EstudianteController {
     }
 
     @PostMapping("/estudiante-sin-pps/solicitud/{id}/cancelar")
-    public String cancelarSolicitud(@PathVariable Long id, 
+    public String cancelarSolicitud(@PathVariable Long id,
                                   RedirectAttributes redirectAttributes) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -491,5 +520,47 @@ public class EstudianteController {
             redirectAttributes.addFlashAttribute("error", "Error al cancelar la solicitud: " + e.getMessage());
         }
         return "redirect:/estudiante-sin-pps/dashboard";
+    }
+
+    @GetMapping("/descargarActividad/{numero}/{planNumero}/{proyectoTitulo}/{proyectoCuit}")
+    public ResponseEntity<Resource> descargarActividad(
+            @PathVariable int numero,
+            @PathVariable int planNumero,
+            @PathVariable String proyectoTitulo,
+            @PathVariable Long proyectoCuit) {
+        try {
+            ProyectoId proyectoId = new ProyectoId(proyectoTitulo, proyectoCuit);
+            PlanDeTrabajoId planDeTrabajoId = new PlanDeTrabajoId(planNumero, proyectoId);
+            ActividadId actividadId = new ActividadId(numero, planDeTrabajoId);
+
+            Optional<Actividad> actividadOpt = actividadService.obtenerActividadPorId(actividadId);
+            if (!actividadOpt.isPresent() || actividadOpt.get().getRutaArchivo() == null) {
+                return ResponseEntity.notFound().build();
+            }
+
+            Actividad actividad = actividadOpt.get();
+            Path filePath = Paths.get(actividad.getRutaArchivo());
+
+            if (!Files.exists(filePath) || !Files.isReadable(filePath)) {
+                logger.warn("Archivo no encontrado o no legible en la ruta: {}. Actividad Numero: {}, Plan: {}, Proyecto: {}, Cuit: {}", filePath, numero, planNumero, proyectoTitulo, proyectoCuit);
+                return ResponseEntity.notFound().build();
+            }
+
+            Resource resource = new FileSystemResource(filePath.toFile());
+            String contentType = Files.probeContentType(filePath);
+            if (contentType == null) {
+                contentType = "application/octet-stream";
+            }
+
+            String filename = filePath.getFileName().toString();
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(contentType))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
+                    .body(resource);
+        } catch (Exception e) {
+            logger.error("Error al descargar archivo de actividad para Numero: {}, Plan: {}, Proyecto: {}, Cuit: {}. Error: {}", numero, planNumero, proyectoTitulo, proyectoCuit, e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }

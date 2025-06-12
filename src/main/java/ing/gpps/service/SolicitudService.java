@@ -1,8 +1,11 @@
 package ing.gpps.service;
 
 import ing.gpps.entity.Solicitud;
+import ing.gpps.entity.institucional.Convenio;
 import ing.gpps.entity.institucional.Proyecto;
 import ing.gpps.entity.users.Estudiante;
+import ing.gpps.repository.AdminEntidadRepository;
+import ing.gpps.repository.ConvenioRepository;
 import ing.gpps.repository.SolicitudRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,10 +17,14 @@ import java.util.List;
 public class SolicitudService {
 
     private final SolicitudRepository solicitudRepository;
+    private final ConvenioService convenioService;
+    private final ConvenioRepository convenioRepository;
 
     @Autowired
-    public SolicitudService(SolicitudRepository solicitudRepository) {
+    public SolicitudService(SolicitudRepository solicitudRepository, ConvenioService convenioService, ConvenioRepository convenioRepository) {
         this.solicitudRepository = solicitudRepository;
+        this.convenioService = convenioService;
+        this.convenioRepository = convenioRepository;
     }
 
     @Transactional(readOnly = true)
@@ -30,7 +37,16 @@ public class SolicitudService {
         Solicitud solicitud = solicitudRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Solicitud no encontrada"));
         solicitud.aprobar();
-        solicitud.getProyecto().asignarEstudiante((Estudiante) solicitud.getSolicitante());
+        solicitud.getProyecto().asignarEstudiante(solicitud.getSolicitante());
+
+        Convenio convenio = new Convenio(
+                solicitud.getSolicitante(),
+                solicitud.getProyecto(),
+                solicitud.getProyecto().getTutorExterno(),
+                solicitud.getProyecto().getEntidad(),
+                solicitud.getProyecto().getTutorUNRN()
+        );
+        convenioRepository.save(convenio);
         return solicitudRepository.save(solicitud);
     }
 

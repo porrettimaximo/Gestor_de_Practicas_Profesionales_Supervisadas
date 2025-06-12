@@ -5,8 +5,49 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8a4dffd5-889c-4703-adf3-92d1edf6cbdc" name="Changes" comment="front admin-entidad fixeado">
+      <change afterPath="$PROJECT_DIR$/fonts/ARIALN.TTF" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/fonts/ARIALNB.TTF" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/fonts/ARIALNBI.TTF" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/fonts/ARIALNI.TTF" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/fonts/arial.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/fonts/arialbd.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/fonts/arialbi.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/fonts/ariali.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/fonts/ariblk.ttf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/repository/ConvenioRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/indexAdminEntidad.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/indexAdminEntidad.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ing/gpps/controller/DireccionCarreraController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/controller/DireccionCarreraController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ing/gpps/controller/DocenteSupervisorController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/controller/DocenteSupervisorController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ing/gpps/controller/EstudianteController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/controller/EstudianteController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ing/gpps/dto/ConvenioDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ing/gpps/entity/institucional/Convenio.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/entity/institucional/Convenio.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ing/gpps/repository/SetupDataBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/repository/SetupDataBase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ing/gpps/service/ConvenioService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/service/ConvenioService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ing/gpps/service/SolicitudService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/service/SolicitudService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/indexAlumno.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/indexAlumno.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/indexDocenteSupervisorProyecto.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/indexDocenteSupervisorProyecto.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/postulantesProyectoDireccionDeCarrera.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/postulantesProyectoDireccionDeCarrera.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/controller/ActividadController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ing/gpps/controller/ActividadController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/controller/DireccionCarreraController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ing/gpps/controller/DireccionCarreraController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/controller/DocenteSupervisorController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ing/gpps/controller/DocenteSupervisorController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/controller/EstudianteController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ing/gpps/controller/EstudianteController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/controller/InformeController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ing/gpps/controller/InformeController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/controller/NotificacionController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ing/gpps/controller/NotificacionController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/dto/ActividadRequest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/entity/institucional/Actividad$EstadoActividad.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ing/gpps/entity/institucional/Actividad$EstadoActividad.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/entity/institucional/Actividad.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ing/gpps/entity/institucional/Actividad.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/entity/institucional/Informe.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ing/gpps/entity/institucional/Informe.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/repository/SetupDataBase.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ing/gpps/repository/SetupDataBase.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/service/ActividadService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ing/gpps/service/ActividadService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/service/DocenteSupervisorService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ing/gpps/service/DocenteSupervisorService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/service/InformeService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ing/gpps/service/InformeService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/service/SolicitudService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ing/gpps/service/SolicitudService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/templates/indexAlumno.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/templates/indexAlumno.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/templates/indexDocenteSupervisorProyecto.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/templates/indexDocenteSupervisorProyecto.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/templates/postulantesProyectoDireccionDeCarrera.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/templates/postulantesProyectoDireccionDeCarrera.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,8 +82,8 @@
 }</component>
   <component name="GithubPullRequestsUISettings"><![CDATA[{
   "selectedUrlAndAccountId": {
-    "url": "https://github.com/L-Salvo/gpps",
-    "accountId": "3fb5f2f2-52dd-4260-a689-d9a587ac60fd"
+    "url": "https://github.com/L-Salvo/gpps.git",
+    "accountId": "06c589a1-3503-4190-b8f8-1e390d41c1ff"
   }
 }]]></component>
   <component name="MavenImportPreferences">
@@ -53,13 +94,13 @@
     </option>
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="DEPENDENCY_CHECKER_PROBLEMS_TAB" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 6
 }</component>
   <component name="ProjectId" id="2xML9BqufsyU296fmMvKhNX4q7F" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+  <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
   <component name="ProjectViewState">
@@ -70,15 +111,17 @@
   "keyToString": {
     "Application.DemoApplication.executor": "Run",
     "JUnit.NotificarServiceTest.executor": "Run",
+    "Maven.demo [clean].executor": "Run",
     "Maven.demo [org.apache.maven.plugins:maven-clean-plugin:3.3.2:clean].executor": "Run",
     "Maven.demo [org.apache.maven.plugins:maven-clean-plugin:3.4.1:clean].executor": "Run",
     "Maven.demo [org.apache.maven.plugins:maven-jar-plugin:3.4.2:jar].executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main2.0-EntregasYActividades",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/1lau_/Downloads/demo/gpps/src/main/resources/templates",
+    "last_opened_file_path": "C:/Users/1lau_/Documents/Proyectos/gpps/fonts",
     "settings.editor.selected.configurable": "preferences.pluginManager"
   }
 }]]></component>
@@ -87,6 +130,7 @@
       <recent name="ing.gpps.repository" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\1lau_\Documents\Proyectos\gpps\fonts" />
       <recent name="C:\Users\1lau_\Downloads\demo\gpps\src\main\resources\templates" />
     </key>
   </component>
@@ -202,23 +246,28 @@
         </line-breakpoint>
         <line-breakpoint type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/ing/gpps/controller/DireccionCarreraController.java</url>
-          <line>91</line>
+          <line>94</line>
           <option name="timeStamp" value="17" />
         </line-breakpoint>
         <line-breakpoint type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/ing/gpps/controller/DireccionCarreraController.java</url>
-          <line>74</line>
+          <line>77</line>
           <option name="timeStamp" value="18" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/ing/gpps/controller/EstudianteSinPPSController.java</url>
-          <line>97</line>
-          <option name="timeStamp" value="20" />
+          <url>file://$PROJECT_DIR$/src/main/java/ing/gpps/controller/DireccionCarreraController.java</url>
+          <line>119</line>
+          <option name="timeStamp" value="22" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/ing/gpps/controller/DireccionCarreraController.java</url>
-          <line>116</line>
-          <option name="timeStamp" value="22" />
+          <url>file://$PROJECT_DIR$/src/main/java/ing/gpps/service/ConvenioService.java</url>
+          <line>157</line>
+          <option name="timeStamp" value="23" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/ing/gpps/repository/SetupDataBase.java</url>
+          <line>201</line>
+          <option name="timeStamp" value="24" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

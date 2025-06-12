@@ -137,6 +137,10 @@ public class EstudianteController {
 
                                 model.addAttribute("informes", informes != null ? informes : Collections.emptyList());
 
+                                double progreso = proyectoService.calcularProgreso(proyectoActual);
+
+                                model.addAttribute("progreso", progreso);
+
                                 logger.info("Cargando dashboard para estudiante: {} {}", estudiante.getNombre(), estudiante.getApellido());
                                 logger.info("Proyecto: {}", proyectoActual.getTitulo());
                                 logger.info("Número de actividades (final): {}", actividades != null ? actividades.size() : 0);

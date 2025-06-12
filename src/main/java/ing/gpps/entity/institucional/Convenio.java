@@ -2,10 +2,8 @@ package ing.gpps.entity.institucional;
 
 import jakarta.persistence.*;
 import ing.gpps.entity.users.Estudiante;
-import ing.gpps.entity.institucional.Proyecto;
 import ing.gpps.entity.users.TutorExterno;
 import ing.gpps.entity.users.DocenteSupervisor;
-import ing.gpps.entity.users.DireccionDeCarrera;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,20 +31,25 @@ public class Convenio {
     })
     private Proyecto proyecto;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "tutor_externo_id")
     private TutorExterno tutorExterno;
 
-    @ManyToOne
-    @JoinColumn(name = "entidad_id")
+    @OneToOne
+    @JoinColumn(name = "cuit")
     private Entidad entidad;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "docente_supervisor_id")
     private DocenteSupervisor docenteSupervisor;
 
-    @ManyToOne
-    @JoinColumn(name = "direccion_carrera_id")
-    private DireccionDeCarrera direccionCarrera;
+    public Convenio(Estudiante estudiante, Proyecto proyecto, TutorExterno tutorExterno, Entidad entidad, DocenteSupervisor docenteSupervisor) {
+        this.estudiante = estudiante;
+        this.proyecto = proyecto;
+        this.tutorExterno = tutorExterno;
+        this.entidad = entidad;
+        this.docenteSupervisor = docenteSupervisor;
+    }
+
 
 }

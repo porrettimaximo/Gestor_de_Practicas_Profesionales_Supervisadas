@@ -153,7 +153,9 @@ public class DocenteSupervisorController {
             List<Actividad> actividades = planDeTrabajo != null ? planDeTrabajo.getActividades() : List.of();
             List<Entrega> entregas = docenteSupervisorService.getEntregasByProyecto(proyecto);
             List<Informe> informes = informeRepository.findByActividad_PlanDeTrabajo_Proyecto(proyecto);
+            double progreso = proyectoService.calcularProgreso(proyecto);
 
+            model.addAttribute("progreso", progreso);
             model.addAttribute("tutor", tutor);
             model.addAttribute("proyecto", proyecto);
             model.addAttribute("planDeTrabajo", planDeTrabajo);

@@ -234,9 +234,31 @@
 
     <script>
         function aprobarSolicitud(id) {
-            if (confirm('¿Está seguro que desea aprobar esta solicitud?')) {
-                window.location.href = '/direccion/solicitud/' + id + '/aprobar';
-            }
+            fetch(`/direccion/solicitud/${id}/aprobar`)
+                .then(response => {
+                    if (response.ok) {
+                        return response.blob();
+                    }
+                    throw new Error('Error al aprobar la solicitud');
+                })
+                .then(blob => {
+                    // Crear un enlace temporal para la descarga
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `convenio-${id}.pdf`;
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    a.remove();
+                    
+                    // Redirigir al dashboard después de la descarga
+                    window.location.href = '/direccion/dashboard';
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error al aprobar la solicitud');
+                });
         }
 
         function rechazarSolicitud(id) {

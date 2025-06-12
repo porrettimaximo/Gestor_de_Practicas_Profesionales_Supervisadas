@@ -1,6 +1,7 @@
 package ing.gpps.controller;
 
 import ing.gpps.entity.Solicitud;
+import ing.gpps.entity.institucional.Convenio;
 import ing.gpps.entity.institucional.Entidad;
 import ing.gpps.entity.institucional.Proyecto;
 import ing.gpps.entity.users.Admin;
@@ -12,14 +13,14 @@ import ing.gpps.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -44,6 +45,8 @@ public class DireccionCarreraController {
     private SolicitudRepository solicitudRepository;
     @Autowired
     private SolicitudService solicitudService;
+    @Autowired
+    private ConvenioService convenioService;
 
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
@@ -176,20 +179,25 @@ public class DireccionCarreraController {
     }
 
     @GetMapping("/solicitud/{id}/aprobar")
-    public String aprobarSolicitud(@PathVariable Long id) {
+    public ResponseEntity<Resource> aprobarSolicitud(@PathVariable Long id) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             if (authentication == null || !authentication.isAuthenticated()) {
-                return "redirect:/login";
+                return ResponseEntity.badRequest().build();
             }
 
             Solicitud solicitud = solicitudService.aprobarSolicitud(id);
-
+            Convenio convenio = convenioService.obtenerConvenioPorSolicitud(solicitud);
+            if (solicitud != null && convenio != null) {
+                Resource resource = convenioService.generarArchivoConvenio(convenio);
+                return ResponseEntity.ok()
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                        .body(resource);
+            }
         } catch (Exception e) {
             logger.error("Error al aprobar solicitud: {}", e.getMessage());
-        }finally {
-            return "redirect:/direccion/dashboard";
         }
+        return ResponseEntity.badRequest().build();
     }
 
     @GetMapping("/solicitud/{id}/rechazar")

@@ -278,11 +278,19 @@ public class SetupDataBase implements CommandLineRunner {
                 planDeTrabajo4, 100
         );
 
+        Actividad actividad6 = new Actividad(
+                2,
+                "Implementación de Funcionalidades",
+                "Implementar las funcionalidades principales de la aplicación, incluyendo gestión de inventario y ventas.",
+                planDeTrabajo4, 100
+        );
+
         planDeTrabajo1.addActividad(actividad1);
         planDeTrabajo1.addActividad(actividad2);
         planDeTrabajo2.addActividad(actividad3);
         planDeTrabajo3.addActividad(actividad4);
         planDeTrabajo4.addActividad(actividad5);
+        planDeTrabajo4.addActividad(actividad6);
 
         // Crear entregas
         Entrega entrega1 = new Entrega(
@@ -407,6 +415,7 @@ public class SetupDataBase implements CommandLineRunner {
 
         System.out.println("Administrador de entidad cargado: " + adminEntidad.getNombre() + " (" + adminEntidad.getEmail() + ")");
 
+        proyectoRepository.save(proyecto4);
 
         System.out.println("Datos cargados correctamente");
         System.out.println("Estudiantes registrados: " + usuarioRepository.count());

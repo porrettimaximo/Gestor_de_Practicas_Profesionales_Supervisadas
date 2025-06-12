@@ -90,6 +90,10 @@ public class DireccionCarreraController {
             model.addAttribute("proyectosConPostulantes", proyectosConPostulantes);
             model.addAttribute("cantidadPostulantes", cantidadPostulantes);
 
+            // Obtener todos los convenios y añadirlos al modelo
+            List<Convenio> conveniosGenerados = convenioService.obtenerTodosLosConvenios();
+            model.addAttribute("conveniosGenerados", conveniosGenerados);
+
             return "indexDireccionDeCarrera";
         } catch (Exception e) {
             logger.error("Error en dashboard: {}", e.getMessage());
@@ -179,25 +183,27 @@ public class DireccionCarreraController {
     }
 
     @GetMapping("/solicitud/{id}/aprobar")
-    public ResponseEntity<Resource> aprobarSolicitud(@PathVariable Long id) {
+    public String aprobarSolicitud(@PathVariable Long id) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             if (authentication == null || !authentication.isAuthenticated()) {
-                return ResponseEntity.badRequest().build();
+                return "redirect:/login";
             }
 
             Solicitud solicitud = solicitudService.aprobarSolicitud(id);
             Convenio convenio = convenioService.obtenerConvenioPorSolicitud(solicitud);
+
             if (solicitud != null && convenio != null) {
-                Resource resource = convenioService.generarArchivoConvenio(convenio);
-                return ResponseEntity.ok()
-                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
-                        .body(resource);
+                // Ahora solo aprobamos, la descarga se manejará en otro endpoint
+                Proyecto proyecto = solicitud.getProyecto();
+                String cuit = proyecto.getProyectoId().getCuitEntidad().toString();
+                String titulo = java.net.URLEncoder.encode(proyecto.getProyectoId().getTitulo(), "UTF-8");
+                return "redirect:/direccion/proyecto/" + cuit + "/" + titulo + "/postulantes";
             }
         } catch (Exception e) {
             logger.error("Error al aprobar solicitud: {}", e.getMessage());
         }
-        return ResponseEntity.badRequest().build();
+        return "redirect:/direccion/dashboard";
     }
 
     @GetMapping("/solicitud/{id}/rechazar")
@@ -222,5 +228,30 @@ public class DireccionCarreraController {
             logger.error("Error al rechazar solicitud: {}", e.getMessage(), e);
         }
         return "redirect:/direccion/dashboard";
+    }
+
+    @GetMapping("/convenio/{id}/descargar")
+    public ResponseEntity<Resource> descargarConvenio(@PathVariable Long id) {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication == null || !authentication.isAuthenticated()) {
+                return ResponseEntity.badRequest().build();
+            }
+
+            // Obtener el convenio directamente por su ID
+            Convenio convenio = convenioService.obtenerConvenioPorId(id);
+            if (convenio != null) {
+                Resource resource = convenioService.generarArchivoConvenio(convenio);
+                return ResponseEntity.ok()
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                        .body(resource);
+            } else {
+                logger.error("Convenio no encontrado con ID: {}", id);
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            logger.error("Error al descargar convenio: {}", e.getMessage());
+        }
+        return ResponseEntity.badRequest().build();
     }
 } 

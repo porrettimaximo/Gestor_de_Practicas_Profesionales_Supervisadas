@@ -1,5 +1,6 @@
 package ing.gpps.controller;
 
+import ing.gpps.entity.institucional.Convenio;
 import ing.gpps.entity.institucional.Entidad;
 import ing.gpps.entity.institucional.Proyecto;
 import ing.gpps.entity.institucional.TipoEntidad;
@@ -9,6 +10,9 @@ import ing.gpps.entity.users.Usuario;
 import ing.gpps.security.CustomUserDetails;
 import ing.gpps.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -35,6 +39,8 @@ public class AdminController {
     private AdminEntidadService adminEntidadService;
     @Autowired
     private EstudianteService estudianteService;
+    @Autowired
+    private ConvenioService convenioService;
 
     public AdminController() {
 
@@ -86,6 +92,10 @@ public class AdminController {
 
             List<Proyecto> proyectos = proyectoService.obtenerTodos();
             model.addAttribute("proyectos", proyectos);
+
+            // Obtener todos los convenios y añadirlos al modelo
+            List<ing.gpps.entity.institucional.Convenio> convenios = convenioService.obtenerTodosLosConvenios();
+            model.addAttribute("convenios", convenios);
 
             return "indexAdmin";
         } catch (Exception e) {
@@ -352,5 +362,30 @@ public class AdminController {
         usuarioService.eliminarUsuario(id);
 
         return "redirect:/admin/dashboard";
+    }
+
+    @GetMapping("/convenio/{id}/descargar")
+    public ResponseEntity<Resource> descargarConvenio(@PathVariable Long id) {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication == null || !authentication.isAuthenticated()) {
+                return ResponseEntity.badRequest().build();
+            }
+
+            // Obtener el convenio directamente por su ID
+            Convenio convenio = convenioService.obtenerConvenioPorId(id);
+            if (convenio != null) {
+                Resource resource = convenioService.generarArchivoConvenio(convenio);
+                return ResponseEntity.ok()
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                        .body(resource);
+            } else {
+                logger.error("Convenio no encontrado con ID: {}", id);
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            logger.error("Error al descargar convenio: {}", e.getMessage());
+        }
+        return ResponseEntity.badRequest().build();
     }
 }

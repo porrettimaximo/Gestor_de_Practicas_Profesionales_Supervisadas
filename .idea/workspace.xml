@@ -4,50 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8a4dffd5-889c-4703-adf3-92d1edf6cbdc" name="Changes" comment="front admin-entidad fixeado">
-      <change afterPath="$PROJECT_DIR$/fonts/ARIALN.TTF" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/fonts/ARIALNB.TTF" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/fonts/ARIALNBI.TTF" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/fonts/ARIALNI.TTF" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/fonts/arial.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/fonts/arialbd.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/fonts/arialbi.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/fonts/ariali.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/fonts/ariblk.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/repository/ConvenioRepository.java" afterDir="false" />
+    <list default="true" id="8a4dffd5-889c-4703-adf3-92d1edf6cbdc" name="Changes" comment="documento convenio">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ing/gpps/controller/AdminController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/controller/AdminController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ing/gpps/controller/DireccionCarreraController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/controller/DireccionCarreraController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ing/gpps/controller/DocenteSupervisorController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/controller/DocenteSupervisorController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ing/gpps/controller/EstudianteController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/controller/EstudianteController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ing/gpps/dto/ConvenioDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ing/gpps/entity/institucional/Convenio.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/entity/institucional/Convenio.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ing/gpps/repository/SetupDataBase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/repository/SetupDataBase.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ing/gpps/service/ConvenioService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/service/ConvenioService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ing/gpps/service/SolicitudService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/service/SolicitudService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/indexAlumno.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/indexAlumno.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/indexDocenteSupervisorProyecto.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/indexDocenteSupervisorProyecto.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/postulantesProyectoDireccionDeCarrera.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/postulantesProyectoDireccionDeCarrera.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/controller/ActividadController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ing/gpps/controller/ActividadController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/controller/DireccionCarreraController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ing/gpps/controller/DireccionCarreraController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/controller/DocenteSupervisorController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ing/gpps/controller/DocenteSupervisorController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/controller/EstudianteController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ing/gpps/controller/EstudianteController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/controller/InformeController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ing/gpps/controller/InformeController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/controller/NotificacionController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ing/gpps/controller/NotificacionController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/dto/ActividadRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/entity/institucional/Actividad$EstadoActividad.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ing/gpps/entity/institucional/Actividad$EstadoActividad.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/entity/institucional/Actividad.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ing/gpps/entity/institucional/Actividad.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/entity/institucional/Informe.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ing/gpps/entity/institucional/Informe.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/repository/SetupDataBase.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ing/gpps/repository/SetupDataBase.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/service/ActividadService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ing/gpps/service/ActividadService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/service/DocenteSupervisorService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ing/gpps/service/DocenteSupervisorService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/service/InformeService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ing/gpps/service/InformeService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ing/gpps/service/SolicitudService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ing/gpps/service/SolicitudService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/templates/indexAlumno.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/templates/indexAlumno.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/templates/indexDocenteSupervisorProyecto.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/templates/indexDocenteSupervisorProyecto.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/templates/postulantesProyectoDireccionDeCarrera.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/templates/postulantesProyectoDireccionDeCarrera.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/indexAdmin.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/indexAdmin.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -216,7 +178,15 @@
       <option name="project" value="LOCAL" />
       <updated>1749696452829</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="documento convenio">
+      <option name="closed" value="true" />
+      <created>1749717577858</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1749717577858</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -234,19 +204,20 @@
     <MESSAGE value="merge funcional notificaciones" />
     <MESSAGE value="DocenteSupervisor y estudianteSinPPS" />
     <MESSAGE value="front admin-entidad fixeado" />
-    <option name="LAST_COMMIT_MESSAGE" value="front admin-entidad fixeado" />
+    <MESSAGE value="documento convenio" />
+    <option name="LAST_COMMIT_MESSAGE" value="documento convenio" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/ing/gpps/controller/AdminController.java</url>
-          <line>206</line>
+          <line>216</line>
           <option name="timeStamp" value="14" />
         </line-breakpoint>
         <line-breakpoint type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/ing/gpps/controller/DireccionCarreraController.java</url>
-          <line>94</line>
+          <line>98</line>
           <option name="timeStamp" value="17" />
         </line-breakpoint>
         <line-breakpoint type="java-line">
@@ -256,7 +227,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/ing/gpps/controller/DireccionCarreraController.java</url>
-          <line>119</line>
+          <line>123</line>
           <option name="timeStamp" value="22" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">

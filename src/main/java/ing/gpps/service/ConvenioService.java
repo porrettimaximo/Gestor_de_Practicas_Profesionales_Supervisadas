@@ -241,4 +241,13 @@ public class ConvenioService {
         return convenioRepository.findByProyecto(solicitud.getProyecto())
                 .orElseThrow(() -> new RuntimeException("No se encontró un convenio para el proyecto: " + solicitud.getProyecto().getTitulo()));
     }
+
+    public Convenio obtenerConvenioPorId(Long id) {
+        return convenioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Convenio no encontrado con ID: " + id));
+    }
+
+    public List<Convenio> obtenerTodosLosConvenios() {
+        return convenioRepository.findAll();
+    }
 }

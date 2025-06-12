@@ -735,11 +735,6 @@
                     <td th:text="${entidad.ubicacion}"></td>
                     <td th:text="${entidad.email}"></td>
                     <td class="actions">
-                        <!-- Botón Edit - redirige a formulario de edición -->
-                        <a th:href="@{/admin/entidad/edit/{cuit}(cuit=${entidad.cuit})}" class="btn edit-entity-btn">
-                            <i class="fas fa-edit"></i>
-                        </a>
-
                         <!-- Formulario para Delete con confirmación -->
                         <form th:action="@{/admin/entidad/delete/{cuit}(cuit=${entidad.cuit})}"
                               method="post"
@@ -806,111 +801,19 @@
             </div>
         </div>
 
-        <div class="table-actions">
-            <button class="btn primary" id="add-convenio-btn">
-                <i class="fas fa-file-contract"></i> Nuevo Convenio
-            </button>
-        </div>
-
         <div class="table-container">
             <table class="convenio-table">
                 <thead>
                 <tr>
-                    <th>Número</th>
+                    <th>ID</th>
+                    <th>Proyecto</th>
                     <th>Entidad</th>
-                    <th>Fecha Inicio</th>
-                    <th>Fecha Fin</th>
-                    <th>Estado</th>
-                    <th>Documento</th>
+                    <th>Estudiante</th>
                     <th>Acciones</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>CONV-2025-001</td>
-                    <td>Empresa XYZ</td>
-                    <td>15/01/2025</td>
-                    <td>15/01/2026</td>
-                    <td><span class="convenio-status status-active">Activo</span></td>
-                    <td><a href="#"><i class="fas fa-file-pdf"></i> Ver</a></td>
-                    <td class="actions">
-                        <button class="btn small edit-convenio-btn" data-id="1">
-                            <i class="fas fa-edit"></i>
-                        </button>
 
-                        <button class="btn small">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>CONV-2025-002</td>
-                    <td>Municipalidad de Río Negro</td>
-                    <td>01/02/2025</td>
-                    <td>01/02/2027</td>
-                    <td><span class="convenio-status status-active">Activo</span></td>
-                    <td><a href="#"><i class="fas fa-file-pdf"></i> Ver</a></td>
-                    <td class="actions">
-                        <button class="btn small edit-convenio-btn" data-id="2">
-                            <i class="fas fa-edit"></i>
-                        </button>
-
-                        <button class="btn small">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>CONV-2025-003</td>
-                    <td>Startup ABC</td>
-                    <td>10/03/2025</td>
-                    <td>10/03/2026</td>
-                    <td><span class="convenio-status status-active">Activo</span></td>
-                    <td><a href="#"><i class="fas fa-file-pdf"></i> Ver</a></td>
-                    <td class="actions">
-                        <button class="btn small edit-convenio-btn" data-id="3">
-                            <i class="fas fa-edit"></i>
-                        </button>
-
-                        <button class="btn small">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>CONV-2024-015</td>
-                    <td>Fundación Educativa</td>
-                    <td>15/10/2024</td>
-                    <td>15/04/2025</td>
-                    <td><span class="convenio-status status-expired">Vencido</span></td>
-                    <td><a href="#"><i class="fas fa-file-pdf"></i> Ver</a></td>
-                    <td class="actions">
-                        <button class="btn small edit-convenio-btn" data-id="4">
-                            <i class="fas fa-edit"></i>
-                        </button>
-
-                        <button class="btn small">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>CONV-2025-004</td>
-                    <td>Instituto Tecnológico</td>
-                    <td>Pendiente</td>
-                    <td>Pendiente</td>
-                    <td><span class="convenio-status status-pending">Pendiente</span></td>
-                    <td><a href="#"><i class="fas fa-file-pdf"></i> Ver</a></td>
-                    <td class="actions">
-                        <button class="btn small edit-convenio-btn" data-id="5">
-                            <i class="fas fa-edit"></i>
-                        </button>
-
-                        <button class="btn small">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
-                    </td>
-                </tr>
                 </tbody>
             </table>
         </div>
@@ -970,12 +873,6 @@
             </div>
         </div>
 
-        <div class="table-actions">
-            <button class="btn primary" id="add-proyecto-btn">
-                <i class="fas fa-project-diagram"></i> Nuevo Proyecto
-            </button>
-        </div>
-
         <div class="table-container">
             <table class="proyecto-table">
                 <thead>
@@ -1001,9 +898,6 @@
                     </td>
 
                     <td class="actions">
-                        <button class="btn small edit-proyecto-btn" data-id="5">
-                            <i class="fas fa-edit"></i>
-                        </button>
 
                         <button class="btn small">
                             <i class="fas fa-trash-alt"></i>

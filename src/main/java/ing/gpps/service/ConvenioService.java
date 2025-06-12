@@ -14,13 +14,16 @@ import ing.gpps.entity.institucional.Convenio;
 import ing.gpps.repository.ConvenioRepository;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -29,68 +32,56 @@ public class ConvenioService {
 
     private final ConvenioRepository convenioRepository;
     private static final String CARPETA_CONVENIOS = "convenios";
-    private static final String FONT_PATH = "fonts/arial.ttf";
-    private static final String IMAGE_PATH = "src/main/resources/images/UNRN-201x300.jpg"; // Ruta corregida
-    private static final float HEADER_HEIGHT = 100; // Altura para el encabezado
+    private static final float HEADER_HEIGHT = 100;
 
-    private BaseFont bfArial;
     private Font titleFont;
     private Font subtitleFont;
     private Font normalFont;
     private Font boldFont;
-    private Image headerImage; // Movida aquí para ser accesible desde toda la clase
 
-    public ConvenioService(ConvenioRepository convenioRepository) throws DocumentException, IOException {
+    public ConvenioService(ConvenioRepository convenioRepository) {
         this.convenioRepository = convenioRepository;
-        // Inicializar fuentes aquí
-        bfArial = BaseFont.createFont(FONT_PATH, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
-        titleFont = new Font(bfArial, 14, Font.BOLD);
-        subtitleFont = new Font(bfArial, 14, Font.BOLD);
-        normalFont = new Font(bfArial, 12, Font.NORMAL);
-        boldFont = new Font(bfArial, 12, Font.BOLD);
         
-        // Inicializar la imagen del encabezado
-        headerImage = Image.getInstance(IMAGE_PATH);
-        headerImage.scaleToFit(80, 80); // Ajustamos a un tamaño más visible para el logo
-    }
-
-    // Clase interna para el evento de página del encabezado
-    class HeaderImageEvent extends PdfPageEventHelper {
-        @Override
-        public void onEndPage(PdfWriter writer, Document document) {
-            try {
-                // Posicionar la imagen en la esquina superior izquierda
-                float imageX = document.leftMargin();
-                float imageY = writer.getPageSize().getTop() - 20; // 20 pts de padding desde el borde superior
-                headerImage.setAbsolutePosition(imageX, imageY - headerImage.getScaledHeight());
-                writer.getDirectContent().addImage(headerImage);
-
-            } catch (Exception e) {
-                System.err.println("Error al añadir elementos al encabezado: " + e.getMessage());
-            }
+        // Inicializar fuentes con la fuente por defecto
+        try {
+            titleFont = new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD);
+            subtitleFont = new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD);
+            normalFont = new Font(Font.FontFamily.HELVETICA, 12, Font.NORMAL);
+            boldFont = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD);
+        } catch (Exception e) {
+            throw new RuntimeException("Error al inicializar fuentes del PDF: " + e.getMessage(), e);
         }
     }
 
     public Resource generarArchivoConvenio(Convenio convenio) {
         try {
             // Crear la carpeta si no existe
-            File carpeta = new File(CARPETA_CONVENIOS);
-            if (!carpeta.exists()) {
-                carpeta.mkdirs();
+            Path carpetaPath = Paths.get(CARPETA_CONVENIOS).toAbsolutePath();
+            if (!Files.exists(carpetaPath)) {
+                Files.createDirectories(carpetaPath);
+            }
+            
+            // Verificar permisos de escritura
+            if (!Files.isWritable(carpetaPath)) {
+                throw new RuntimeException("No hay permisos de escritura en la carpeta de convenios: " + carpetaPath);
             }
 
-            String nombreArchivo = CARPETA_CONVENIOS + File.separator + "convenio-" + convenio.getProyecto().getTitulo() + ".pdf";
+            String nombreArchivo = carpetaPath.resolve("convenio-" + convenio.getId() + ".pdf").toString();
+            Path filePath = Paths.get(nombreArchivo);
             
-            // Crear el documento PDF con un margen superior suficiente para el encabezado
-            Document document = new Document(PageSize.A4, 36, 36, HEADER_HEIGHT, 36); // left, right, top, bottom
+            // Verificar si el archivo ya existe
+            if (Files.exists(filePath)) {
+                return new UrlResource(filePath.toUri());
+            }
+
+            // Crear el documento PDF
+            Document document = new Document(PageSize.A4, 36, 36, 36, 36); // left, right, top, bottom
             PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(nombreArchivo));
-            writer.setPageEvent(new HeaderImageEvent()); // Registrar el evento de página
             document.open();
 
-            // Título del acta solo en la primera página
+            // Título del acta
             Paragraph docTitle = new Paragraph("ACTA ACUERDO\nSOBRE INSTANCIAS DE PRÁCTICAS PROFESIONALES SUPERVISADAS", titleFont);
             docTitle.setAlignment(Element.ALIGN_CENTER);
-            docTitle.setSpacingBefore(headerImage.getScaledHeight() + 20); // Espacio para la imagen en la primera página
             docTitle.setSpacingAfter(20);
             document.add(docTitle);
 
@@ -102,7 +93,7 @@ public class ConvenioService {
             intro.add(new Chunk(convenio.getEstudiante().getNombre()+ " " +convenio.getEstudiante().getApellido(), boldFont));
             intro.add(new Chunk(", DNI "+convenio.getEstudiante().getDni(), boldFont));
             intro.add(new Chunk(", en adelante la/el ESTUDIANTE/PRACTICANTE, convienen celebrar el presente acuerdo, conforme lo establecido por la RESOLUCIÓN CDEyVE SEDE ATLÁNTICA N° 011/2021 y con sujeción a las siguientes cláusulas y condiciones:", normalFont));
-            intro.setSpacingBefore(10); // Agrega un pequeño espacio antes de la introducción
+            intro.setSpacingBefore(10);
             intro.setSpacingAfter(15);
             document.add(intro);
 
@@ -165,7 +156,7 @@ public class ConvenioService {
                 }
             }
 
-            document.add(alumnoInfo); // Añadir alumnoInfo al documento solo una vez aquí
+            document.add(alumnoInfo);
             document.add(objetivosProyecto);
 
             // Tabla de Plan de Trabajo
@@ -219,13 +210,12 @@ public class ConvenioService {
             document.close();
 
             // Convertir el archivo a un recurso descargable
-            Path filePath = Paths.get(nombreArchivo);
             Resource resource = new UrlResource(filePath.toUri());
 
             if (resource.exists() && resource.isReadable()) {
                 return resource;
             } else {
-                throw new RuntimeException("No se pudo leer el archivo generado");
+                throw new RuntimeException("No se pudo leer el archivo generado: " + filePath);
             }
             
         } catch (Exception e) {
@@ -242,12 +232,12 @@ public class ConvenioService {
                 .orElseThrow(() -> new RuntimeException("No se encontró un convenio para el proyecto: " + solicitud.getProyecto().getTitulo()));
     }
 
-    public Convenio obtenerConvenioPorId(Long id) {
-        return convenioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Convenio no encontrado con ID: " + id));
-    }
-
     public List<Convenio> obtenerTodosLosConvenios() {
         return convenioRepository.findAll();
+    }
+
+    public Convenio obtenerConvenioPorId(Long id) {
+        return convenioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("No se encontró el convenio con ID: " + id));
     }
 }

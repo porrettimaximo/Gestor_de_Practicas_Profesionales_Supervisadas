@@ -94,7 +94,7 @@ public class AdminController {
             model.addAttribute("proyectos", proyectos);
 
             // Obtener todos los convenios y añadirlos al modelo
-            List<ing.gpps.entity.institucional.Convenio> convenios = convenioService.obtenerTodosLosConvenios();
+            List<Convenio> convenios = convenioService.obtenerTodosLosConvenios();
             model.addAttribute("convenios", convenios);
 
             return "indexAdmin";

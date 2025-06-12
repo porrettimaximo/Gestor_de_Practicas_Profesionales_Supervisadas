@@ -236,13 +236,12 @@
         function aprobarSolicitud(id) {
             fetch(`/direccion/solicitud/${id}/aprobar`)
                 .then(response => {
-                    if (response.ok) {
-                        return response.blob();
+                    if (!response.ok) {
+                        throw new Error('Error al aprobar la solicitud');
                     }
-                    throw new Error('Error al aprobar la solicitud');
+                    return response.blob();
                 })
                 .then(blob => {
-                    // Crear un enlace temporal para la descarga
                     const url = window.URL.createObjectURL(blob);
                     const a = document.createElement('a');
                     a.href = url;
@@ -257,7 +256,7 @@
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('Error al aprobar la solicitud');
+                    alert('Error al aprobar la solicitud: ' + error.message);
                 });
         }
 

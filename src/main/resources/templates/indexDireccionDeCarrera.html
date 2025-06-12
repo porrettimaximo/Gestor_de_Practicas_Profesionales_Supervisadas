@@ -525,7 +525,7 @@
         </section>
 
         <section style="margin-top: 40px;">
-            <h2>Proyectos con Postulantes</h2>
+            <h2>Proyectos sin iniciar</h2>
             <div class="table-container">
                 <table>
                     <thead>
@@ -566,6 +566,43 @@
             </div>
         </section>
 
+        <!-- Sección de Convenios Generados -->
+        <section style="margin-top: 40px;">
+            <h2>Convenios Generados</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Estudiante</th>
+                        <th>Proyecto</th>
+                        <th>Entidad</th>
+                        <th>Docente Supervisor</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:if="${convenios.empty}">
+                        <td colspan="6" style="text-align: center; padding: 20px;">
+                            No hay convenios generados
+                        </td>
+                    </tr>
+                    <tr th:each="convenio : ${convenios}">
+                        <td th:text="${convenio.id}">1</td>
+                        <td th:text="${convenio.estudiante != null ? convenio.estudiante.nombre + ' ' + convenio.estudiante.apellido : 'No asignado'}">Estudiante</td>
+                        <td th:text="${convenio.proyecto != null ? convenio.proyecto.titulo : 'No asignado'}">Proyecto</td>
+                        <td th:text="${convenio.entidad != null ? convenio.entidad.nombre : 'No asignada'}">Entidad</td>
+                        <td th:text="${convenio.docenteSupervisor != null ? convenio.docenteSupervisor.nombre + ' ' + convenio.docenteSupervisor.apellido : 'No asignado'}">Docente Supervisor</td>
+                        <td>
+                            <a th:href="@{/direccion/convenio/{id}/descargar(id=${convenio.id})}" class="btn btn-ver">
+                                <i class="fas fa-file-pdf"></i> Descargar PDF
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
     </main>
 
     <footer>
@@ -608,6 +645,29 @@
                 }
             });
         }
+        function descargarConvenio(id) {
+        fetch(`/direccion/convenio/${id}/descargar`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error al descargar el convenio');
+                }
+                return response.blob();
+            })
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `convenio-${id}.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                a.remove();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error al descargar el convenio: ' + error.message);
+            });
+    }
     </script>
 </body>
 </html>

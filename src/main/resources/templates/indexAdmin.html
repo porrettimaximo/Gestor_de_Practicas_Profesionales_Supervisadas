@@ -813,7 +813,22 @@
                 </tr>
                 </thead>
                 <tbody>
-
+                    <tr th:if="${convenios.empty}">
+                        <td colspan="5" style="text-align: center; padding: 20px;">
+                            No hay convenios registrados
+                        </td>
+                    </tr>
+                    <tr th:each="convenio : ${convenios}">
+                        <td th:text="${convenio.id}">ID</td>
+                        <td th:text="${convenio.proyecto.titulo}">Proyecto</td>
+                        <td th:text="${convenio.entidad.nombre}">Entidad</td>
+                        <td th:text="${convenio.estudiante.nombre + ' ' + convenio.estudiante.apellido}">Estudiante</td>
+                        <td class="actions">
+                            <button class="btn small" th:onclick="'descargarConvenio(' + ${convenio.id} + ')'">
+                                <i class="fas fa-download"></i> Descargar
+                            </button>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -1480,6 +1495,30 @@
         } else {
             form.reportValidity();
         }
+    }
+
+    function descargarConvenio(id) {
+        fetch(`/admin/convenio/${id}/descargar`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error al descargar el convenio');
+                }
+                return response.blob();
+            })
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `convenio-${id}.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                a.remove();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error al descargar el convenio: ' + error.message);
+            });
     }
 </script>
 <script>

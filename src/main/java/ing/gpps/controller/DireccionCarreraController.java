@@ -91,8 +91,8 @@ public class DireccionCarreraController {
             model.addAttribute("cantidadPostulantes", cantidadPostulantes);
 
             // Obtener todos los convenios y añadirlos al modelo
-            List<Convenio> conveniosGenerados = convenioService.obtenerTodosLosConvenios();
-            model.addAttribute("conveniosGenerados", conveniosGenerados);
+            List<Convenio> convenios = convenioService.obtenerTodosLosConvenios();
+            model.addAttribute("convenios", convenios);
 
             return "indexDireccionDeCarrera";
         } catch (Exception e) {
@@ -183,27 +183,26 @@ public class DireccionCarreraController {
     }
 
     @GetMapping("/solicitud/{id}/aprobar")
-    public String aprobarSolicitud(@PathVariable Long id) {
+    public ResponseEntity<Resource> aprobarSolicitud(@PathVariable Long id) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             if (authentication == null || !authentication.isAuthenticated()) {
-                return "redirect:/login";
+                return ResponseEntity.badRequest().build();
             }
 
             Solicitud solicitud = solicitudService.aprobarSolicitud(id);
             Convenio convenio = convenioService.obtenerConvenioPorSolicitud(solicitud);
 
             if (solicitud != null && convenio != null) {
-                // Ahora solo aprobamos, la descarga se manejará en otro endpoint
-                Proyecto proyecto = solicitud.getProyecto();
-                String cuit = proyecto.getProyectoId().getCuitEntidad().toString();
-                String titulo = java.net.URLEncoder.encode(proyecto.getProyectoId().getTitulo(), "UTF-8");
-                return "redirect:/direccion/proyecto/" + cuit + "/" + titulo + "/postulantes";
+                Resource resource = convenioService.generarArchivoConvenio(convenio);
+                return ResponseEntity.ok()
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"convenio-" + convenio.getId() + ".pdf\"")
+                        .body(resource);
             }
         } catch (Exception e) {
             logger.error("Error al aprobar solicitud: {}", e.getMessage());
         }
-        return "redirect:/direccion/dashboard";
+        return ResponseEntity.badRequest().build();
     }
 
     @GetMapping("/solicitud/{id}/rechazar")

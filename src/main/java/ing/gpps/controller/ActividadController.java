@@ -1,6 +1,6 @@
 package ing.gpps.controller;
 
-import ing.gpps.dto.ActividadRequest;
+
 import ing.gpps.entity.institucional.Actividad;
 import ing.gpps.entity.institucional.PlanDeTrabajo;
 import ing.gpps.entity.institucional.Proyecto;
@@ -35,20 +35,20 @@ public class ActividadController {
     private ProyectoService proyectoService;
 
     @PostMapping
-    public ResponseEntity<?> crearActividad(@RequestBody ActividadRequest request) {
+    public ResponseEntity<?> crearActividad(@RequestBody Actividad actividad) {
         try {
-            if (request == null) {
-                return ResponseEntity.badRequest().body("La solicitud no puede ser nula");
+            if (actividad == null) {
+                return ResponseEntity.badRequest().body("La actividad no puede ser nula");
             }
 
-            if (request.getTituloProyecto() == null || request.getCuitEntidad() == null) {
-                return ResponseEntity.badRequest().body("El título del proyecto y el CUIT son requeridos");
+            if (actividad.getPlanDeTrabajo() == null || actividad.getPlanDeTrabajo().getProyecto() == null || actividad.getPlanDeTrabajo().getProyecto().getProyectoId().getTitulo() == null || actividad.getPlanDeTrabajo().getProyecto().getProyectoId().getCuitEntidad() == null) {
+                return ResponseEntity.badRequest().body("El título del proyecto y el CUIT son requeridos en el plan de trabajo de la actividad");
             }
 
             // Obtener el proyecto
             Proyecto proyecto = proyectoService.getProyectoByTituloAndCuit(
-                request.getTituloProyecto(), 
-                request.getCuitEntidad()
+                actividad.getPlanDeTrabajo().getProyecto().getProyectoId().getTitulo(), 
+                actividad.getPlanDeTrabajo().getProyecto().getProyectoId().getCuitEntidad()
             );
 
             if (proyecto == null) {
@@ -64,16 +64,12 @@ public class ActividadController {
             }
 
             // Crear la actividad
-            Actividad actividad = new Actividad(
-                planDeTrabajo.getActividades().size() + 1,
-                request.getNombre(),
-                request.getDescripcion(),
-                planDeTrabajo, 1
-            );
+            int numeroActividad = planDeTrabajo.getActividades().size() + 1;
+            actividad.setActividadId(new ActividadId(numeroActividad, planDeTrabajo.getPlanDeTrabajoId()));
+            actividad.setPlanDeTrabajo(planDeTrabajo);
+            actividad.setEstado(Actividad.EstadoActividad.EN_REVISION);
 
-            if (request.getHoras() > 0) {
-                actividad.setHoras(request.getHoras());
-            }
+            // La cantidad de horas y fecha límite ya vienen en el objeto actividad por @RequestBody
 
             Actividad actividadCreada = actividadService.crearActividad(actividad);
             return ResponseEntity.ok(actividadCreada);

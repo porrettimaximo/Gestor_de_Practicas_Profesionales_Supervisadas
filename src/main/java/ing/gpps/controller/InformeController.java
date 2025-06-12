@@ -104,7 +104,8 @@ public class InformeController {
             Informe informeGuardado = informeService.crearInforme(
                 informe.getId().getNumero(),
                 informe.getTitulo(),
-                informe.getRuta(),
+                (String) informe.getDescripcion(),
+                (String) informe.getRutaArchivo(),
                 estudiante,
                 informe.getActividad()
             );

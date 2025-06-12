@@ -75,7 +75,7 @@ public class ActividadService {
         int horasTotales = 200; // Horas totales del proyecto
         int horasCompletadas = actividades.stream()
                 .filter(a -> a.getEstado() == Actividad.EstadoActividad.COMPLETADA)
-                .mapToInt(Actividad::getHoras)
+                .mapToInt(Actividad::getCantidadHoras)
                 .sum();
         
         return (double) horasCompletadas / horasTotales * 100;

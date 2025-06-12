@@ -326,6 +326,12 @@ public class SetupDataBase implements CommandLineRunner {
         planDeTrabajoRepository.save(planDeTrabajo3);
         planDeTrabajoRepository.save(planDeTrabajo4);
 
+        // Guardar actividades explícitamente
+        actividadRepository.save(actividad1);
+        actividadRepository.save(actividad2);
+        actividadRepository.save(actividad3);
+        actividadRepository.save(actividad4);
+
         // Guardar entregas
         entregaRepository.save(entrega1);
         entregaRepository.save(entrega2);

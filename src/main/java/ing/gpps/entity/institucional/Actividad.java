@@ -4,6 +4,7 @@ import ing.gpps.entity.idClasses.ActividadId;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -33,10 +34,8 @@ public class Actividad {
     @Column(columnDefinition = "TEXT")
     private String descripcion;
 
-    @Column
-    private int horas;
-
     @Column(name = "fecha_limite")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate fechaLimite;
 
     @Enumerated(EnumType.STRING)
@@ -128,8 +127,16 @@ public class Actividad {
                         entrega.getEstado() == Entrega.EstadoEntrega.PENDIENTE);
     }
 
+    public void setEntregas(List<Entrega> entregas) {
+        this.entregas = entregas;
+    }
+
     public void setCantidadHoras(int cantidadHoras) {
         this.cantidadHoras = cantidadHoras;
+    }
+
+    public int getCantidadHoras() {
+        return cantidadHoras;
     }
 
     public void setNombre(String nombre) {
@@ -146,6 +153,10 @@ public class Actividad {
         } else {
             throw new IllegalStateException("La actividad debe estar asociada a un plan de trabajo antes de asignar un proyecto.");
         }
+    }
+
+    public int getHoras() {
+        return cantidadHoras;
     }
 
     public enum EstadoActividad {

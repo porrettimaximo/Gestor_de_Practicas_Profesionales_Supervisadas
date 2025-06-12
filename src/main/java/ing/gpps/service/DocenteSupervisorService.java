@@ -6,10 +6,14 @@ import ing.gpps.entity.institucional.PlanDeTrabajo;
 import ing.gpps.entity.institucional.Actividad;
 import ing.gpps.entity.institucional.Actividad.EstadoActividad;
 import ing.gpps.entity.idClasses.ActividadId;
+import ing.gpps.entity.idClasses.ProyectoId;
+import ing.gpps.entity.idClasses.PlanDeTrabajoId;
 import ing.gpps.entity.users.DocenteSupervisor;
 import ing.gpps.repository.EntregaRepository;
 import ing.gpps.repository.ProyectoRepository;
 import ing.gpps.repository.ActividadRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +23,8 @@ import java.util.List;
 
 @Service
 public class DocenteSupervisorService {
+
+    private static final Logger logger = LoggerFactory.getLogger(DocenteSupervisorService.class);
 
     private final ProyectoRepository proyectoRepository;
     private final EntregaRepository entregaRepository;
@@ -114,17 +120,42 @@ public class DocenteSupervisorService {
     }
 
     @Transactional(readOnly = true)
-    public Actividad getActividadById(int actividadId) {
-        // Buscar la actividad en todos los planes de trabajo
-        return actividadRepository.findAll().stream()
-            .filter(a -> a.getActividadId().numero() == actividadId)
-            .findFirst()
-            .orElse(null);
+    public Actividad getActividadById(int actividadId, int planNumero, Long proyectoCuit, String proyectoTitulo) {
+        logger.info("Buscando actividad con parámetros: actividadId={}, planNumero={}, proyectoCuit={}, proyectoTitulo={}",
+                actividadId, planNumero, proyectoCuit, proyectoTitulo);
+
+        if (actividadId <= 0 || planNumero <= 0 || proyectoCuit == null || proyectoTitulo == null) {
+            logger.warn("Parámetros inválidos para buscar actividad");
+            return null;
+        }
+        
+        try {
+            ProyectoId proyectoId = new ProyectoId(proyectoTitulo, proyectoCuit);
+            PlanDeTrabajoId planDeTrabajoId = new PlanDeTrabajoId(planNumero, proyectoId);
+            ActividadId actividadIdObj = new ActividadId(actividadId, planDeTrabajoId);
+            
+            logger.info("Buscando actividad con ID compuesto: {}", actividadIdObj);
+            Actividad actividad = actividadRepository.findById(actividadIdObj).orElse(null);
+            
+            if (actividad == null) {
+                logger.warn("No se encontró la actividad con ID: {}", actividadIdObj);
+            } else {
+                logger.info("Actividad encontrada: {}", actividad);
+            }
+            
+            return actividad;
+        } catch (Exception e) {
+            logger.error("Error al buscar actividad: {}", e.getMessage(), e);
+            return null;
+        }
     }
 
     @Transactional
-    public Actividad guardarActividad(Actividad actividad) {
-        return actividadRepository.save(actividad);
+    public void guardarActividad(Actividad actividad) {
+        if (actividad == null) {
+            return;
+        }
+        actividadRepository.save(actividad);
     }
 
     @Transactional(readOnly = true)

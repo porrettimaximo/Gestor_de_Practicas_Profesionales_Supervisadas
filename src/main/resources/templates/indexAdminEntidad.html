@@ -27,6 +27,7 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             margin-bottom: 30px;
             padding: 20px;
+            overflow: visible;
         }
 
         .section-header {
@@ -84,7 +85,7 @@
 
         /* Estilos para las tablas */
         .table-container {
-            overflow-x: auto;
+            overflow: visible;
             margin-top: 20px;
         }
 
@@ -507,6 +508,16 @@
     overflow-y: auto;
     min-width: 350px;
     margin-top: 2px;
+    display: none;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+}
+
+.actividades-content.mostrar {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
 }
 
 /* Items individuales de actividad */
@@ -663,10 +674,12 @@
 
 /* ===== RESPONSIVE PARA EL DESPLEGABLE ===== */
 
+/* REEMPLAZAR desde línea ~620 */
 @media (max-width: 768px) {
     .actividades-content {
         min-width: 280px;
         max-height: 300px;
+        left: -50px; /* ✅ AGREGAR ESTA LÍNEA */
     }
 
     .actividad-item {
@@ -735,9 +748,23 @@
 
 .plan-table td {
     position: relative;
+    overflow: visible;
 }
-aaa
-      .notification-container {
+
+.actividades-content.align-right {
+    left: auto;
+    right: 0;
+}
+
+.table-container {
+    overflow: visible !important;
+}
+
+.plan-table {
+    overflow: visible !important;
+}
+
+.notification-container {
     position: relative;
 }
 
@@ -799,8 +826,6 @@ aaa
     text-align: center;
     background-color: #f8f9fa;
 }
-
-
     </style>
 </head>
 <body>
@@ -1074,46 +1099,43 @@ aaa
                     <td th:text="${#temporals.format(plan.fechaInicio, 'dd/MM/yyyy')}">Inicio</td>
                     <td th:text="${#temporals.format(plan.fechaFin, 'dd/MM/yyyy')}">Fin</td>
                     <td>
-                        <!-- ✅ Desplegable de actividades -->
+                        <!-- ✅ Desplegable de actividades --> <!-- se rompe, debería mostrarse el desplegable completo una vez abierto incluso por fuera de la section -->
                         <div class="actividades-dropdown">
                             <button class="btn small actividades-toggle"
                                     th:attr="data-plan-id=${plan.planDeTrabajoId.numero}"
                                     onclick="toggleActividades(this)">
-                                <i class="fas fa-list"></i>
-                                <span th:text="${plan.actividades != null ? plan.actividades.size() : 0}">0</span>
-                                Actividades
-                                <i class="fas fa-chevron-down"></i>
+                                    <span>
+                                        <i class="fas fa-list"></i>
+                                        <span th:text="${plan.actividades != null ? plan.actividades.size() : 0}">0</span>
+                                        Actividades
+                                    </span>
+                                <i class="fas fa-chevron-down toggle-icon"></i> <!-- ✅ AGREGAR clase toggle-icon -->
                             </button>
 
                             <div class="actividades-content"
-                                 th:attr="id='actividades-' + ${plan.planDeTrabajoId.numero}" style="display: none;">
+                                 th:attr="id='actividades-' + ${plan.planDeTrabajoId.numero}">
                                 <div th:if="${plan.actividades == null or plan.actividades.isEmpty()}"
                                      class="no-actividades">
                                     <p>No hay actividades asignadas</p>
                                 </div>
 
-                                <div th:if="${plan.actividades != null and !plan.actividades.isEmpty()}">
-                                    <div th:each="actividad : ${plan.actividades}" class="actividad-item">
-                                        <div class="actividad-header">
-                                            <strong th:text="'Actividad ' + ${actividad.actividadId.numero}">Actividad
-                                                1</strong>
-                                            <span class="actividad-horas" th:text="${actividad.cantidadHoras} + ' hrs'">20 hrs</span>
-                                        </div>
-                                        <div class="actividad-details">
-                                            <p><strong>Nombre:</strong> <span th:text="${actividad.nombre}">Nombre actividad</span>
-                                            </p>
-                                            <p><strong>Descripción:</strong> <span th:text="${actividad.descripcion}">Descripción</span>
-                                            </p>
-                                            <p><strong>Fecha límite:</strong>
-                                                <span th:text="${actividad.fechaLimite != null ? #temporals.format(actividad.fechaLimite, 'dd/MM/yyyy') : 'Sin definir'}">Sin definir</span>
-                                            </p>
-                                        </div>
+                                <div th:each="actividad : ${plan.actividades}" class="actividad-item">
+                                    <div class="actividad-header">
+                                        <strong th:text="'Actividad ' + ${actividad.actividadId.numero}">Actividad 1</strong>
+                                        <span class="actividad-horas" th:text="${actividad.cantidadHoras} + ' hrs'">20 hrs</span>
                                     </div>
+                                    <div class="actividad-details">
+                                        <p><strong>Nombre:</strong> <span th:text="${actividad.nombre}">Nombre actividad</span></p>
+                                        <p><strong>Descripción:</strong> <span th:text="${actividad.descripcion}">Descripción</span></p>
+                                        <p><strong>Fecha límite:</strong>
+                                            <span th:text="${actividad.fechaLimite != null ? #temporals.format(actividad.fechaLimite, 'dd/MM/yyyy') : 'Sin definir'}">Sin definir</span>
+                                        </p>
+                                    </div>
+                                </div>
 
-                                    <div class="actividades-summary">
-                                        <strong>Total horas: </strong>
-                                        <span th:text="${#aggregates.sum(plan.actividades.![cantidadHoras])} + ' hrs'">75 hrs</span>
-                                    </div>
+                                <div th:if="${plan.actividades != null and !plan.actividades.isEmpty()}" class="actividades-summary">
+                                    <strong>Total horas: </strong>
+                                    <span th:text="${#aggregates.sum(plan.actividades.![cantidadHoras])} + ' hrs'">75 hrs</span>
                                 </div>
                             </div>
                         </div>
@@ -1626,31 +1648,98 @@ document.addEventListener('DOMContentLoaded', function() {
     function toggleActividades(button) {
     const planId = button.getAttribute('data-plan-id');
     const content = document.getElementById('actividades-' + planId);
-    const icon = button.querySelector('.fa-chevron-down, .fa-chevron-up');
+    const toggleIcon = button.querySelector('.toggle-icon');
 
-    if (content.style.display === 'none' || content.style.display === '') {
-        content.style.display = 'block';
-        icon.classList.remove('fa-chevron-down');
-        icon.classList.add('fa-chevron-up');
+    if (!content || !toggleIcon) {
+        console.error('Elementos no encontrados para plan:', planId);
+        return;
+    }
+
+    // Cerrar otros desplegables abiertos
+    document.querySelectorAll('.actividades-content.mostrar').forEach(otherContent => {
+        if (otherContent !== content) {
+            otherContent.classList.remove('mostrar');
+            const otherButton = document.querySelector(`[data-plan-id="${otherContent.id.split('-')[1]}"]`);
+            if (otherButton) {
+                const otherIcon = otherButton.querySelector('.toggle-icon');
+                if (otherIcon) {
+                    otherIcon.classList.remove('fa-chevron-up');
+                    otherIcon.classList.add('fa-chevron-down');
+                }
+            }
+        }
+    });
+
+    // Toggle del desplegable actual
+    const isVisible = content.classList.contains('mostrar');
+
+    if (isVisible) {
+        // Cerrar
+        content.classList.remove('mostrar');
+        toggleIcon.classList.remove('fa-chevron-up');
+        toggleIcon.classList.add('fa-chevron-down');
     } else {
-        content.style.display = 'none';
-        icon.classList.remove('fa-chevron-up');
-        icon.classList.add('fa-chevron-down');
+        // Abrir
+        content.classList.add('mostrar');
+        toggleIcon.classList.remove('fa-chevron-down');
+        toggleIcon.classList.add('fa-chevron-up');
+
+        // Ajustar posición si está cerca del borde
+        setTimeout(() => {
+            const rect = content.getBoundingClientRect();
+            const windowWidth = window.innerWidth;
+
+            if (rect.right > windowWidth - 20) {
+                content.classList.add('align-right');
+            } else {
+                content.classList.remove('align-right');
+            }
+        }, 10);
     }
 }
 
+
+
+// Cerrar desplegables al hacer clic fuera
 // Cerrar desplegables al hacer clic fuera
 document.addEventListener('click', function(event) {
     if (!event.target.closest('.actividades-dropdown')) {
-        document.querySelectorAll('.actividades-content').forEach(content => {
-            content.style.display = 'none';
-        });
-        document.querySelectorAll('.fa-chevron-up').forEach(icon => {
-            icon.classList.remove('fa-chevron-up');
-            icon.classList.add('fa-chevron-down');
+        document.querySelectorAll('.actividades-content.mostrar').forEach(content => {
+            content.classList.remove('mostrar');
+
+            // Resetear iconos
+            const planId = content.id.split('-')[1];
+            const button = document.querySelector(`[data-plan-id="${planId}"]`);
+            if (button) {
+                const icon = button.querySelector('.toggle-icon');
+                if (icon) {
+                    icon.classList.remove('fa-chevron-up');
+                    icon.classList.add('fa-chevron-down');
+                }
+            }
         });
     }
 });
+
+    // Cerrar con tecla ESC
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        document.querySelectorAll('.actividades-content.mostrar').forEach(content => {
+            content.classList.remove('mostrar');
+
+            const planId = content.id.split('-')[1];
+            const button = document.querySelector(`[data-plan-id="${planId}"]`);
+            if (button) {
+                const icon = button.querySelector('.toggle-icon');
+                if (icon) {
+                    icon.classList.remove('fa-chevron-up');
+                    icon.classList.add('fa-chevron-down');
+                }
+            }
+        });
+    }
+});
+
 </script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {

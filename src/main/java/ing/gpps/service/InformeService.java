@@ -43,7 +43,7 @@ public class InformeService {
     }
 
     @Transactional
-    public Informe crearInforme(int numero, String titulo, String ruta, Estudiante estudiante, Actividad actividad) {
+    public Informe crearInforme(int numero, String titulo, String descripcion, String rutaArchivo, Estudiante estudiante, Actividad actividad) {
         if (estudiante == null || estudiante.getDni() == null) {
             throw new IllegalArgumentException("El estudiante y su DNI no pueden ser nulos");
         }
@@ -51,7 +51,7 @@ public class InformeService {
             throw new IllegalArgumentException("La actividad no puede ser nula");
         }
         try {
-            Informe informe = new Informe(numero, LocalDate.now(), titulo, ruta, estudiante, actividad);
+            Informe informe = new Informe(numero, LocalDate.now(), titulo, descripcion, rutaArchivo, estudiante, actividad);
             return informeRepository.save(informe);
         } catch (Exception e) {
             logger.error("Error al crear informe: {}", e.getMessage());
@@ -68,7 +68,20 @@ public class InformeService {
 
     @Transactional(readOnly = true)
     public List<Informe> obtenerInformesPorEstudiante(Integer dni) {
-        return informeRepository.findByEstudianteDni(dni);
+        logger.info("Buscando informes para el estudiante con DNI: {}", dni);
+        List<Informe> informes = informeRepository.findByEstudianteDni(dni);
+        logger.info("Se encontraron {} informes para el estudiante con DNI: {}", informes.size(), dni);
+        if (informes.isEmpty()) {
+            logger.warn("No se encontraron informes para el estudiante con DNI: {}", dni);
+        } else {
+            informes.forEach(informe -> 
+                logger.info("Informe encontrado - Número: {}, Título: {}, Fecha: {}", 
+                    informe.getId().getNumero(), 
+                    informe.getTitulo(), 
+                    informe.getFecha())
+            );
+        }
+        return informes;
     }
 
     public void eliminarInforme(InformeId id) {

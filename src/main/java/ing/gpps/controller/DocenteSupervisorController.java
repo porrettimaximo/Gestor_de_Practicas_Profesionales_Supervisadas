@@ -1,9 +1,9 @@
 package ing.gpps.controller;
 
-import ing.gpps.dto.ActividadRequest;
 import ing.gpps.entity.idClasses.ActividadId;
 import ing.gpps.entity.idClasses.PlanDeTrabajoId;
 import ing.gpps.entity.idClasses.ProyectoId;
+import ing.gpps.entity.idClasses.InformeId;
 import ing.gpps.entity.institucional.*;
 import ing.gpps.entity.users.DocenteSupervisor;
 import ing.gpps.entity.users.Usuario;
@@ -40,6 +40,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.io.IOException;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/docente-supervisor")
@@ -176,10 +177,18 @@ public class DocenteSupervisorController {
     @Transactional
     public String crearActividad(@PathVariable Long cuit,
                                @PathVariable String titulo,
-                               @ModelAttribute ActividadRequest actividadRequest,
-                               @RequestParam("fechaLimite") String fechaLimiteStr,
+                               @ModelAttribute Actividad actividad,
                                @RequestParam(value = "archivo", required = false) MultipartFile archivo) {
         try {
+            logger.info("Recibida solicitud para crear actividad:");
+            logger.info("  Cuit: {}", cuit);
+            logger.info("  Titulo: {}", titulo);
+            logger.info("  Nombre de actividad: {}", actividad.getNombre());
+            logger.info("  Descripción de actividad: {}", actividad.getDescripcion());
+            logger.info("  Horas estimadas: {}", actividad.getHoras());
+            logger.info("  Fecha Límite: {}", actividad.getFechaLimite());
+            logger.info("  Archivo presente: {}", archivo != null && !archivo.isEmpty());
+
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             if (auth == null || !auth.isAuthenticated() || !(auth.getPrincipal() instanceof CustomUserDetails)) {
                 logger.warn("Intento de acceso no autorizado para crear actividad");
@@ -207,12 +216,8 @@ public class DocenteSupervisorController {
             }
 
             int numeroActividad = planDeTrabajo.getActividades().size() + 1;
-            Actividad actividad = new Actividad(numeroActividad, actividadRequest.getNombre(), actividadRequest.getDescripcion(), planDeTrabajo, 200);
-            actividad.setHoras(actividadRequest.getHoras());
-
-            // Parsear manualmente la fecha
-            LocalDate fechaLimite = LocalDate.parse(fechaLimiteStr);
-            actividad.setFechaLimite(fechaLimite);
+            Actividad actividadToSave = new Actividad(numeroActividad, actividad.getNombre(), actividad.getDescripcion(), planDeTrabajo, actividad.getHoras());
+            actividadToSave.setFechaLimite(actividad.getFechaLimite());
 
             // Manejar la subida del archivo si existe
             if (archivo != null && !archivo.isEmpty()) {
@@ -236,14 +241,14 @@ public class DocenteSupervisorController {
                     Files.copy(archivo.getInputStream(), filePath);
 
                     // Guardar la ruta en la actividad
-                    actividad.setRutaArchivo(actividadPath + "/" + newFilename);
+                    actividadToSave.setRutaArchivo(actividadPath + "/" + newFilename);
                 } catch (IOException e) {
                     logger.error("Error al guardar el archivo de la actividad: {}", e.getMessage());
                     // Continuar con la creación de la actividad incluso si falla la subida del archivo
                 }
             }
 
-            docenteSupervisorService.crearActividad(cuit.toString(), titulo, actividad);
+            docenteSupervisorService.crearActividad(cuit.toString(), titulo, actividadToSave);
 
             return "redirect:/docente-supervisor/proyecto/" + cuit + "/" + titulo;
         } catch (Exception e) {
@@ -255,8 +260,11 @@ public class DocenteSupervisorController {
     @PostMapping("/cambiar-estado-actividad")
     @Transactional
     public String cambiarEstadoActividad(@RequestParam int actividadId,
+                                       @RequestParam int planNumero,
                                        @RequestParam String estado,
-                                       @RequestParam(required = false) String comentario) {
+                                       @RequestParam(required = false) String comentario,
+                                       @RequestParam Long proyectoCuit,
+                                       @RequestParam String proyectoTitulo) {
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             if (auth == null || !auth.isAuthenticated() || !(auth.getPrincipal() instanceof CustomUserDetails)) {
@@ -273,9 +281,9 @@ public class DocenteSupervisorController {
             DocenteSupervisor tutor = (DocenteSupervisor) userDetails.getUsuario();
 
             // Obtener la actividad y verificar que pertenece a un proyecto del tutor
-            Actividad actividad = docenteSupervisorService.getActividadById(actividadId);
+            Actividad actividad = docenteSupervisorService.getActividadById(actividadId, planNumero, proyectoCuit, proyectoTitulo);
             if (actividad == null) {
-                logger.warn("Actividad no encontrada: {}", actividadId);
+                logger.warn("Actividad no encontrada: {}-{}-{}-{}", actividadId, planNumero, proyectoCuit, proyectoTitulo);
                 return "redirect:/docente-supervisor/dashboard";
             }
 
@@ -302,7 +310,8 @@ public class DocenteSupervisorController {
 
             docenteSupervisorService.guardarActividad(actividad);
 
-            return "redirect:/docente-supervisor/proyecto/" + proyecto.getProyectoId().cuitEntidad() + "/" + proyecto.getProyectoId().titulo();
+            logger.info("Redirigiendo a proyecto con CUIT: {} y Título: {}", proyectoCuit, proyectoTitulo);
+            return "redirect:/docente-supervisor/proyecto/" + proyectoCuit + "/" + proyectoTitulo;
         } catch (Exception e) {
             logger.error("Error al cambiar estado de actividad: {}", e.getMessage(), e);
             return "redirect:/error";
@@ -313,7 +322,9 @@ public class DocenteSupervisorController {
     @Transactional
     public String cambiarEstadoEntrega(@RequestParam Long entregaId,
                                      @RequestParam String estado,
-                                     @RequestParam(required = false) String comentario) {
+                                     @RequestParam(required = false) String comentario,
+                                     @RequestParam Long proyectoCuit,
+                                     @RequestParam String proyectoTitulo) {
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             if (auth == null || !auth.isAuthenticated() || !(auth.getPrincipal() instanceof CustomUserDetails)) {
@@ -359,7 +370,7 @@ public class DocenteSupervisorController {
 
             docenteSupervisorService.guardarEntrega(entrega);
 
-            return "redirect:/docente-supervisor/proyecto/" + proyecto.getProyectoId().cuitEntidad() + "/" + proyecto.getProyectoId().titulo();
+            return "redirect:/docente-supervisor/proyecto/" + proyectoCuit + "/" + proyectoTitulo;
         } catch (Exception e) {
             logger.error("Error al cambiar estado de entrega: {}", e.getMessage(), e);
             return "redirect:/error";
@@ -404,8 +415,7 @@ public class DocenteSupervisorController {
             @PathVariable Long proyectoCuit) {
         try {
             // Obtener la actividad
-            ActividadId actividadId = new ActividadId(numero, new PlanDeTrabajoId(planNumero, new ProyectoId(proyectoTitulo, proyectoCuit)));
-            Actividad actividad = docenteSupervisorService.getActividadById(numero);
+            Actividad actividad = docenteSupervisorService.getActividadById(numero, planNumero, proyectoCuit, proyectoTitulo);
             
             if (actividad == null || actividad.getRutaArchivo() == null) {
                 return ResponseEntity.notFound().build();
@@ -430,6 +440,46 @@ public class DocenteSupervisorController {
                     .body(resource);
         } catch (Exception e) {
             logger.error("Error al descargar el archivo de la actividad: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping("/descargarInforme/{numero}/{estudianteDni}/{actividadNumero}/{planNumero}/{proyectoTitulo}/{proyectoCuit}")
+    public ResponseEntity<Resource> descargarInforme(
+            @PathVariable int numero,
+            @PathVariable int estudianteDni,
+            @PathVariable int actividadNumero,
+            @PathVariable int planNumero,
+            @PathVariable String proyectoTitulo,
+            @PathVariable Long proyectoCuit) {
+        try {
+            InformeId informeId = new InformeId(numero, estudianteDni);
+
+            Optional<Informe> informeOpt = informeRepository.findById(informeId);
+            if (!informeOpt.isPresent() || informeOpt.get().getRutaArchivo() == null) {
+                return ResponseEntity.notFound().build();
+            }
+
+            Informe informe = informeOpt.get();
+            Path filePath = Paths.get(uploadPath, informe.getRutaArchivo());
+
+            if (!Files.exists(filePath) || !Files.isReadable(filePath)) {
+                logger.warn("Archivo de informe no encontrado o no legible en la ruta: {}. Informe Numero: {}, EstudianteDni: {}", filePath, numero, estudianteDni);
+                return ResponseEntity.notFound().build();
+            }
+
+            Resource resource = new FileSystemResource(filePath.toFile());
+            String contentType = Files.probeContentType(filePath);
+            if (contentType == null) {
+                contentType = "application/octet-stream";
+            }
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(contentType))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filePath.getFileName().toString() + "\"")
+                    .body(resource);
+        } catch (Exception e) {
+            logger.error("Error al descargar el archivo del informe: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }

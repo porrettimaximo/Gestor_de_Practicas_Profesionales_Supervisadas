@@ -5,6 +5,7 @@ import ing.gpps.notificaciones.Notificacion;
 
 import ing.gpps.service.NotificacionVisualService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,11 +29,10 @@ public class NotificacionController {
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getNotificacionesUsuario(){
         try {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            Usuario usuario = (Usuario) authentication.getPrincipal();
+            Usuario usuario = getUsuarioActual();
 
             if (usuario == null) {
-                return ResponseEntity.badRequest().build();
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Usuario no autenticado o no encontrado."));
             }
 
             List<Notificacion> notificaciones = notificacionService.getNotificacionesPorUsuario(Long.valueOf (usuario.getId()));
@@ -45,7 +45,9 @@ public class NotificacionController {
 
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
+            // Log the exception for debugging purposes
+            System.err.println("Error en getNotificacionesUsuario: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(Map.of("message", "Error interno del servidor al obtener notificaciones."));
         }
     }
     //Marcar una notificación como leída

@@ -6,6 +6,7 @@ import ing.gpps.entity.users.Usuario;
 import ing.gpps.entity.idClasses.ActividadId;
 import ing.gpps.entity.idClasses.PlanDeTrabajoId;
 import ing.gpps.entity.idClasses.ProyectoId;
+import ing.gpps.entity.idClasses.InformeId;
 import ing.gpps.security.CustomUserDetails;
 import ing.gpps.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -119,8 +120,19 @@ public class EstudianteController {
                                 model.addAttribute("entregas", entregas != null ? entregas : Collections.emptyList());
 
                                 logger.info("Intentando obtener informes para el estudiante ID: {}", estudiante.getId());
-                                List<Informe> informes = estudianteService.obtenerInformesPorEstudiante(valueOf(estudiante.getId()));
+                                List<Informe> informes = estudianteService.obtenerInformesPorEstudiante(estudiante.getDni().intValue());
                                 logger.info("Resultado de obtenerInformesPorEstudiante: {}", informes != null ? "Lista (tamaño: " + informes.size() + ")" : "null");
+                                
+                                if (informes != null && !informes.isEmpty()) {
+                                    logger.info("Detalles de los informes encontrados:");
+                                    informes.forEach(informe -> 
+                                        logger.info("Informe - Número: {}, Título: {}, Fecha: {}, Estudiante: {}", 
+                                            informe.getId().getNumero(),
+                                            informe.getTitulo(),
+                                            informe.getFecha(),
+                                            informe.getEstudiante().getDni())
+                                    );
+                                }
 
                                 model.addAttribute("informes", informes != null ? informes : Collections.emptyList());
 
@@ -191,19 +203,24 @@ public class EstudianteController {
     @Transactional
     public String crearInforme(@RequestParam("numero") int numero,
                               @RequestParam("titulo") String titulo,
-                              @RequestParam("ruta") String ruta,
+                              @RequestParam("descripcion") String descripcion,
+                              @RequestParam(value = "archivo", required = false) MultipartFile archivo,
                               @RequestParam("actividadNumero") int actividadNumero,
                               @RequestParam("planNumero") int planNumero,
                               @RequestParam("proyectoTitulo") String proyectoTitulo,
                               @RequestParam("proyectoCuit") Long proyectoCuit,
-                              Authentication authentication) {
+                              Authentication authentication,
+                              RedirectAttributes redirectAttributes) {
         try {
-            if (authentication == null || !(authentication.getPrincipal() instanceof Usuario)) {
+            if (authentication == null || !(authentication.getPrincipal() instanceof CustomUserDetails)) {
+                redirectAttributes.addFlashAttribute("error", "No hay sesión activa");
                 return "redirect:/login";
             }
 
-            Usuario usuario = (Usuario) authentication.getPrincipal();
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            Usuario usuario = userDetails.getUsuario();
             if (!(usuario instanceof Estudiante)) {
+                redirectAttributes.addFlashAttribute("error", "Usuario no autorizado");
                 return "redirect:/login";
             }
 
@@ -215,19 +232,63 @@ public class EstudianteController {
 
             Optional<Actividad> actividadOpt = actividadService.obtenerActividadPorId(actividadId);
             if (!actividadOpt.isPresent()) {
-                return "redirect:/estudiante/dashboard?error=actividad_no_encontrada";
+                redirectAttributes.addFlashAttribute("error", "No se encontró la actividad");
+                return "redirect:/estudiante/dashboard";
             }
 
             Actividad actividad = actividadOpt.get();
-            if (!actividad.getPlanDeTrabajo().getProyecto().equals(estudiante.getProyecto())) {
-                return "redirect:/estudiante/dashboard?error=proyecto_no_coincide";
+            logger.info("Validando proyecto del estudiante vs proyecto de la actividad");
+            logger.info("Proyecto del estudiante: {}", estudiante.getProyecto());
+            logger.info("Proyecto de la actividad: {}", actividad.getPlanDeTrabajo().getProyecto());
+            
+            Proyecto proyectoEstudiante = estudiante.getProyecto();
+            Proyecto proyectoActividad = actividad.getPlanDeTrabajo().getProyecto();
+            
+            if (proyectoEstudiante == null || proyectoActividad == null) {
+                logger.error("Uno de los proyectos es nulo");
+                logger.error("Proyecto estudiante: {}", proyectoEstudiante);
+                logger.error("Proyecto actividad: {}", proyectoActividad);
+                redirectAttributes.addFlashAttribute("error", "No se encontró el proyecto");
+                return "redirect:/estudiante/dashboard";
+            }
+            
+            // Validar que los IDs de los proyectos coincidan
+            if (!proyectoEstudiante.getProyectoId().equals(proyectoActividad.getProyectoId())) {
+                logger.error("Los proyectos no coinciden");
+                logger.error("Proyecto estudiante ID - Título: {}, CUIT: {}", 
+                    proyectoEstudiante.getProyectoId().getTitulo(), 
+                    proyectoEstudiante.getProyectoId().getCuitEntidad());
+                logger.error("Proyecto actividad ID - Título: {}, CUIT: {}", 
+                    proyectoActividad.getProyectoId().getTitulo(), 
+                    proyectoActividad.getProyectoId().getCuitEntidad());
+                redirectAttributes.addFlashAttribute("error", "El proyecto no coincide");
+                return "redirect:/estudiante/dashboard";
             }
 
-            Informe informe = informeService.crearInforme(numero, titulo, ruta, estudiante, actividad);
-            return "redirect:/estudiante/dashboard?success=informe_creado";
+            String rutaArchivo = null;
+            if (archivo != null && !archivo.isEmpty()) {
+                try {
+                    String subDirectory = proyectoTitulo + "/informes";
+                    rutaArchivo = fileStorageService.storeFile(archivo, subDirectory);
+                    if (rutaArchivo == null) {
+                        logger.error("Error al guardar el archivo del informe para la actividad: {}", actividad.getNombre());
+                        redirectAttributes.addFlashAttribute("error", "Error al guardar el archivo");
+                        return "redirect:/estudiante/dashboard";
+                    }
+                } catch (IOException e) {
+                    logger.error("Error al guardar el archivo del informe: {}", e.getMessage());
+                    redirectAttributes.addFlashAttribute("error", "Error al guardar el archivo");
+                    return "redirect:/estudiante/dashboard";
+                }
+            }
+
+            Informe informe = informeService.crearInforme(numero, titulo, descripcion, rutaArchivo, estudiante, actividad);
+            redirectAttributes.addFlashAttribute("success", "Informe creado exitosamente");
+            return "redirect:/estudiante/dashboard";
         } catch (Exception e) {
             logger.error("Error al crear informe: {}", e.getMessage());
-            return "redirect:/estudiante/dashboard?error=error_crear_informe";
+            redirectAttributes.addFlashAttribute("error", "Error al crear el informe");
+            return "redirect:/estudiante/dashboard";
         }
     }
 
@@ -473,6 +534,46 @@ public class EstudianteController {
                     .body(resource);
         } catch (Exception e) {
             logger.error("Error al descargar archivo de actividad para Numero: {}, Plan: {}, Proyecto: {}, Cuit: {}. Error: {}", numero, planNumero, proyectoTitulo, proyectoCuit, e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping("/descargarInforme/{numero}/{estudianteDni}")
+    public ResponseEntity<Resource> descargarInforme(
+            @PathVariable int numero,
+            @PathVariable int estudianteDni) {
+        try {
+            InformeId informeId = new InformeId();
+            informeId.setNumero(numero);
+            informeId.setEstudianteDni(estudianteDni);
+
+            Optional<Informe> informeOpt = informeService.obtenerInforme(informeId);
+            if (!informeOpt.isPresent() || informeOpt.get().getRutaArchivo() == null) {
+                return ResponseEntity.notFound().build();
+            }
+
+            Informe informe = informeOpt.get();
+            Path filePath = Paths.get(uploadPath, informe.getRutaArchivo());
+
+            if (!Files.exists(filePath) || !Files.isReadable(filePath)) {
+                logger.warn("Archivo de informe no encontrado o no legible en la ruta: {}. Informe Numero: {}, EstudianteDni: {}", filePath, numero, estudianteDni);
+                return ResponseEntity.notFound().build();
+            }
+
+            Resource resource = new FileSystemResource(filePath.toFile());
+            String contentType = Files.probeContentType(filePath);
+            if (contentType == null) {
+                contentType = "application/octet-stream";
+            }
+
+            String filename = filePath.getFileName().toString();
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(contentType))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
+                    .body(resource);
+        } catch (Exception e) {
+            logger.error("Error al descargar archivo de informe para Numero: {}, EstudianteDni: {}. Error: {}", numero, estudianteDni, e.getMessage(), e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }

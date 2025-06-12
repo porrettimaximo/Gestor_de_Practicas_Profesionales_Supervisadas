@@ -4,12 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8a4dffd5-889c-4703-adf3-92d1edf6cbdc" name="Changes" comment="documento convenio">
+    <list default="true" id="8a4dffd5-889c-4703-adf3-92d1edf6cbdc" name="Changes" comment="Tabla convenios en admin">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ing/gpps/controller/AdminController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/controller/AdminController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ing/gpps/controller/DireccionCarreraController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/controller/DireccionCarreraController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ing/gpps/service/ConvenioService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ing/gpps/service/ConvenioService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/indexAdmin.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/indexAdmin.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -71,7 +67,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "Application.DemoApplication.executor": "Run",
+    "Application.DemoApplication.executor": "Debug",
     "JUnit.NotificarServiceTest.executor": "Run",
     "Maven.demo [clean].executor": "Run",
     "Maven.demo [org.apache.maven.plugins:maven-clean-plugin:3.3.2:clean].executor": "Run",
@@ -186,7 +182,15 @@
       <option name="project" value="LOCAL" />
       <updated>1749717577858</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Tabla convenios en admin">
+      <option name="closed" value="true" />
+      <created>1749720580970</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1749720580970</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -205,7 +209,8 @@
     <MESSAGE value="DocenteSupervisor y estudianteSinPPS" />
     <MESSAGE value="front admin-entidad fixeado" />
     <MESSAGE value="documento convenio" />
-    <option name="LAST_COMMIT_MESSAGE" value="documento convenio" />
+    <MESSAGE value="Tabla convenios en admin" />
+    <option name="LAST_COMMIT_MESSAGE" value="Tabla convenios en admin" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -239,6 +244,11 @@
           <url>file://$PROJECT_DIR$/src/main/java/ing/gpps/repository/SetupDataBase.java</url>
           <line>201</line>
           <option name="timeStamp" value="24" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/ing/gpps/service/AdminEntidadService.java</url>
+          <line>215</line>
+          <option name="timeStamp" value="25" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

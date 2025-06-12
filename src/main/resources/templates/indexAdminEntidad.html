@@ -1240,14 +1240,6 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="estado">Estado:</label>
-                        <select id="estado" th:field="*{estado}" required>
-                            <option value="" disabled selected>Seleccioná un estado</option>
-                            <option th:each="e : ${estados}" th:value="${e}" th:text="${e.label}"></option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
                         <label for="tutorExterno">Tutor:</label>
                         <select id="tutorExterno" th:field="*{tutorExterno.id}">
                             <option value="">Sin tutor asignado</option>

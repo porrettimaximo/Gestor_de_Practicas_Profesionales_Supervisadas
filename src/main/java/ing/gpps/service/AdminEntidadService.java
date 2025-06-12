@@ -215,7 +215,7 @@ public class AdminEntidadService {
 
         ProyectoId proyectoId = new ProyectoId(proyecto.getTitulo(), proyecto.getEntidad().getCuit());
         proyecto.setProyectoId(proyectoId);
-
+        proyecto.setEstado(Proyecto.EstadoProyecto.EN_ESPERA);
         proyectoRepository.save(proyecto);
 
         verificarCarga(proyecto.getProyectoId().getCuitEntidad()); // opcional para debug

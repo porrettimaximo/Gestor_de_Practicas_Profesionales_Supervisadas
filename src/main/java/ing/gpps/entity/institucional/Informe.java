@@ -16,12 +16,12 @@ public class Informe {
     @EmbeddedId
     private InformeId id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @MapsId("estudianteDni")
     @JoinColumn(name = "fk_id_estudiante")
     private Estudiante estudiante;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumns({
             @JoinColumn(name = "fk_numero_actividad", referencedColumnName = "numero"),
             @JoinColumn(name = "fk_titulo_proyecto", referencedColumnName = "fk_titulo_proyecto"),
@@ -36,10 +36,13 @@ public class Informe {
     @Column(nullable = false)
     private String titulo;
 
-    @Column(nullable = false)
-    private String ruta; // enlace de Drive
+    @Column(nullable = true)
+    private String descripcion;
 
-    public Informe(int numero, LocalDate fecha, String titulo, String ruta, Estudiante estudiante, Actividad actividad) {
+    @Column(name = "ruta_archivo", nullable = true)
+    private String rutaArchivo;
+
+    public Informe(int numero, LocalDate fecha, String titulo, String descripcion, String rutaArchivo, Estudiante estudiante, Actividad actividad) {
         if (estudiante == null || estudiante.getDni() == null) {
             throw new IllegalArgumentException("El estudiante y su DNI no pueden ser nulos");
         }
@@ -48,7 +51,8 @@ public class Informe {
         this.id.setEstudianteDni(estudiante.getDni().intValue());
         this.fecha = fecha;
         this.titulo = titulo;
-        this.ruta = ruta;
+        this.descripcion = descripcion;
+        this.rutaArchivo = rutaArchivo;
         this.estudiante = estudiante;
         this.actividad = actividad;
     }

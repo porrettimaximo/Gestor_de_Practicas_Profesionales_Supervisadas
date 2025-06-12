@@ -924,40 +924,16 @@ aaa
     <section id="proyecto-section" class="section-card">
         <div class="section-header">
             <h1 id="proyecto-table">Gestión de Proyectos</h1>
+            <!-- ✅ Botón Nuevo Proyecto extraído de versiones anteriores -->
+            <button class="btn primary" onclick="abrirModal('add-proyecto-modal')">
+                <i class="fas fa-plus"></i> Nuevo Proyecto
+            </button>
             <button class="section-top-btn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
                 <i class="fas fa-arrow-up"></i> Subir
             </button>
         </div>
 
         <div class="table-container">
-
-            <div class="filters-container">
-                <div class="filter-group">
-                    <label for="status-filter">Estado:</label>
-                    <select id="status-filter">
-                        <option value="">Todos</option>
-                        <option value="active">Activo</option>
-                        <option value="inactive">Inactivo</option>
-                        <option value="pending">Pendiente</option>
-                    </select>
-                </div>
-
-                <div class="filter-group">
-                    <label for="search-proyecto">Buscar:</label>
-                    <input type="text" id="search-proyecto" placeholder="Título, área, tutor o fecha">
-                </div>
-
-                <div class="filter-actions">
-                    <button class="btn secondary">Filtrar</button>
-                </div>
-            </div>
-
-            <div class="table-actions">
-                <button class="btn primary" onclick="abrirModal('add-proyecto-modal')">
-                    <i class="fas fa-plus"></i> Nuevo Proyecto
-                </button>
-            </div>
-
             <table class="proyecto-table">
                 <thead>
                 <tr>
@@ -1018,41 +994,15 @@ aaa
         <div class="section-header">
             <h1 id="plan-table">Gestión de Planes de Trabajo</h1>
             <!-- ✅ Botón directo al modal (igual que proyecto) -->
-
+            <button class="btn primary" onclick="abrirModal('add-plan-modal')">
+                <i class="fas fa-plus"></i> Nuevo Plan
+            </button>
             <button class="section-top-btn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
                 <i class="fas fa-arrow-up"></i> Subir
             </button>
         </div>
 
         <div class="table-container">
-
-            <div class="filters-container">
-                <div class="filter-group">
-                    <label for="status-filter">Estado:</label>
-                    <select id="status-filter">
-                        <option value="">Todos</option>
-                        <option value="active">Activo</option>
-                        <option value="inactive">Inactivo</option>
-                        <option value="pending">Pendiente</option>
-                    </select>
-                </div>
-
-                <div class="filter-group">
-                    <label for="search-plan">Buscar:</label>
-                    <input type="text" id="search-plan" placeholder="Numero, Proyecto o fecha">
-                </div>
-
-                <div class="filter-actions">
-                    <button class="btn secondary">Filtrar</button>
-                </div>
-            </div>
-
-            <div class="table-actions">
-                <button class="btn primary" onclick="abrirModal('add-plan-modal')">
-                    <i class="fas fa-plus"></i> Nuevo Plan
-                </button>
-            </div>
-
             <table class="plan-table">
                 <thead>
                 <tr>

@@ -458,6 +458,8 @@ public class AdminEntidadController {
         return "redirect:/login";
     }
 
+    //MODIFICAR LA CARGA DE ACTIVIDADES: REEMPLAZAR "ADJUNTA ARCHIVO" POR FECHA LIMITE
+
     @ModelAttribute("planForm")
     public PlanForm planForm() {
         return new PlanForm();
@@ -494,7 +496,7 @@ public class AdminEntidadController {
         CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Usuario usuario = userDetails.getUsuario();
         AdminEntidad admin = (AdminEntidad) usuario;
-        proyecto.setEntidad(admin.getEntidad());
+        proyecto.setEntidad(admin.getEntidad()); //la línea que lanza la excepcion.
 
         adminEntidadService.proponerProyectos(proyecto);
 
@@ -528,11 +530,21 @@ public class AdminEntidadController {
     }
 
     @PostMapping("/agregarActividad")
-    public String agregarActividad(@ModelAttribute("actividad") Actividad actividad,
+    public String agregarActividad(@RequestParam String nombre,
+                                   @RequestParam String descripcion,
+                                   @RequestParam int cantidadHoras,
+                                   @RequestParam String fechaLimite,
                                    @ModelAttribute("planForm") PlanForm planForm,
                                    RedirectAttributes redirectAttributes) {
         try {
+            Actividad actividad = new Actividad();
+            actividad.setNombre(nombre);
+            actividad.setDescripcion(descripcion);
+            actividad.setCantidadHoras(cantidadHoras);
+            actividad.setFechaLimite(LocalDate.parse(fechaLimite));
+
             planForm.agregarActividad(actividad);
+
             redirectAttributes.addFlashAttribute("mensaje",
                     "Actividad agregada al plan. Total actividades: " + planForm.getActividades().size());
             redirectAttributes.addAttribute("modal", "plan");
@@ -542,6 +554,7 @@ public class AdminEntidadController {
 
         return "redirect:/admin-entidad/dashboard";
     }
+
 
     @PostMapping("/guardarPlan")
     public String guardarPlan(@ModelAttribute("planForm") PlanForm planForm,
@@ -609,11 +622,11 @@ public class AdminEntidadController {
                                      @RequestParam int cantidadHoras,
                                      @RequestParam String nombre,
                                      @RequestParam String descripcion,
-                                     @RequestParam boolean adjuntaArchivo,
+                                     @RequestParam String fechaLimite,
                                      @ModelAttribute("actividad") Actividad actividad,
                                      RedirectAttributes redirectAttributes) {
         try {
-            adminEntidadService.modificarActividades(actividad, cuitEntidad, cantidadHoras, nombre, descripcion, adjuntaArchivo);
+            adminEntidadService.modificarActividades(actividad, cuitEntidad, cantidadHoras, nombre, descripcion, LocalDate.parse(fechaLimite));
             redirectAttributes.addFlashAttribute("mensaje", "Actividad modificada correctamente.");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Error al modificar la actividad: " + e.getMessage());

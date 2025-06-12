@@ -20,6 +20,5 @@ public interface PlanDeTrabajoRepository extends JpaRepository<PlanDeTrabajo, Pl
 
     // Usar una consulta JPQL explícita
     @Query("SELECT p FROM PlanDeTrabajo p JOIN p.proyecto pr WHERE pr.entidad.cuit = :cuit")
-//    @Query("SELECT p FROM PlanDeTrabajo p WHERE p.proyecto.entidad.cuit = :cuit")
     List<PlanDeTrabajo> findByCuitEntidad(@Param("cuit") Long cuit);
 }

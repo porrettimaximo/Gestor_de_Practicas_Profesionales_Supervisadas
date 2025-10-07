@@ -120,11 +120,5 @@ email.claveApp=clave_app_generada
 - `ConvenioService` genera actas en PDF dentro de `convenios/`; si la carpeta no existe, se crea al vuelo.
 - Los recursos estaticos (CSS, imagenes) se sirven desde `src/main/resources/static/`.
 
-## Roadmap 
-1. Reactivar y cubrir con pruebas el modulo de administracion de entidades.
-2. Externalizar credenciales sensibles (`spring.datasource.password`, `email.claveApp`) mediante variables de entorno o perfiles.
-3. Ajustar `spring.jpa.hibernate.ddl-auto` a `update` o migraciones Flyway para preservar datos reales.
-4. Incorporar pruebas unitarias/integracion para servicios clave (entregas, convenios, notificaciones).
-5. Documentar los flujos de notificaciones y correo dentro de la guia de operacion.
 
 

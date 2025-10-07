@@ -99,7 +99,7 @@ email.claveApp=clave_app_generada
    ```
 3. Acceder a http://localhost:8080/login y utilizar alguna de las credenciales de prueba.
 
-## Datos iniciales (perfil `create`)
+## Datos iniciales
 
 | Rol | Email | Password | Notas |
 | --- | ----- | -------- | ----- |
